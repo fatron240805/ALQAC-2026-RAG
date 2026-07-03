@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import confusion_matrix
 
-# Cố định 4 nhãn của ALQAC để dựng ma trận nhầm lẫn chuẩn
+# Cố định đúng 4 nhãn của ALQAC phục vụ dựng ma trận nhầm lẫn
 ALQAC_LABELS = ["A_WIN", "PARTIAL_A_WIN", "PARTIAL_B_WIN", "B_WIN"]
 
 def evaluate_alqac_system(gold_data, pred_data):
@@ -54,7 +54,7 @@ def evaluate_alqac_system(gold_data, pred_data):
     correct_outcomes = 0
     total_penalized_case_recall = 0.0
     
-    # Rổ chứa toàn cục cho Micro F1
+    # Tập hợp toàn cục chứa chứng cứ luật phục vụ Micro F1
     G_law_set = set()
     P_law_set = set()
     
@@ -68,61 +68,63 @@ def evaluate_alqac_system(gold_data, pred_data):
             
         pred = pred_dict[case_id]
         
-        # Lấy nhãn để đưa vào ma trận nhầm lẫn
+        # Đồng bộ nhãn
         gt_label = str(gold.get('prediction', '')).strip()
         pred_label = str(pred.get('prediction', '')).strip()
         y_true_list.append(gt_label)
         y_pred_list.append(pred_label)
         
-        # 1. OUTCOME ACCURACY (Đoán đúng kết quả thắng thua)
+        # 1. OUTCOME ACCURACY (Hình image_05fc32.png)
         if gt_label == pred_label:
             correct_outcomes += 1
             
-        # 2. PENALIZED CASE EVIDENCE RECALL (Đo lường Hưng chọc API)
+        # 2. PENALIZED CASE EVIDENCE RECALL (Hình image_05fcae.png & image_05fcce.png)
         g_case = set(gold.get('case_evidence', []))
         p_case = set(pred.get('case_evidence', []))
         
-        # Base recall của tình tiết vụ án
-        case_recall = len(p_case.intersection(g_case)) / len(g_case) if len(g_case) > 0 else 0.0
-        
-        # Tính Penalty Factor (E_i) theo công thức BTC
-        n_i = gold.get('n_segments', 0) # Tổng số segment của case
-        c_i = pred.get('api_calls', 0)  # Số API Khoa/Hưng đã gọi
-        
-        if c_i <= 2 * n_i:
-            E_i = 1.0
-        elif 2 * n_i < c_i < 5 * n_i:
-            E_i = 1.0 - ((c_i - 2 * n_i) / (3 * n_i))
+        # Tính toán Recall nền tảng (Xử lý an toàn tập dữ liệu rỗng)
+        if len(g_case) == 0:
+            case_recall = 1.0 if len(p_case) == 0 else 0.0
         else:
-            E_i = 0.0 # Gọi API quá tay -> Phạt bằng 0
+            case_recall = len(p_case.intersection(g_case)) / len(g_case)
+        
+        # Áp dụng công thức max thu gọn chống lỗi ZeroDivision: E_i = max(0, 1 - max(0, c_i - 2n_i) / 3n_i)
+        n_i = gold.get('n_segments', 0)
+        c_i = pred.get('api_calls', 0)
+        
+        if n_i == 0:
+            E_i = 1.0 if c_i == 0 else 0.0
+        else:
+            penalty_numerator = max(0, c_i - 2 * n_i)
+            penalty_denominator = 3 * n_i
+            E_i = max(0.0, 1.0 - (penalty_numerator / penalty_denominator))
             
         total_penalized_case_recall += (case_recall * E_i)
         
-        # 3. CHUẨN BỊ DATA CHO MICRO LAW F1
+        # 3. THU THẬP BẰNG CHỨNG LUẬT CHO MICRO F1 (Hình image_05fceb.png)
         def extract_law_tuples(evidence_list):
-            # Biến Object {"law_id": "A", "aid": 1} thành chuỗi "case_law_aid" để so khớp
             return {f"{case_id}_{e.get('law_id')}_{e.get('aid')}" for e in evidence_list if isinstance(e, dict)}
             
         G_law_set.update(extract_law_tuples(gold.get('law_evidence', [])))
         P_law_set.update(extract_law_tuples(pred.get('law_evidence', [])))
 
-    # --- TÍNH TOÁN 3 CHỈ SỐ LỚN ---
+    # --- TÍNH TOÁN CÁC CHỈ SỐ TOÀN CỤC ---
     accuracy = correct_outcomes / total_cases if total_cases > 0 else 0.0
     avg_penalized_case_recall = total_penalized_case_recall / total_cases if total_cases > 0 else 0.0
     
+    # Tính toán Micro-averaged F1 chuẩn xác (Hình image_05fceb.png)
     tp_law = len(P_law_set.intersection(G_law_set))
     micro_precision = tp_law / len(P_law_set) if len(P_law_set) > 0 else 0.0
     micro_recall = tp_law / len(G_law_set) if len(G_law_set) > 0 else 0.0
     micro_f1 = (2 * micro_precision * micro_recall) / (micro_precision + micro_recall) if (micro_precision + micro_recall) > 0 else 0.0
     
-    # --- FINAL SCORE CỦA ALQAC ---
+    # THÀNH PHẦN ĐIỂM SỐ CUỐI CÙNG: 0.70 * Acc + 0.20 * CaseRecall + 0.10 * LawF1 (Hình image_05fceb.png)
     final_score = (0.70 * accuracy) + (0.20 * avg_penalized_case_recall) + (0.10 * micro_f1)
     
-    # --- MA TRẬN NHẦM LẪN ---
+    # Tạo dựng Ma trận nhầm lẫn phục vụ kiểm soát chất lượng
     cm = confusion_matrix(y_true_list, y_pred_list, labels=ALQAC_LABELS)
     cm_df = pd.DataFrame(cm, index=[f"True_{l}" for l in ALQAC_LABELS], columns=[f"Pred_{l}" for l in ALQAC_LABELS])
     
-    # --- ĐÓNG GÓI BÁO CÁO ---
     report = {
         "ALQAC_Final_Score": round(final_score, 4),
         "Components": {
