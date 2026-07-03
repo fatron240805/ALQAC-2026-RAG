@@ -1,0 +1,16 @@
+[
+  {
+    "case_id": "0001",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [{"law_id": "47/2010/QH12", "aid": 270}, {"law_id": "47/2010/QH12", "aid": 271}],
+    "case_evidence": ["seg_1", "seg_3", "seg_5"],
+    "n_segments": 10
+  },
+  {
+    "case_id": "0002",
+    "prediction": "B_WIN",
+    "law_evidence": [{"law_id": "91/2015/QH13", "aid": 15}],
+    "case_evidence": ["seg_8", "seg_9"],
+    "n_segments": 5
+  }
+]

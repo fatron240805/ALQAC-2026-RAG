@@ -1,0 +1,12 @@
+{
+    "ALQAC_Final_Score": 0.5589,
+    "Components": {
+        "Outcome_Accuracy_70%": 0.5,
+        "Penalized_Case_Recall_20%": 0.7111,
+        "Micro_Law_F1_10%": 0.6667
+    },
+    "Retrieval_Stats": {
+        "Law_Precision": 0.6667,
+        "Law_Recall": 0.6667
+    }
+}
