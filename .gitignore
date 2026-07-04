@@ -37,6 +37,9 @@ Thumbs.db
 # VS Code settings (optional)
 .vscode/
 
+# Local planning notes
+Plan.md
+
 # Keep repository data tracked
 !data/
 !data/**
