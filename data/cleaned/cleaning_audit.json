@@ -1,0 +1,33 @@
+{
+  "article_count": 3352,
+  "article_number_source_counts": {
+    "aid": 3352
+  },
+  "avg_article_tokens": 218.12,
+  "avg_chunk_tokens": 54.45,
+  "chunk_count": 17535,
+  "chunk_unit_counts": {
+    "article": 674,
+    "article_intro": 224,
+    "clause": 7783,
+    "clause_intro": 1700,
+    "point": 7152,
+    "point_part": 2
+  },
+  "cleaned_at": "2026-07-03T13:38:32.945832+00:00",
+  "cleaning_notes": "deprecated=True is a candidate signal for human audit, not a conclusive determination; inline clause/point splitting skips cross-references (e.g. 'tại khoản 2.').",
+  "deprecated_article_count": 23,
+  "deprecated_document_count": 14,
+  "document_count": 18,
+  "duplicate_law_ids": [],
+  "empty_article_count": 0,
+  "overlap_tokens": 90,
+  "raw_path": "data/raw/ALQAC/corpus_law_pub.json",
+  "schema_version": 3,
+  "target_tokens": 450,
+  "written": {
+    "articles": 3352,
+    "chunks": 17535,
+    "documents": 18
+  }
+}
