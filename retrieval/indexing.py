@@ -164,3 +164,114 @@ class HybridIndexer:
             np.save(save_path / "dense_embeddings.npy", self.embeddings)
 
         return save_path
+
+    # ------------------------------------------------------------------
+    # Query-time API (added for orchestration/run_pipeline.py, T0-1/T1-3).
+    # HybridIndexer previously only supported build_index()/save_index();
+    # these methods close the gap so the pipeline can actually retrieve.
+    # Hưng: feel free to move/refactor this into retrieval/router.py (T2-1)
+    # once query decomposition / routing lands on top of it.
+    # ------------------------------------------------------------------
+
+    def encode_query(self, query: str) -> np.ndarray:
+        """Encode a single query string into the same embedding space as the corpus."""
+        text = query or ""
+        if self.embedding_model is not None:
+            vector = self.embedding_model.encode(
+                [text], convert_to_numpy=True, normalize_embeddings=True
+            )
+            return np.asarray(vector[0], dtype=np.float32)
+
+        # Must mirror _build_dense_embeddings' fallback exactly, or query and
+        # corpus vectors would live in inconsistent spaces.
+        tokens = self._tokenize(text)
+        vector = np.zeros(self.embedding_dim, dtype=np.float32)
+        for token in tokens:
+            index = abs(hash(token)) % self.embedding_dim
+            vector[index] += 1.0
+        if np.linalg.norm(vector) > 0:
+            vector /= np.linalg.norm(vector)
+        return vector
+
+    def bm25_scores(self, query: str) -> np.ndarray:
+        """Score every indexed document against a raw query string."""
+        if self.bm25_model is None or not self.doc_ids:
+            return np.zeros(0, dtype=np.float32)
+
+        tokens = self._tokenize(query)
+        if isinstance(self.bm25_model, _SimpleBM25):
+            # _SimpleBM25.get_scores expects a batch of tokenized "documents";
+            # wrap the single query and unwrap the single resulting row.
+            return np.asarray(self.bm25_model.get_scores([tokens])[0], dtype=np.float32)
+        return np.asarray(self.bm25_model.get_scores(tokens), dtype=np.float32)
+
+    @staticmethod
+    def _min_max_normalize(scores: np.ndarray) -> np.ndarray:
+        if scores.size == 0:
+            return scores
+        min_v, max_v = float(scores.min()), float(scores.max())
+        if max_v - min_v < 1e-9:
+            return np.zeros_like(scores)
+        return (scores - min_v) / (max_v - min_v)
+
+    def search(self, query: str, top_k: int = 10, alpha: float = 0.45) -> list[dict[str, Any]]:
+        """Hybrid BM25 + dense retrieval: score = alpha*BM25_norm + (1-alpha)*cosine.
+
+        Matches the fusion formula and default alpha=0.45 from Plan.md.
+        Returns a list of result dicts ordered by descending fused_score.
+        """
+        if not self.doc_ids:
+            return []
+
+        bm25_raw = self.bm25_scores(query)
+        bm25_norm = self._min_max_normalize(bm25_raw)
+
+        query_vector = self.encode_query(query)
+        if self.embeddings is not None and len(self.embeddings) > 0:
+            dense_scores = self.embeddings @ query_vector
+        else:
+            dense_scores = np.zeros(len(self.doc_ids), dtype=np.float32)
+
+        fused = alpha * bm25_norm + (1.0 - alpha) * dense_scores
+        top_k = max(0, min(top_k, len(self.doc_ids)))
+        ranked_indices = np.argsort(-fused)[:top_k]
+
+        results: list[dict[str, Any]] = []
+        for rank, idx in enumerate(ranked_indices):
+            results.append(
+                {
+                    "rank": rank + 1,
+                    "doc_id": self.doc_ids[idx],
+                    "content": self.contents[idx],
+                    "metadata": self.metadata[idx],
+                    "bm25_score": float(bm25_raw[idx]) if len(bm25_raw) else 0.0,
+                    "dense_score": float(dense_scores[idx]),
+                    "fused_score": float(fused[idx]),
+                }
+            )
+        return results
+
+    @classmethod
+    def load_index(cls, path: str | Path, model_name: str | None = None) -> "HybridIndexer":
+        """Reconstruct an indexer instance from artifacts written by save_index()."""
+        load_path = Path(path)
+        indexer = cls(model_name=model_name)
+
+        with (load_path / "documents.jsonl").open("r", encoding="utf-8") as handle:
+            indexer.documents = [json.loads(line) for line in handle if line.strip()]
+        with (load_path / "doc_ids.json").open("r", encoding="utf-8") as handle:
+            indexer.doc_ids = json.load(handle)
+        with (load_path / "bm25_model.pkl").open("rb") as handle:
+            indexer.bm25_model = pickle.load(handle)
+
+        embeddings_path = load_path / "dense_embeddings.npy"
+        indexer.embeddings = np.load(embeddings_path) if embeddings_path.exists() else None
+
+        indexer.contents = [doc.get("content", "") for doc in indexer.documents]
+        indexer.metadata = [doc.get("metadata", {}) for doc in indexer.documents]
+
+        if SentenceTransformer is not None and torch is not None:
+            indexer.embedding_model = SentenceTransformer(indexer.model_name)
+
+        return indexer
+
