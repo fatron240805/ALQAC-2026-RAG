@@ -1,16 +1,1740 @@
 [
   {
-    "case_id": "0001",
+    "case_id": "case_4101",
+    "_case_query_preview": "Chị Lê Thị T khởi kiện anh Chử Lương D và chị Đỗ Thị Thanh T về tranh chấp bồi thường thiệt hại ngoài hợp đồng do chó nhà bị thả rông đuổi cắn làm chị T ngã xe, gây hư hỏng xe máy và chấn thương. Chị ...",
     "prediction": "PARTIAL_A_WIN",
-    "law_evidence": [{"law_id": "47/2010/QH12", "aid": 270}, {"law_id": "47/2010/QH12", "aid": 271}],
-    "case_evidence": ["seg_1", "seg_3", "seg_5"],
-    "n_segments": 10
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 584
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 558
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 590
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 603
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 157
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 158
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
   },
   {
-    "case_id": "0002",
+    "case_id": "case_4834",
+    "_case_query_preview": "Ông Trần Thanh N, bà Lương Thị D khởi kiện ông Nguyễn Tấn C về việc đòi lại khoản tiền liên quan các hộ dân vay vốn nông nghiệp thông qua ngân hàng, có thỏa thuận giao/thu tiền và thế chấp quyền sử dụ...",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 357
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 584
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 585
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 586
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 587
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 590
+      },
+      {
+        "law_id": "Bộ luật Tố tụng Dân sự 2015",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật Tố tụng Dân sự 2015",
+        "aid": 266
+      },
+      {
+        "law_id": "Bộ luật Tố tụng Dân sự 2015",
+        "aid": 271
+      },
+      {
+        "law_id": "Bộ luật Tố tụng Dân sự 2015",
+        "aid": 273
+      },
+      {
+        "law_id": "Nghị quyết 326/2016/UBTVQH14 ngày 30/12/2016 của Ủy ban Thường vụ Quốc hội",
+        "aid": 2
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_669",
+    "_case_query_preview": "Nguyên đơn ông Danh Ch, bà Thị M tranh chấp với các bị đơn bà Thị X, bà Thị Q, bà Thị Đ, ông Danh C về việc hủy/bảo lưu hợp đồng chuyển nhượng quyền sử dụng đất viết tay miệng năm 1995 liên quan diện ...",
     "prediction": "B_WIN",
-    "law_evidence": [{"law_id": "91/2015/QH13", "aid": 15}],
-    "case_evidence": ["seg_8", "seg_9"],
-    "n_segments": 5
+    "law_evidence": [
+      {
+        "law_id": "Bộ Luật tố tụng dân sự",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 297
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2015",
+        "aid": 688
+      },
+      {
+        "law_id": "Nghị quyết số: 326/2016/UBTVQH14, ngày 30/12/2016",
+        "aid": 48
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_4616",
+    "_case_query_preview": "Ngân hàng B khởi kiện Công ty TNHH Thương mại và Xuất nhập khẩu H tranh chấp hợp đồng tín dụng; đồng thời yêu cầu Công ty TNHH Đầu tư K và ông Lam Wing C thực hiện nghĩa vụ bảo lãnh, thế chấp. Ngân hà...",
+    "prediction": "A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 30
+      },
+      {
+        "law_id": "Bộ Luật dân sự 2005",
+        "aid": 122
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_6616",
+    "_case_query_preview": "Ông Nguyễn Văn H kiện cụ Trần Thị Đ và các đồng thừa kế về tranh chấp thừa kế theo pháp luật. Di sản gồm quyền sử dụng đất ở tại thửa 20, thửa 107 (tờ bản đồ số 4) và số tiền Nhà nước bồi thường, lãi ...",
+    "prediction": "A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự năm 2015",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 9
+      },
+      {
+        "law_id": "Luật Hôn nhân và gia đình năm 2014",
+        "aid": 33
+      },
+      {
+        "law_id": "Luật Hộ tịch",
+        "aid": 21
+      },
+      {
+        "law_id": "Luật Đất đai năm 1987",
+        "aid": 1
+      },
+      {
+        "law_id": "Luật đất đai năm 2013",
+        "aid": 100
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14",
+        "aid": 12
+      },
+      {
+        "law_id": "Án lệ số 06/2016/AL",
+        "aid": 220
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_950",
+    "_case_query_preview": "Ông Huỳnh Tấn T kiện ông Nguyễn Khánh T2 tranh chấp quyền sử dụng đất kèm đòi bồi thường 56 cây chuối bị chặt. Quyền sử dụng đối với thửa đất diện tích 1.421,38m2 tại thửa số 173, tờ bản đồ 26; cho rằ...",
+    "prediction": "B_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự năm 2015",
+        "aid": 144
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự năm 2015",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự năm 2015",
+        "aid": 157
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự năm 2015",
+        "aid": 165
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự năm 2015",
+        "aid": 227
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự năm 2015",
+        "aid": 228
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 234
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 604
+      },
+      {
+        "law_id": "Luật Đất đai năm 2003",
+        "aid": 49
+      },
+      {
+        "law_id": "Luật Đất đai năm 2003",
+        "aid": 50
+      },
+      {
+        "law_id": "Luật Đất đai năm 2003",
+        "aid": 52
+      },
+      {
+        "law_id": "Luật Đất đai năm 2003",
+        "aid": 105
+      },
+      {
+        "law_id": "Luật Đất đai năm 2003",
+        "aid": 123
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_149",
+    "_case_query_preview": "Ông Trần Xuân V khởi kiện vợ chồng ông Nguyễn Gia H, bà Nguyễn Thị L tranh chấp hợp đồng chuyển nhượng quyền sử dụng đất ký 09/10/2018, đồng thời yêu cầu trả lại tiền nhận và bồi thường thiệt hại theo...",
+    "prediction": "PARTIAL_B_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 147
+      },
+      {
+        "law_id": "Luật Đất đai",
+        "aid": 167
+      },
+      {
+        "law_id": "Luật hôn nhân và gia đình",
+        "aid": 45
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14 ngày 30/12/2016 Quy định về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí Tòa án.",
+        "aid": 12
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14 ngày 30/12/2016 Quy định về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí Tòa án.",
+        "aid": 26
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_614",
+    "_case_query_preview": "Ông Trần Văn Đ và ông Trần Văn T là nguyên đơn tranh chấp với ông Trần Quốc H (cùng nhiều người thừa kế khác) về di sản thừa kế là quyền sử dụng đất 432,1m2 và tài sản gắn liền trên đất thuộc thửa 51,...",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 5
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 1
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 1
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 157
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 165
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 184
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 1
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 1
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 1
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 1
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 633
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 635
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 674
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 675
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 676
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 681
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 685
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 1
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 1
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14",
+        "aid": 7
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_7467",
+    "_case_query_preview": "Bà Võ Thị Huỳnh H1 và các đồng nguyên đơn gồm bà Võ Thị Huỳnh H2, bà Võ Thị Thanh H5, bà Võ Thị Thanh H6, ông Võ Thế H3, ông Võ Thế H4 tranh chấp di sản thừa kế của cụ Võ Văn M và cụ Phan Thị S với bị...",
+    "prediction": "PARTIAL_B_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 39
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 157
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 165
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 228
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2015",
+        "aid": 623
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2015",
+        "aid": 630
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2015",
+        "aid": 643
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2015",
+        "aid": 650
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2015",
+        "aid": 651
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2015",
+        "aid": 652
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14 ngày 30/12/2016 của Ủy ban Thường vụ Quốc hội quy định về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí tòa án.",
+        "aid": 12
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14 ngày 30/12/2016 của Ủy ban Thường vụ Quốc hội quy định về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí tòa án.",
+        "aid": 26
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14 ngày 30/12/2016 của Ủy ban Thường vụ Quốc hội quy định về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí tòa án.",
+        "aid": 27
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_8219",
+    "_case_query_preview": "Bà Nguyễn Thị Bé M khởi kiện bà Nguyễn Thị H tranh chấp hợp đồng vay tài sản, liên quan “Giấy mượn tiền” ngày 03/3/2014, gồm tiền 81.000.000 đồng và 05 phân vàng 9999, cùng chi phí sửa chữa nhà 60.000...",
+    "prediction": "A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự năm 2015",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 471
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 357
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14",
+        "aid": 12
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_2705",
+    "_case_query_preview": "Ông Nguyễn Hữu B khởi kiện ông Phạm Văn C về tranh chấp hợp đồng dịch vụ ngày 26/7/2013 liên quan đến việc giới thiệu, tuyển dụng và đào tạo con trai ông Đ vào làm tại công ty hàng không. Ông B yêu cầ...",
+    "prediction": "A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật Dân sự",
+        "aid": 123
+      },
+      {
+        "law_id": "Pháp lệnh án phí, lệ phí Tòa án",
+        "aid": 27
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14",
+        "aid": 48
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_3263",
+    "_case_query_preview": "Bà Huỳnh Hồng T khởi kiện vợ chồng ông Phạm Ngọc H và bà Nguyễn Thị Thúy H về tranh chấp tiền hụi (hụi tháng, hụi ngày, hụi chết) và tiền vay; yêu cầu liên đới thanh toán tổng 1.075.000.000 đồng. Agen...",
+    "prediction": "A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 228
+      },
+      {
+        "law_id": "Bộ luật Dân sự",
+        "aid": 357
+      },
+      {
+        "law_id": "Luật Hôn nhân và gia đình",
+        "aid": 37
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14",
+        "aid": 27
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_9125",
+    "_case_query_preview": "Ông Võ N khởi kiện ông Võ Thanh Q về tranh chấp quyền sử dụng đất 437m2, kèm yêu cầu liên quan giấy chứng nhận quyền sử dụng đất và quyết định cá biệt của cơ quan hành chính. Ông N đề nghị công nhận q...",
+    "prediction": "A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 115
+      },
+      {
+        "law_id": "Luật Đất đai năm 2013",
+        "aid": 26
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14",
+        "aid": 12
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_2035",
+    "_case_query_preview": "Ông Trần Sinh H và người đại diện Nguyễn Thị C tranh chấp với ông Trần Văn L và liên quan đến bức tường, phần đất dưới bức tường, ban công, cửa sổ giữa hai nhà. Nguyên đơn yêu cầu công nhận bức tường ...",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật tố tụng",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật tố tụng",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật tố tụng",
+        "aid": 39
+      },
+      {
+        "law_id": "Bộ luật tố tụng",
+        "aid": 144
+      },
+      {
+        "law_id": "Bộ luật tố tụng",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật tố tụng",
+        "aid": 227
+      },
+      {
+        "law_id": "Bộ luật tố tụng",
+        "aid": 235
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 266
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 271
+      },
+      {
+        "law_id": "Luật Đất đai 2013",
+        "aid": 26
+      },
+      {
+        "law_id": "Luật Đất đai 2013",
+        "aid": 166
+      },
+      {
+        "law_id": "Luật Đất đai 2013",
+        "aid": 170
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_8303",
+    "_case_query_preview": "Công ty QLTS (VAMC, kế thừa quyền và nghĩa vụ từ Ngân hàng VIB) khởi kiện bà Đỗ Thị T và ông Chu Văn A về tranh chấp hợp đồng tín dụng, kèm khế ước nhận nợ và nghĩa vụ trả lãi, gốc. Tài sản thế chấp l...",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 122
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 124
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 343
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 351
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 355
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 422
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 721
+      },
+      {
+        "law_id": "Luật các tổ chức tín dụng",
+        "aid": 91
+      },
+      {
+        "law_id": "Luật các tổ chức tín dụng",
+        "aid": 95
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 39
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 95
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 146
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 227
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 228
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 271
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 273
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14 ngày 30/12/2016 của Ủy ban thường vụ Quốc hội",
+        "aid": 26
+      },
+      {
+        "law_id": "Pháp lệnh án phí, lệ phí Tòa án",
+        "aid": 14
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_3735",
+    "_case_query_preview": "Anh Nguyễn T và chị Nguyễn T1 tranh chấp hợp đồng hợp tác, liên quan khoản hùn tiền thuê lại quán nước của chị Huỳnh Thị H ngày 07/02/2017. Tòa án xem xét nghĩa vụ hoàn trả tiền hùn thuê quán, đồng th...",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 39
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 91
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 144
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 157
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 229
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 468
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 504
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 509
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 510
+      },
+      {
+        "law_id": "Nghị quyết 326/2016/UBTVQH14",
+        "aid": 26
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_8758",
+    "_case_query_preview": "Bà Diêm Thị V (ông Nguyễn Thái A đại diện) tranh chấp với chị Nguyễn Thị N và các con của bà T (anh Nguyễn Hoàng C, chị Nguyễn Thị T, anh Nguyễn Văn K) về phần đất làm lối đi khoảng 42m² thuộc thửa đấ...",
+    "prediction": "B_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Luật đất đai năm 2013",
+        "aid": 95
+      },
+      {
+        "law_id": "Luật đất đai năm 2013",
+        "aid": 166
+      },
+      {
+        "law_id": "Luật đất đai năm 2013",
+        "aid": 170
+      },
+      {
+        "law_id": "Luật đất đai năm 2013",
+        "aid": 171
+      },
+      {
+        "law_id": "Luật đất đai năm 2013",
+        "aid": 202
+      },
+      {
+        "law_id": "Luật đất đai năm 2013",
+        "aid": 203
+      },
+      {
+        "law_id": "Bộ luật dân sự",
+        "aid": 254
+      },
+      {
+        "law_id": "Bộ luật dân sự",
+        "aid": 257
+      },
+      {
+        "law_id": "Bộ luật dân sự",
+        "aid": 265
+      },
+      {
+        "law_id": "Bộ luật dân sự",
+        "aid": 266
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 144
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 155
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 157
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 158
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 163
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 165
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 166
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 217
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 273
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_6425",
+    "_case_query_preview": "Ông A tranh chấp quyền sử dụng đất với bà B, ông C và liên quan bà D, bà E, cùng UBND tỉnh Sóc Trăng. Vụ việc liên quan phần đất ông A bị lấn chiếm, đồng thời phần đất được UBND tỉnh cấp chồng lên. Ôn...",
+    "prediction": "A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 608
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 268
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 604
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 605
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 2
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 1
+      },
+      {
+        "law_id": "Pháp lệnh án phí, lệ phí Tòa án",
+        "aid": 27
+      },
+      {
+        "law_id": "Nghị quyết 01/2012/NQ-HĐTP",
+        "aid": 13
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_127",
+    "_case_query_preview": "Nguyên đơn gồm ông Nguyễn Văn T (vợ bà Trịnh Thị T V, các con/ người kế thừa) và bị đơn là vợ chồng ông Phạm Văn Th, bà Vũ Thị H. Tranh chấp hợp đồng chuyển nhượng nhà, đất giữa cụ Phạm Văn L với cụ P...",
+    "prediction": "B_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 39
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 144
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 266
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 273
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 280
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 121
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 122
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 123
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 124
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 255
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 256
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 280
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 281
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 290
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 401
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 439
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 439
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 450
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 451
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 452
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 454
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 471
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 474
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 697
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 698
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 699
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 700
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 701
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 702
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 155
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 688
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_2978",
+    "_case_query_preview": "Anh Ong Teng Kh kiện các chị Diệp Kiều H, Nguyễn Thị Huỳnh Nh, Huỳnh Nguyễn Ngọc Kiều O tranh chấp “kiện đòi tài sản”. Anh cho rằng đã đầu tư tiền vốn và yêu cầu các bị đơn trả lại hệ thống nhà xưởng,...",
+    "prediction": "B_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng Dân sự 2015",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật Tố tụng Dân sự 2015",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật Tố tụng Dân sự 2015",
+        "aid": 39
+      },
+      {
+        "law_id": "Bộ luật Tố tụng Dân sự 2015",
+        "aid": 203
+      },
+      {
+        "law_id": "Bộ luật Tố tụng Dân sự 2015",
+        "aid": 227
+      },
+      {
+        "law_id": "Bộ luật Tố tụng Dân sự 2015",
+        "aid": 228
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_2238",
+    "_case_query_preview": "Ông Nông Văn H và bà Đào Thị H khởi kiện ông Nguyễn Quang V, bà Vũ Thị Y về hợp đồng chuyển nhượng quyền sử dụng đất và tài sản gắn liền với đất đối với thửa đất có nhà cấp 4. Nguyên đơn yêu cầu bị đơ...",
+    "prediction": "PARTIAL_B_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 34
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 39
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 1
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 1
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự 2015",
+        "aid": 1
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 122
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 127
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 128
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 2
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 219
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2005",
+        "aid": 223
+      },
+      {
+        "law_id": "Luật Đất đai 2003",
+        "aid": 106
+      },
+      {
+        "law_id": "Luật Hôn nhân và Gia đình 2000",
+        "aid": 28
+      },
+      {
+        "law_id": "Pháp lệnh Án phí, lệ phí Tòa án 2009",
+        "aid": 3
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 2
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_5236",
+    "_case_query_preview": "Ông Trần Văn C khởi kiện ông Dương Văn B (và bà Dương Thị L liên quan) về tranh chấp hụi, họ, phường. Hai bên có quan hệ chơi hai dây phường từ 07/7/2015 và 10/02/2016, có thỏa thuận tiền gốc và lãi, ...",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 389
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 401
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 402
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 403
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 404
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 479
+      },
+      {
+        "law_id": "Bộ luật dân sự",
+        "aid": 288
+      },
+      {
+        "law_id": "Bộ luật dân sự",
+        "aid": 357
+      },
+      {
+        "law_id": "Luật hôn nhân và gia đình",
+        "aid": 27
+      },
+      {
+        "law_id": "Luật hôn nhân và gia đình",
+        "aid": 37
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 39
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 228
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 271
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 273
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_6663",
+    "_case_query_preview": "Ngân hàng TMCP T (TPBank) khởi kiện Công ty TNHH Thương mại dịch vụ vận tải H tranh chấp hợp đồng tín dụng đã ký cho vay theo hạn mức, kèm các hợp đồng thế chấp tài sản là các xe đầu kéo, sơ mi rơ moo...",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 19
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 30
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 39
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 227
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 228
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 471
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 473
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 474
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2005",
+        "aid": 476
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 292
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 299
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 317
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 320
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 323
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 463
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 466
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 468
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 688
+      },
+      {
+        "law_id": "Luật các tổ chức tín dụng",
+        "aid": 91
+      },
+      {
+        "law_id": "Luật các tổ chức tín dụng",
+        "aid": 95
+      },
+      {
+        "law_id": "Nghị quyết 326/2016/UBTVQH14 ngày 30/12/2016 của Ủy ban thường vụ Quốc hội nước Cộng hòa xã hội chủ nghĩa Việt Nam quy định về mức thu, miễn, giảm, nộp, quản lý và sử dụng án phí và lệ phí Tòa án",
+        "aid": 26
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_8732",
+    "_case_query_preview": "Chị Phạm Thị O kiện bà Đặng Thị N (có bà Đặng Thị H liên quan) về tranh chấp hợp đồng vay tài sản, thể hiện qua giấy biên nhận vay và thỏa thuận thế chấp quyền sử dụng đất. Nguyên đơn yêu cầu buộc bị ...",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 471
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 473
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 474
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 476
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 477
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 478
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2015",
+        "aid": 357
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2015",
+        "aid": 468
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_4861",
+    "_case_query_preview": "Nguyên đơn ông Nguyễn Văn N tranh chấp với các bị đơn ông Nguyễn Văn H và ông Nguyễn Văn S, cùng những người liên quan trong quan hệ thừa kế. Vấn đề là quyền sử dụng đất 2.505m2 tại thửa 14, tờ bản đồ...",
+    "prediction": "PARTIAL_B_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng Dân sự",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật Tố tụng Dân sự",
+        "aid": 37
+      },
+      {
+        "law_id": "Bộ luật Tố tụng Dân sự",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật Dân sự",
+        "aid": 649
+      },
+      {
+        "law_id": "Bộ luật Dân sự",
+        "aid": 650
+      },
+      {
+        "law_id": "Bộ luật Dân sự",
+        "aid": 651
+      },
+      {
+        "law_id": "Bộ luật Dân sự",
+        "aid": 658
+      },
+      {
+        "law_id": "Bộ luật Dân sự",
+        "aid": 660
+      },
+      {
+        "law_id": "Luật Hôn nhân và Gia đình",
+        "aid": 33
+      },
+      {
+        "law_id": "Luật Hôn nhân và Gia đình",
+        "aid": 59
+      },
+      {
+        "law_id": "Luật đất đai 2013",
+        "aid": 5
+      },
+      {
+        "law_id": "Luật đất đai 2013",
+        "aid": 100
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14 ngày 30-12-2016 của Ủy ban Thường vụ Quốc hội về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí Tòa án",
+        "aid": 12
+      },
+      {
+        "law_id": "Nghị quyết số 326/2016/UBTVQH14 ngày 30-12-2016 của Ủy ban Thường vụ Quốc hội về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí Tòa án",
+        "aid": 27
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_3241",
+    "_case_query_preview": "Ngân hàng B khởi kiện bà Nguyễn Thị H, ông Nguyễn Văn S và con trai anh Nguyễn Thanh B về tranh chấp hợp đồng tín dụng và hợp đồng thế chấp quyền sử dụng đất, tài sản gắn liền. Ngân hàng yêu cầu buộc ...",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 30
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 39
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 227
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 266
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 40
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 295
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 298
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 299
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 301
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 302
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 317
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 319
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 320
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 463
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 466
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 468
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_1087",
+    "_case_query_preview": "Bà Ngô Thị X khởi kiện vợ chồng ông Phạm Đức Tr và bà Trần Thị G về tranh chấp bồi thường thiệt hại ngoài hợp đồng do tài sản bị xâm phạm. Cụ thể căn nhà và giếng đào trên diện tích bà X nhận chuyển n...",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 298
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 604
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 605
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 606
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2005",
+        "aid": 608
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2015",
+        "aid": 357
+      },
+      {
+        "law_id": "Bộ luật dân sự năm 2015",
+        "aid": 468
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 157
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự năm 2015",
+        "aid": 164
+      },
+      {
+        "law_id": "Pháp lệnh số 10/2009/UBTVQH12 ngày 27/02/2009 quy định về án phí, lệ phí Tòa án",
+        "aid": 27
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_551",
+    "_case_query_preview": "Nguyên đơn ông Nguyễn Hữu C (và người đại diện theo ủy quyền) tranh chấp với bị đơn ông Hoàng Đình T, ông Hoàng Đình L cùng UBND xã T S và UBND huyện Đ L. Tranh chấp quyền sử dụng các thửa đất liên qu...",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật dân sự 2015",
+        "aid": 116
+      },
+      {
+        "law_id": "Luật đất đai 2013",
+        "aid": 166
+      },
+      {
+        "law_id": "Luật đất đai 2003",
+        "aid": 50
+      },
+      {
+        "law_id": "Nghị định 181/2004/NĐ-CP ngày 29/10/2004",
+        "aid": 48
+      },
+      {
+        "law_id": "Luật khiếu nại, tố cáo năm 1998",
+        "aid": 2
+      },
+      {
+        "law_id": "Luật sửa đổi bổ sung một số điều của Luật khiếu nại tố cáo năm 2006",
+        "aid": 1
+      },
+      {
+        "law_id": "Luật khiếu nại",
+        "aid": 2
+      },
+      {
+        "law_id": "Luật tố tụng hành chính",
+        "aid": 193
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 147
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_5160",
+    "_case_query_preview": "Ông Trần Đình H và bà Hoàng Thị T tranh chấp di sản thừa kế với bà Phùng Thị L cùng các con; đồng thời liên quan phần đất 2.325m² bị cắt 180m² chuyển nhượng để trả nợ và phần còn lại. Nguyên đơn yêu c...",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật Tố tụng dân sự",
+        "aid": 266
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 221
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 223
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 500
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 503
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 612
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 615
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 623
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 649
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 650
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 651
+      },
+      {
+        "law_id": "Bộ luật Dân sự 2015",
+        "aid": 658
+      },
+      {
+        "law_id": "Luật Đất đai năm 2013",
+        "aid": 95
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
+  },
+  {
+    "case_id": "case_8147",
+    "_case_query_preview": "Bà Nguyễn Thị L khởi kiện tranh chấp di sản thừa kế quyền sử dụng đất đối với cha mẹ là cụ Nguyễn Văn K và cụ Nguyễn Thị T2 đã chết không di chúc, liên quan thửa đất 286 tờ bản đồ số 1 tại ấp P xã Q h...",
+    "prediction": "PARTIAL_A_WIN",
+    "law_evidence": [
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 26
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 35
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 39
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 147
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 157
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 165
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 228
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 273
+      },
+      {
+        "law_id": "Bộ luật tố tụng dân sự",
+        "aid": 280
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 102
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 212
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 649
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 650
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 651
+      },
+      {
+        "law_id": "Bộ luật Dân sự năm 2015",
+        "aid": 660
+      },
+      {
+        "law_id": "Luật đất đai năm 2013",
+        "aid": 167
+      },
+      {
+        "law_id": "Luật đất đai năm 2013",
+        "aid": 179
+      }
+    ],
+    "case_evidence": [],
+    "n_segments": 0
   }
 ]
