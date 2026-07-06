@@ -9,16 +9,16 @@ Thư mục này chứa toàn bộ hạ tầng đo lường chỉ số nội bộ
 Để vừa phục vụ công tác chẩn đoán sâu ở Local (cần tính điểm phạt API, chẩn đoán tầng Retrieval), vừa đảm bảo tệp nộp lên Leaderboard không bị rác dữ liệu dẫn đến **Desk-reject**, quy trình phối hợp giữa **Khoa (Inference)** và **Tuấn Anh (QA/Evaluation)** sẽ vận hành như sau:
 
 ```text
-                         [ Pipeline Agent RAG của Khoa ]
-                                                                                 │
-                                                                                 ▼
-                Tệp Log Đầy Đủ: experiments/run_v0_baseline.json
-                                                                                 │
-                                ┌────────────┴────────────┐
-                                ▼                         ▼
+       [ Pipeline Agent RAG của Khoa ]
+                     │
+                     ▼
+    Tệp Log Đầy Đủ: experiments/run_v0_baseline.json
+                     │
+        ┌────────────┴────────────┐
+        ▼                         ▼
 [ run_evaluator.py ]      [ build_submission.py ]
-                                │                         │
-                                ▼                         ▼
+        │                         │
+        ▼                         ▼
  Báo cáo Local 70-20-10    Tệp Sạch: submission.json
  (Dùng để tối ưu RAG)     (Nộp lên Leaderboard BTC)
 ```
