@@ -1,0 +1,1288 @@
+[
+  {
+    "case_id": "case_4101",
+    "prediction": "PARTIAL_A_WIN",
+    "case_evidence": [
+      "case_4101_chunk_21"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50705
+      },
+      {
+        "law_id": "326/2016/UBTVQH14",
+        "aid": 13622
+      },
+      {
+        "law_id": "326/2016/UBTVQH14",
+        "aid": 13631
+      },
+      {
+        "law_id": "326/2016/UBTVQH14",
+        "aid": 13626
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53875
+      }
+    ]
+  },
+  {
+    "case_id": "case_4337",
+    "prediction": "B_WIN",
+    "case_evidence": [
+      "case_4337_chunk_5"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56049
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56052
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56048
+      }
+    ]
+  },
+  {
+    "case_id": "case_4588",
+    "prediction": "PARTIAL_B_WIN",
+    "case_evidence": [
+      "case_4588_chunk_16"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53429
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53412
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53432
+      },
+      {
+        "law_id": "326/2016/UBTVQH14",
+        "aid": 13626
+      }
+    ]
+  },
+  {
+    "case_id": "case_4616",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_4616_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "47/2010/QH12",
+        "aid": 372
+      },
+      {
+        "law_id": "66/2014/QH13",
+        "aid": 874
+      }
+    ]
+  },
+  {
+    "case_id": "case_6616",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_6616_chunk_38"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53432
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53421
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56136
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56129
+      }
+    ]
+  },
+  {
+    "case_id": "case_5226",
+    "prediction": "PARTIAL_B_WIN",
+    "case_evidence": [
+      "case_5226_chunk_6"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53096
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53095
+      },
+      {
+        "law_id": "47/2010/QH12",
+        "aid": 364
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56106
+      }
+    ]
+  },
+  {
+    "case_id": "case_6284",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_6284_chunk_16"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53985
+      },
+      {
+        "law_id": "26/2008/QH12",
+        "aid": 5286
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53976
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53421
+      }
+    ]
+  },
+  {
+    "case_id": "case_3995",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_3995_chunk_4"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56108
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50705
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 55989
+      }
+    ]
+  },
+  {
+    "case_id": "case_6384",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_6384_chunk_25"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56025
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56054
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56049
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56052
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56051
+      }
+    ]
+  },
+  {
+    "case_id": "case_8219",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_8219_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50964
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50910
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50882
+      }
+    ]
+  },
+  {
+    "case_id": "case_2705",
+    "prediction": "PARTIAL_B_WIN",
+    "case_evidence": [
+      "case_2705_chunk_4"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53976
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53985
+      },
+      {
+        "law_id": "26/2008/QH12",
+        "aid": 5286
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53421
+      }
+    ]
+  },
+  {
+    "case_id": "case_3263",
+    "prediction": "PARTIAL_B_WIN",
+    "case_evidence": [
+      "case_3263_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50964
+      },
+      {
+        "law_id": "326/2016/UBTVQH14",
+        "aid": 13631
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50910
+      },
+      {
+        "law_id": "26/2008/QH12",
+        "aid": 5286
+      }
+    ]
+  },
+  {
+    "case_id": "case_9125",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_9125_chunk_10"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56154
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56050
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56008
+      },
+      {
+        "law_id": "66/2014/QH13",
+        "aid": 867
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56108
+      }
+    ]
+  },
+  {
+    "case_id": "case_5658",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_5658_chunk_0"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "47/2010/QH12",
+        "aid": 364
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50915
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50705
+      },
+      {
+        "law_id": "26/2008/QH12",
+        "aid": 5404
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50910
+      }
+    ]
+  },
+  {
+    "case_id": "case_5045",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_5045_chunk_9"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56049
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56048
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56052
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56025
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56045
+      }
+    ]
+  },
+  {
+    "case_id": "case_4920",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_4920_chunk_0"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50964
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50705
+      },
+      {
+        "law_id": "37/2015/NĐ-CP",
+        "aid": 4091
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50910
+      }
+    ]
+  },
+  {
+    "case_id": "case_8758",
+    "prediction": "PARTIAL_B_WIN",
+    "case_evidence": [
+      "case_8758_chunk_0"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "26/2008/QH12",
+        "aid": 5286
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53979
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53421
+      },
+      {
+        "law_id": "52/2010/QH12",
+        "aid": 3537
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53875
+      }
+    ]
+  },
+  {
+    "case_id": "case_9089",
+    "prediction": "PARTIAL_B_WIN",
+    "case_evidence": [
+      "case_9089_chunk_0"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56008
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56048
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 55979
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 55953
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 55981
+      }
+    ]
+  },
+  {
+    "case_id": "case_127",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_127_chunk_16"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50737
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53979
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50864
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50865
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50910
+      }
+    ]
+  },
+  {
+    "case_id": "case_2978",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_2978_chunk_6"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50733
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50705
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50857
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50910
+      }
+    ]
+  },
+  {
+    "case_id": "case_4579",
+    "prediction": "PARTIAL_A_WIN",
+    "case_evidence": [
+      "case_4579_chunk_0"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "26/2008/QH12",
+        "aid": 5286
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53985
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56048
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53976
+      }
+    ]
+  },
+  {
+    "case_id": "case_5236",
+    "prediction": "B_WIN",
+    "case_evidence": [
+      "case_5236_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "100/2015/QH13",
+        "aid": 56539
+      },
+      {
+        "law_id": "39/2009/QH12",
+        "aid": 52209
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53985
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53976
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53421
+      }
+    ]
+  },
+  {
+    "case_id": "case_6663",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_6663_chunk_0"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "47/2010/QH12",
+        "aid": 364
+      },
+      {
+        "law_id": "47/2010/QH12",
+        "aid": 372
+      },
+      {
+        "law_id": "47/2010/QH12",
+        "aid": 374
+      },
+      {
+        "law_id": "47/2010/QH12",
+        "aid": 383
+      },
+      {
+        "law_id": "47/2010/QH12",
+        "aid": 425
+      }
+    ]
+  },
+  {
+    "case_id": "case_8732",
+    "prediction": "PARTIAL_A_WIN",
+    "case_evidence": [
+      "case_8732_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50910
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50964
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50865
+      },
+      {
+        "law_id": "47/2010/QH12",
+        "aid": 273
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53115
+      }
+    ]
+  },
+  {
+    "case_id": "case_4861",
+    "prediction": "B_WIN",
+    "case_evidence": [
+      "case_4861_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56108
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50864
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50913
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50865
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50737
+      }
+    ]
+  },
+  {
+    "case_id": "case_3241",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_3241_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "47/2010/QH12",
+        "aid": 364
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56049
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56106
+      },
+      {
+        "law_id": "47/2010/QH12",
+        "aid": 295
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56125
+      }
+    ]
+  },
+  {
+    "case_id": "case_1087",
+    "prediction": "B_WIN",
+    "case_evidence": [
+      "case_1087_chunk_1"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50705
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50733
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50964
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53315
+      }
+    ]
+  },
+  {
+    "case_id": "case_9052",
+    "prediction": "B_WIN",
+    "case_evidence": [
+      "case_9052_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56048
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56052
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56053
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 55953
+      }
+    ]
+  },
+  {
+    "case_id": "case_5160",
+    "prediction": "PARTIAL_A_WIN",
+    "case_evidence": [
+      "case_5160_chunk_1"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53420
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53412
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53413
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53432
+      }
+    ]
+  },
+  {
+    "case_id": "case_8147",
+    "prediction": "PARTIAL_B_WIN",
+    "case_evidence": [
+      "case_8147_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53420
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53432
+      },
+      {
+        "law_id": "326/2016/UBTVQH14",
+        "aid": 13626
+      }
+    ]
+  },
+  {
+    "case_id": "case_2238",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_2238_chunk_32"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56048
+      },
+      {
+        "law_id": "66/2014/QH13",
+        "aid": 858
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50964
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56025
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56068
+      }
+    ]
+  },
+  {
+    "case_id": "case_614",
+    "prediction": "PARTIAL_A_WIN",
+    "case_evidence": [
+      "case_614_chunk_13"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53432
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53413
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56104
+      },
+      {
+        "law_id": "326/2016/UBTVQH14",
+        "aid": 13626
+      }
+    ]
+  },
+  {
+    "case_id": "case_1959",
+    "prediction": "PARTIAL_A_WIN",
+    "case_evidence": [
+      "case_1959_chunk_17"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53189
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 52955
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50818
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50705
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50882
+      }
+    ]
+  },
+  {
+    "case_id": "case_6425",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_6425_chunk_26"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56052
+      },
+      {
+        "law_id": "26/2008/QH12",
+        "aid": 5286
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53985
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53976
+      }
+    ]
+  },
+  {
+    "case_id": "case_3735",
+    "prediction": "B_WIN",
+    "case_evidence": [
+      "case_3735_chunk_30"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "326/2016/UBTVQH14",
+        "aid": 13616
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50964
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53251
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53984
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 52822
+      }
+    ]
+  },
+  {
+    "case_id": "case_5860",
+    "prediction": "B_WIN",
+    "case_evidence": [
+      "case_5860_chunk_18"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50705
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50964
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50910
+      }
+    ]
+  },
+  {
+    "case_id": "case_7467",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_7467_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53421
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53985
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53976
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53979
+      }
+    ]
+  },
+  {
+    "case_id": "case_149",
+    "prediction": "PARTIAL_B_WIN",
+    "case_evidence": [
+      "case_149_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "66/2014/QH13",
+        "aid": 856
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53315
+      },
+      {
+        "law_id": "326/2016/UBTVQH14",
+        "aid": 13626
+      }
+    ]
+  },
+  {
+    "case_id": "case_3079",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_3079_chunk_5"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53360
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50782
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53362
+      }
+    ]
+  },
+  {
+    "case_id": "case_8812",
+    "prediction": "PARTIAL_A_WIN",
+    "case_evidence": [
+      "case_8812_chunk_22"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53362
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53360
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53131
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53361
+      },
+      {
+        "law_id": "100/2015/QH13",
+        "aid": 56814
+      }
+    ]
+  },
+  {
+    "case_id": "case_5057",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_5057_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53985
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53976
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53421
+      }
+    ]
+  },
+  {
+    "case_id": "case_551",
+    "prediction": "PARTIAL_A_WIN",
+    "case_evidence": [
+      "case_551_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50865
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50866
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50882
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50705
+      }
+    ]
+  },
+  {
+    "case_id": "case_669",
+    "prediction": "PARTIAL_B_WIN",
+    "case_evidence": [
+      "case_669_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50910
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 55979
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53985
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53976
+      }
+    ]
+  },
+  {
+    "case_id": "case_4557",
+    "prediction": "PARTIAL_A_WIN",
+    "case_evidence": [
+      "case_4557_chunk_2"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "37/2015/NĐ-CP",
+        "aid": 4081
+      },
+      {
+        "law_id": "37/2015/NĐ-CP",
+        "aid": 4056
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53198
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53315
+      }
+    ]
+  },
+  {
+    "case_id": "case_950",
+    "prediction": "PARTIAL_B_WIN",
+    "case_evidence": [
+      "case_950_chunk_0"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56138
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56108
+      },
+      {
+        "law_id": "26/2008/QH12",
+        "aid": 5377
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 55981
+      },
+      {
+        "law_id": "45/2013/QH13",
+        "aid": 56048
+      }
+    ]
+  },
+  {
+    "case_id": "case_2035",
+    "prediction": "PARTIAL_A_WIN",
+    "case_evidence": [
+      "case_2035_chunk_7"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50910
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50865
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50882
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 52948
+      }
+    ]
+  },
+  {
+    "case_id": "case_8303",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_8303_chunk_13"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50864
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50910
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53077
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50964
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50913
+      }
+    ]
+  },
+  {
+    "case_id": "case_4704",
+    "prediction": "PARTIAL_A_WIN",
+    "case_evidence": [
+      "case_4704_chunk_6"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53432
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53985
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53413
+      },
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53421
+      }
+    ]
+  },
+  {
+    "case_id": "case_4644",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_4644_chunk_3"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "91/2015/QH13",
+        "aid": 53360
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50705
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53977
+      },
+      {
+        "law_id": "52/2014/QH13",
+        "aid": 53875
+      }
+    ]
+  },
+  {
+    "case_id": "case_4834",
+    "prediction": "A_WIN",
+    "case_evidence": [
+      "case_4834_chunk_23"
+    ],
+    "law_evidence": [
+      {
+        "law_id": "47/2010/QH12",
+        "aid": 273
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50883
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50910
+      },
+      {
+        "law_id": "92/2015/QH13",
+        "aid": 50882
+      }
+    ]
+  }
+]

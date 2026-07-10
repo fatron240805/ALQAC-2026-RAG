@@ -63,6 +63,18 @@ class PipelineConfig:
         payload = json.loads(Path(path).read_text(encoding="utf-8"))
         known = {f.name for f in fields(cls)}
         kwargs = {k: v for k, v in payload.items() if k in known and k != "extra"}
+        for key in (
+            "chunks_path",
+            "index_path",
+            "public_test_path",
+            "prompt_path",
+            "gold_path",
+            "submission_tracker_path",
+            "experiments_dir",
+        ):
+            if key in kwargs:
+                value = Path(kwargs[key])
+                kwargs[key] = value if value.is_absolute() else PROJECT_ROOT / value
         extra = {k: v for k, v in payload.items() if k not in known}
         return cls(**kwargs, extra=extra)
 

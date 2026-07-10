@@ -31,36 +31,67 @@ TOKEN_RE = re.compile(r"\b[\wÀ-ỹ]+\b", re.UNICODE)
 class _SimpleBM25:
     """Minimal BM25 implementation used as a fallback when rank_bm25 is unavailable."""
 
-    def __init__(self, corpus: Sequence[Sequence[str]]) -> None:
+    def __init__(
+        self,
+        corpus: Sequence[Sequence[str]],
+        *,
+        k1: float = 1.5,
+        b: float = 0.75,
+    ) -> None:
         self.corpus = list(corpus)
+        self.k1 = k1
+        self.b = b
         self.doc_count = len(self.corpus)
         self.avgdl = sum(len(doc) for doc in self.corpus) / max(1, self.doc_count)
         self.df = Counter(token for doc in self.corpus for token in set(doc))
+        self.doc_term_frequencies = [Counter(doc) for doc in self.corpus]
+        self.doc_lengths = [len(doc) for doc in self.corpus]
         self.idf = {
             token: np.log((self.doc_count - freq + 0.5) / (freq + 0.5) + 1.0)
             for token, freq in self.df.items()
         }
 
-    def get_scores(self, documents: Sequence[Sequence[str]]) -> np.ndarray:
-        scores = np.zeros((len(documents), self.doc_count), dtype=np.float32)
-        for row_index, document in enumerate(documents):
-            frequencies = Counter(document)
-            for token, freq in frequencies.items():
-                if token not in self.idf:
-                    continue
-                doc_freq = self.df[token]
-                numerator = freq * (1.0 + 1.0)
-                denominator = freq + 1.5 * (1.0 - 0.75 + 0.75 * (len(document) / self.avgdl))
-                scores[row_index] += self.idf[token] * (numerator / denominator)
+    def get_scores(self, queries: Sequence[Sequence[str]]) -> np.ndarray:
+        """Return a batch matrix shaped (n_queries, n_indexed_docs).
+
+        This intentionally mirrors rank_bm25's scoring semantics: query tokens
+        are matched against each indexed document's term frequencies. The
+        previous fallback accidentally used query frequencies as if they were
+        document frequencies, which made scores nearly constant across docs.
+        """
+        scores = np.zeros((len(queries), self.doc_count), dtype=np.float32)
+        for row_index, query_tokens in enumerate(queries):
+            for doc_index, term_frequencies in enumerate(self.doc_term_frequencies):
+                doc_len = self.doc_lengths[doc_index] or 1
+                score = 0.0
+                for token in query_tokens:
+                    if token not in self.idf:
+                        continue
+                    freq = term_frequencies.get(token, 0)
+                    if freq == 0:
+                        continue
+                    numerator = freq * (self.k1 + 1.0)
+                    denominator = freq + self.k1 * (
+                        1.0 - self.b + self.b * (doc_len / max(self.avgdl, 1e-9))
+                    )
+                    score += float(self.idf[token]) * (numerator / denominator)
+                scores[row_index, doc_index] = score
         return scores
 
 
 class HybridIndexer:
     """Build sparse BM25 and dense embeddings for document retrieval baselines."""
 
-    def __init__(self, model_name: str | None = None, embedding_dim: int = 384) -> None:
+    def __init__(
+        self,
+        model_name: str | None = None,
+        embedding_dim: int = 384,
+        *,
+        use_sentence_transformer: bool = False,
+    ) -> None:
         self.model_name = model_name or "sentence-transformers/all-MiniLM-L6-v2"
         self.embedding_dim = embedding_dim
+        self.use_sentence_transformer = use_sentence_transformer
         self.documents: list[dict[str, Any]] = []
         self.doc_ids: list[str] = []
         self.contents: list[str] = []
@@ -111,7 +142,7 @@ class HybridIndexer:
         return _SimpleBM25(tokenized)
 
     def _build_dense_embeddings(self, texts: Sequence[str]) -> np.ndarray:
-        if SentenceTransformer is not None and torch is not None:
+        if self.use_sentence_transformer and SentenceTransformer is not None and torch is not None:
             self.embedding_model = SentenceTransformer(self.model_name)
             embeddings = self.embedding_model.encode(list(texts), convert_to_numpy=True, normalize_embeddings=True)
             return np.asarray(embeddings, dtype=np.float32)
@@ -224,6 +255,7 @@ class HybridIndexer:
             return []
 
         bm25_raw = self.bm25_scores(query)
+        alpha = min(1.0, max(0.0, float(alpha)))
         bm25_norm = self._min_max_normalize(bm25_raw)
 
         query_vector = self.encode_query(query)
@@ -252,10 +284,19 @@ class HybridIndexer:
         return results
 
     @classmethod
-    def load_index(cls, path: str | Path, model_name: str | None = None) -> "HybridIndexer":
+    def load_index(
+        cls,
+        path: str | Path,
+        model_name: str | None = None,
+        *,
+        use_sentence_transformer: bool = False,
+    ) -> "HybridIndexer":
         """Reconstruct an indexer instance from artifacts written by save_index()."""
         load_path = Path(path)
-        indexer = cls(model_name=model_name)
+        indexer = cls(
+            model_name=model_name,
+            use_sentence_transformer=use_sentence_transformer,
+        )
 
         with (load_path / "documents.jsonl").open("r", encoding="utf-8") as handle:
             indexer.documents = [json.loads(line) for line in handle if line.strip()]
@@ -266,11 +307,13 @@ class HybridIndexer:
 
         embeddings_path = load_path / "dense_embeddings.npy"
         indexer.embeddings = np.load(embeddings_path) if embeddings_path.exists() else None
+        if indexer.embeddings is not None and indexer.embeddings.ndim == 2:
+            indexer.embedding_dim = int(indexer.embeddings.shape[1])
 
         indexer.contents = [doc.get("content", "") for doc in indexer.documents]
         indexer.metadata = [doc.get("metadata", {}) for doc in indexer.documents]
 
-        if SentenceTransformer is not None and torch is not None:
+        if indexer.use_sentence_transformer and SentenceTransformer is not None and torch is not None:
             indexer.embedding_model = SentenceTransformer(indexer.model_name)
 
         return indexer

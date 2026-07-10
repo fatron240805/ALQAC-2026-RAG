@@ -58,7 +58,11 @@ class CaseRetrievalClient:
             raise CaseRetrievalAuthError(
                 "Thiếu biến môi trường ALQAC_TEAM_TOKEN. Xem .env.example."
             )
-        base_url = os.environ.get("ALQAC_RETRIEVAL_API_BASE_URL", "https://alqac-api.ngrok.pro")
+        base_url = (
+            os.environ.get("ALQAC_RETRIEVAL_API_BASE_URL")
+            or os.environ.get("ALQAC_API_URL")
+            or "https://alqac-api.ngrok.pro"
+        )
         return cls(
             base_url=base_url.rstrip("/"),
             token=token,

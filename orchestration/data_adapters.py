@@ -82,7 +82,7 @@ def load_case_id_filter(path: str | Path) -> set[str]:
     đúng tập case đang cần đối chiếu, tránh đốt quota rate-limit (1 req/5s)
     vào toàn bộ public test khi chỉ cần validate trên 20-50 case đã gán nhãn.
     """
-    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    payload = json.loads(Path(path).read_text(encoding="utf-8-sig"))
     items = payload if isinstance(payload, list) else payload.get("cases", payload.get("data", []))
     return {str(item["case_id"]) for item in items}
 
@@ -94,7 +94,7 @@ def load_test_cases(path: str | Path) -> Iterator[dict[str, Any]]:
     normalizes a couple of plausible key names. Confirm against the real
     file and adjust if needed (case_id/id, case_query/query/query_text).
     """
-    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    payload = json.loads(Path(path).read_text(encoding="utf-8-sig"))
     if isinstance(payload, list):
         items = payload
     elif isinstance(payload, dict):

@@ -9,7 +9,19 @@ from typing import Any, Iterable, Mapping
 class DeprecatedFilter:
     """Flag deprecated or superseded documents using metadata-driven rules."""
 
-    _ACTIVE_STATUSES = {"active", "in_force", "effective", "current", "valid", "in-force", "live"}
+    _ACTIVE_STATUSES = {
+        "active",
+        "in_force",
+        "effective",
+        "current",
+        "valid",
+        "in-force",
+        "live",
+        "còn hiệu lực",
+        "con hieu luc",
+        "đang có hiệu lực",
+        "dang co hieu luc",
+    }
     _DEPRECATED_STATUSES = {
         "deprecated",
         "superseded",
@@ -22,6 +34,14 @@ class DeprecatedFilter:
         "replaced",
         "void",
         "revoked",
+        "hết hiệu lực",
+        "het hieu luc",
+        "không còn hiệu lực",
+        "khong con hieu luc",
+        "bị bãi bỏ",
+        "bi bai bo",
+        "được thay thế",
+        "duoc thay the",
     }
 
     def __init__(self, current_date: date | None = None) -> None:
@@ -85,12 +105,13 @@ class DeprecatedFilter:
         if status is not None:
             if status in self._DEPRECATED_STATUSES:
                 return True
-            if status in self._ACTIVE_STATUSES:
-                return False
 
         expiry_date = self._expiry_date_for(metadata)
         if expiry_date is not None and expiry_date < self.current_date:
             return True
+
+        if status is not None and status in self._ACTIVE_STATUSES:
+            return False
 
         effective_date = self._effective_date_for(metadata)
         if effective_date is not None and effective_date > self.current_date:

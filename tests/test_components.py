@@ -1,0 +1,417 @@
+from __future__ import annotations
+
+import json
+import unittest
+import uuid
+from pathlib import Path
+from unittest.mock import patch
+
+from evaluation.metrics import evaluate_alqac_system
+from orchestration.config import PipelineConfig
+from orchestration.data_adapters import chunk_to_indexer_doc, stream_active_indexer_docs
+from orchestration.interfaces import (
+    LocalOllamaClient,
+    PromptTemplateReasoningAgent,
+    StatutoryConsistencyVerifier,
+)
+from orchestration.run_pipeline import build_submission_json, check_runtime, run_pipeline, validate_prediction_output
+from prepare_corpus import build_corpus_records, normalize_text
+from retrieval.citation_usefulness import HeuristicCitationUsefulnessFilter
+from retrieval.cleaning import build_clean_corpus
+from retrieval.deprecated_filter import DeprecatedFilter
+from retrieval.indexing import HybridIndexer
+from retrieval.reranker import LexicalOverlapReranker
+from retrieval.router import DocumentRouter, QueryAnalyzer
+
+
+class WorkspaceTempDir:
+    def __enter__(self) -> str:
+        tmp_root = Path.cwd() / "test_tmp"
+        tmp_root.mkdir(exist_ok=True)
+        self.path = tmp_root / f"case_{uuid.uuid4().hex}"
+        self.path.mkdir()
+        return str(self.path)
+
+    def __exit__(self, exc_type, exc, tb) -> bool:
+        # Managed sandbox chmod/rmtree can be flaky on Windows. Test artifacts
+        # stay under test_tmp/ and are ignored by git.
+        return False
+
+
+def workspace_tempdir() -> WorkspaceTempDir:
+    return WorkspaceTempDir()
+
+
+class CorpusPreparationTests(unittest.TestCase):
+    def test_normalize_text_standardizes_whitespace_and_punctuation(self) -> None:
+        text = normalize_text("  Điều  1 \r\n  Nội dung   ,  quyền   ;nghĩa vụ  ")
+        self.assertEqual(text, "Điều 1\nNội dung, quyền; nghĩa vụ")
+
+    def test_build_corpus_records_outputs_required_schema(self) -> None:
+        records = build_corpus_records(
+            [
+                {
+                    "id": "law_1",
+                    "law_id": "01/2024/QH15",
+                    "content": [{"content_Article": "Điều 1. Nội dung luật"}],
+                    "status": "active",
+                }
+            ]
+        )
+        self.assertEqual(records[0]["doc_id"], "law_1")
+        self.assertIn("content", records[0])
+        self.assertEqual(records[0]["metadata"]["title"], "01/2024/QH15")
+        self.assertEqual(records[0]["metadata"]["status"], "active")
+
+
+class CleaningTests(unittest.TestCase):
+    def test_cleaning_preserves_aid_as_article_number_and_splits_points(self) -> None:
+        with workspace_tempdir() as tmp:
+            raw_path = Path(tmp) / "corpus.json"
+            raw_path.write_text(
+                json.dumps(
+                    [
+                        {
+                            "id": 1,
+                            "law_id": "99/2024/QH15",
+                            "content": [
+                                {
+                                    "aid": 12,
+                                    "content_Article": (
+                                        "Trong luật này:\n"
+                                        "1. Chủ sở hữu có nghĩa vụ sau đây: "
+                                        "a) Bồi thường thiệt hại; b) Quản lý tài sản."
+                                    ),
+                                }
+                            ],
+                        }
+                    ],
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+
+            _, articles, chunks, audit = build_clean_corpus(raw_path)
+
+        self.assertEqual(audit["schema_version"], 3)
+        self.assertEqual(articles[0].article_number, "12")
+        self.assertEqual(articles[0].article_number_source, "aid")
+        self.assertTrue(any(chunk.unit_type == "point" for chunk in chunks))
+        self.assertIn("điểm a", {chunk.unit_path for chunk in chunks if chunk.point_label == "a"}.pop())
+
+
+class DeprecatedFilterTests(unittest.TestCase):
+    def test_status_and_expiry_rules(self) -> None:
+        deprecated_filter = DeprecatedFilter()
+        self.assertTrue(deprecated_filter.is_deprecated({"metadata": {"status": "hết hiệu lực"}}))
+        self.assertFalse(deprecated_filter.is_deprecated({"metadata": {"status": "còn hiệu lực"}}))
+        self.assertTrue(
+            deprecated_filter.is_deprecated({"metadata": {"status": "active", "valid_until": "2000-01-01"}})
+        )
+
+    def test_stream_active_indexer_docs_filters_flat_chunks(self) -> None:
+        with workspace_tempdir() as tmp:
+            path = Path(tmp) / "chunks.jsonl"
+            rows = [
+                {"chunk_id": "c1", "text": "Điều 1 quyền dân sự", "law_id": "a", "aid": 1},
+                {"chunk_id": "c2", "text": "old", "law_id": "b", "aid": 2, "deprecated": True},
+            ]
+            path.write_text(
+                "\n".join(json.dumps(row, ensure_ascii=False) for row in rows),
+                encoding="utf-8",
+            )
+            docs = list(stream_active_indexer_docs(path))
+        self.assertEqual([doc["doc_id"] for doc in docs], ["c1"])
+        self.assertEqual(docs[0]["metadata"]["law_id"], "a")
+
+
+class RetrievalComponentTests(unittest.TestCase):
+    def test_hybrid_indexer_search_ranks_matching_document(self) -> None:
+        corpus = [
+            {"doc_id": "dog", "content": "trách nhiệm bồi thường thiệt hại do vật nuôi", "metadata": {}},
+            {"doc_id": "bank", "content": "hoạt động ngân hàng và tổ chức tín dụng", "metadata": {}},
+        ]
+        indexer = HybridIndexer(embedding_dim=64).build_index(corpus)
+        results = indexer.search("bồi thường thiệt hại vật nuôi", top_k=1)
+        self.assertEqual(results[0]["doc_id"], "dog")
+        self.assertGreater(results[0]["fused_score"], 0)
+
+    def test_save_and_load_index_roundtrip(self) -> None:
+        with workspace_tempdir() as tmp:
+            indexer = HybridIndexer(embedding_dim=32).build_index(
+                [{"doc_id": "x", "content": "quyền tài sản", "metadata": {"law_id": "L"}}]
+            )
+            indexer.save_index(tmp)
+            loaded = HybridIndexer.load_index(tmp)
+            self.assertEqual(loaded.doc_ids, ["x"])
+            self.assertEqual(loaded.search("tài sản", top_k=1)[0]["doc_id"], "x")
+
+    def test_router_reranker_and_citation_filter(self) -> None:
+        query = "Điều 12 quy định bồi thường thiệt hại như thế nào?"
+        candidates = [
+            {
+                "doc_id": "c1",
+                "content": "Điều 12. Cá nhân phải bồi thường thiệt hại do lỗi của mình.",
+                "metadata": {"law_id": "99/2024/QH15", "unit_path": "99/2024/QH15 Điều 12"},
+                "fused_score": 0.5,
+            },
+            {"doc_id": "c2", "content": "Nội dung quản trị ngân hàng.", "metadata": {}, "fused_score": 0.4},
+        ]
+        analysis = QueryAnalyzer().analyze(query)
+        self.assertIn("12", analysis.statute_references)
+
+        routed = DocumentRouter().apply(query, candidates)
+        reranked = LexicalOverlapReranker().rerank(query, routed, top_k=2)
+        useful = HeuristicCitationUsefulnessFilter(min_score=0.01).filter(query, reranked)
+
+        self.assertEqual(useful[0]["doc_id"], "c1")
+        self.assertIn(useful[0]["citation_judgment"]["judgment"], {"useful", "uncertain"})
+
+
+class ReasoningAndRuntimeTests(unittest.TestCase):
+    def test_local_ollama_client_uses_native_chat_endpoint(self) -> None:
+        class FakeResponse:
+            def raise_for_status(self) -> None:
+                return None
+
+            def json(self) -> dict[str, object]:
+                return {
+                    "message": {
+                        "role": "assistant",
+                        "content": '{"label":"B_WIN","confidence":0.7,"evidence_ids":[],"justification":"ok"}',
+                    }
+                }
+
+        client = LocalOllamaClient(
+            base_url="http://localhost:11434",
+            model_name="qwen2.5:7b-instruct",
+            provider="ollama",
+        )
+        with patch("orchestration.interfaces.requests.post", return_value=FakeResponse()) as post:
+            raw = client.generate("Return JSON", max_tokens=128, temperature=0.0)
+
+        self.assertIn('"label":"B_WIN"', raw)
+        _, kwargs = post.call_args
+        self.assertEqual(post.call_args.args[0], "http://localhost:11434/api/chat")
+        self.assertEqual(kwargs["json"]["format"], "json")
+        self.assertFalse(kwargs["json"]["stream"])
+        self.assertEqual(kwargs["json"]["options"]["num_predict"], 128)
+        self.assertEqual(kwargs["json"]["model"], "qwen2.5:7b-instruct")
+
+    def test_reasoning_parser_extracts_and_normalizes_json(self) -> None:
+        parsed = PromptTemplateReasoningAgent._parse_json_output(
+            "case_x",
+            'prefix {"prediction":"A_WIN","confidence":"0.8","evidence_ids":["L1"],"justification":"ok"} suffix',
+        )
+        self.assertEqual(parsed["label"], "A_WIN")
+        self.assertEqual(parsed["confidence"], 0.8)
+        self.assertEqual(parsed["parser_status"], "ok")
+
+    def test_reasoning_parser_falls_back_on_invalid_label(self) -> None:
+        parsed = PromptTemplateReasoningAgent._parse_json_output(
+            "case_x",
+            '{"label":"UNKNOWN","confidence":2,"justification":"bad"}',
+        )
+        self.assertEqual(parsed["label"], "PARTIAL_B_WIN")
+        self.assertEqual(parsed["confidence"], 1.0)
+        self.assertEqual(parsed["parser_status"], "invalid_label")
+
+    def test_verifier_filters_invalid_evidence_ids_and_lowers_confidence(self) -> None:
+        verifier = StatutoryConsistencyVerifier()
+        verified = verifier.verify(
+            {
+                "case_id": "case_x",
+                "label": "A_WIN",
+                "confidence": 0.9,
+                "evidence_ids": ["L1", "bad"],
+                "justification": "ok",
+            },
+            [{"doc_id": "chunk_1", "content": "Điều 1", "metadata": {}}],
+        )
+        self.assertEqual(verified["evidence_ids"], ["L1"])
+        self.assertEqual(verified["verifier_status"], "ok")
+
+    def test_check_runtime_reports_missing_env_without_network(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            chunks = root / "chunks.jsonl"
+            public = root / "public.json"
+            prompt = root / "prompt.md"
+            for path in (chunks, public, prompt):
+                path.write_text("[]", encoding="utf-8")
+            config = PipelineConfig(
+                chunks_path=chunks,
+                public_test_path=public,
+                prompt_path=prompt,
+                index_path=root / "index",
+            )
+            with patch.dict("os.environ", {"ALQAC_TEAM_TOKEN": "replace_with_team_token"}, clear=False):
+                report = check_runtime(config, ping_llm=False)
+        self.assertFalse(report["ready_for_real_run"])
+        self.assertFalse(report["env"]["ALQAC_TEAM_TOKEN"])
+
+    def test_validate_prediction_output_detects_dry_run(self) -> None:
+        with workspace_tempdir() as tmp:
+            pred_path = Path(tmp) / "pred.json"
+            pred_path.write_text(
+                json.dumps(
+                    [
+                        {
+                            "case_id": "case_1",
+                            "prediction": "A_WIN",
+                            "confidence": 0.5,
+                            "justification": "[dry-run] placeholder",
+                            "parser_status": "ok",
+                            "law_evidence": [{"law_id": "L", "aid": 1}],
+                            "case_evidence": ["c1"],
+                            "api_calls": 1,
+                        }
+                    ],
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            report = validate_prediction_output(pred_path)
+        self.assertTrue(report["ready_for_submission_shape"])
+        self.assertFalse(report["real_reasoning_ready"])
+        self.assertEqual(report["dry_run_cases"], ["case_1"])
+
+    def test_build_submission_json_cleans_schema_and_preserves_public_order(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            pred_path = root / "pred.json"
+            public_path = root / "public.json"
+            output_path = root / "submission.json"
+
+            public_path.write_text(
+                json.dumps(
+                    [{"case_id": "case_2"}, {"case_id": "case_1"}],
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            pred_path.write_text(
+                json.dumps(
+                    [
+                        {
+                            "case_id": "case_1",
+                            "prediction": "A_WIN",
+                            "case_evidence": [" chunk_a ", "chunk_a", ""],
+                            "law_evidence": [
+                                {"law_id": " 91/2015/QH13 ", "aid": "584"},
+                                {"law_id": "91/2015/QH13", "aid": 584},
+                                {"bad": "row"},
+                            ],
+                            "api_calls": 3,
+                        },
+                        {
+                            "case_id": "case_2",
+                            "prediction": "B_WIN",
+                            "case_evidence": "chunk_b",
+                            "law_evidence": [],
+                            "confidence": 0.4,
+                        },
+                    ],
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+
+            build_submission_json(pred_path, output_path, public_test_path=public_path)
+            submission = json.loads(output_path.read_text(encoding="utf-8"))
+
+        self.assertEqual([item["case_id"] for item in submission], ["case_2", "case_1"])
+        self.assertEqual(set(submission[0]), {"case_id", "prediction", "case_evidence", "law_evidence"})
+        self.assertEqual(submission[0]["case_evidence"], ["chunk_b"])
+        self.assertEqual(submission[1]["case_evidence"], ["chunk_a"])
+        self.assertEqual(submission[1]["law_evidence"], [{"law_id": "91/2015/QH13", "aid": 584}])
+
+
+class EvaluationTests(unittest.TestCase):
+    def test_alqac_metrics_handles_exact_predictions(self) -> None:
+        gold = [
+            {
+                "case_id": "case_1",
+                "prediction": "A_WIN",
+                "case_evidence": ["e1"],
+                "law_evidence": [{"law_id": "L", "aid": 1}],
+            }
+        ]
+        pred = [
+            {
+                "case_id": "case_1",
+                "prediction": "A_WIN",
+                "case_evidence": ["e1"],
+                "law_evidence": [{"law_id": "L", "aid": 1}],
+                "api_calls": 1,
+            }
+        ]
+        report, cm = evaluate_alqac_system(gold, pred)
+        self.assertEqual(report["ALQAC_Final_Score"], 1.0)
+        self.assertIn("A_WIN", str(cm))
+
+
+class PipelineDryRunTests(unittest.TestCase):
+    def test_pipeline_dry_run_processes_one_case(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            chunks_path = root / "chunks.jsonl"
+            index_path = root / "index"
+            public_test_path = root / "public_test.json"
+            prompt_path = root / "prompt.md"
+            gold_path = root / "gold.json"
+            experiments_dir = root / "experiments"
+
+            chunks_path.write_text(
+                "\n".join(
+                    [
+                        json.dumps(
+                            {
+                                "chunk_id": "law_1",
+                                "text": "Điều 1. Chủ sở hữu phải bồi thường thiệt hại do tài sản gây ra.",
+                                "law_id": "91/2015/QH13",
+                                "aid": 584,
+                                "unit_path": "91/2015/QH13 Điều 584",
+                            },
+                            ensure_ascii=False,
+                        )
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            public_test_path.write_text(
+                json.dumps(
+                    [{"case_id": "case_1", "case_query": "Ai phải bồi thường thiệt hại tài sản?"}],
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            prompt_path.write_text(
+                "{{case_id}}\n{{case_query}}\n{{related_law_provisions}}\n{{evidence_blocks}}",
+                encoding="utf-8",
+            )
+            gold_path.write_text("[]", encoding="utf-8")
+
+            config = PipelineConfig(
+                chunks_path=chunks_path,
+                index_path=index_path,
+                public_test_path=public_test_path,
+                prompt_path=prompt_path,
+                gold_path=gold_path,
+                experiments_dir=experiments_dir,
+                run_tag="test",
+                top_k_before_rerank=5,
+                top_k_after_rerank=3,
+            )
+            output_path = run_pipeline(config, dry_run=True, limit=1, force_rebuild_index=True)
+            predictions = json.loads(output_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(len(predictions), 1)
+        self.assertEqual(predictions[0]["case_id"], "case_1")
+        self.assertIn(predictions[0]["prediction"], {"A_WIN", "PARTIAL_A_WIN", "PARTIAL_B_WIN", "B_WIN"})
+        self.assertEqual(predictions[0]["api_calls"], 1)
+        self.assertEqual(len(predictions[0]["law_evidence"]), len({(e["law_id"], e["aid"]) for e in predictions[0]["law_evidence"]}))
+
+
+if __name__ == "__main__":
+    unittest.main()

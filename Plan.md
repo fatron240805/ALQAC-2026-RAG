@@ -46,6 +46,146 @@ Verifier
 Submission Output
 ```
 
+**Current Baseline Status**
+
+As of the latest local run, the repository can execute an offline dry-run end
+to end:
+
+```powershell
+python -m unittest discover -s tests -v
+python -m orchestration.run_pipeline run --dry-run --limit 3 --rebuild-index
+```
+
+Current behavior:
+
+- local law retrieval runs for real over `data/chunks.jsonl`
+- BM25 + deterministic dense fallback index builds successfully
+- router, lexical reranker, and heuristic citation usefulness filter run
+- dry-run reasoning returns a fixed placeholder label
+- dry-run case evidence is fake and does not call the official case retrieval API
+
+Important limitation: this is not yet a real reasoning result. A real result
+requires replacing dry-run stubs with:
+
+- a running open-weight LLM endpoint
+- valid ALQAC case retrieval API credentials
+- a prompt that returns strict JSON using the four official labels
+- verifier/fallback logic for invalid JSON or low-confidence answers
+
+**Real Reasoning Activation Plan**
+
+Goal: turn the current dry-run baseline into a true local inference baseline
+that produces meaningful `prediction`, `justification`, `law_evidence`, and
+`case_evidence` for every case.
+
+Minimum requirements:
+
+1. Open-weight LLM backend
+
+   Use a local or self-hosted model under 10B parameters. Acceptable first
+   choices:
+
+   ```text
+   Qwen2.5-7B-Instruct
+   Mistral-7B-Instruct
+   Gemma-class <10B instruct model
+   ```
+
+   The default real backend is Ollama native `/api/chat`. OpenAI-compatible
+   `/v1/chat/completions` endpoints are still supported by setting
+   `ALQAC_LLM_PROVIDER=openai-compatible`.
+
+2. Environment configuration
+
+   Create a local `.env` from `env.example` and set:
+
+   ```text
+   ALQAC_LLM_PROVIDER=ollama
+   ALQAC_LLM_BASE_URL=http://localhost:11434
+   ALQAC_LLM_MODEL_NAME=qwen2.5:7b-instruct
+   ALQAC_TEAM_TOKEN=<official team token>
+   ALQAC_API_URL=https://alqac-api.ngrok.pro
+   FAILURE_BACKOFF_SECONDS=2.0
+   ```
+
+   Do not commit `.env` or real tokens.
+
+3. Real run command
+
+   Check local readiness first:
+
+   ```powershell
+   python -m orchestration.run_pipeline check-runtime
+   python -m orchestration.run_pipeline check-runtime --ping-llm
+   ```
+
+   First run a tiny smoke test:
+
+   ```powershell
+   python -m orchestration.run_pipeline run --limit 1 --rebuild-index
+   ```
+
+   Then run a slightly larger sanity set:
+
+   ```powershell
+   python -m orchestration.run_pipeline run --limit 5
+   ```
+
+   Only run the full public set after JSON validity and latency are acceptable.
+
+4. Expected output contract
+
+   `experiments/run_v0_baseline.json` must contain one object per case:
+
+   ```json
+   {
+     "case_id": "case_4101",
+     "prediction": "A_WIN|PARTIAL_A_WIN|PARTIAL_B_WIN|B_WIN",
+     "confidence": 0.0,
+     "justification": "Concise evidence-grounded reason.",
+     "law_evidence": [{"law_id": "91/2015/QH13", "aid": 584}],
+     "case_evidence": ["case_4101_chunk_..."],
+     "api_calls": 1
+   }
+   ```
+
+5. Pass/fail checks for real reasoning
+
+   A run is considered a real baseline only if:
+
+   - `--dry-run` is not used
+   - LLM response is not the dry-run placeholder
+   - every case has exactly one valid label
+   - invalid JSON rate is 0% or handled by fallback
+   - `law_evidence` is non-empty for most cases
+   - case retrieval API calls respect 1 request / 5 seconds
+   - no proprietary model/API is used in inference
+
+6. First local validation
+
+   Use the existing gold scaffold/evaluator:
+
+   ```powershell
+   python -m orchestration.run_pipeline evaluate --pred experiments/run_v0_baseline.json
+   ```
+
+   If `data/local_validation_gold.json` is empty, fill 20-50 public samples
+   before treating the score as meaningful.
+
+**Real Reasoning Implementation Gaps**
+
+These are the immediate gaps between the current baseline and a useful real
+submission candidate:
+
+| Gap | Current state | Required next step |
+|---|---|---|
+| LLM backend | `LocalOllamaClient` supports Ollama native and OpenAI-compatible endpoints | pull a model with Ollama and run `check-runtime --ping-llm` |
+| Prompt quality | prompt v0 exists | add label definitions and strict output schema examples |
+| Case evidence | dry-run fake evidence in `--dry-run` | use official API with rate limiter and real token |
+| Label accuracy | dry-run fixed label | use LLM output + verifier; evaluate on filled gold labels |
+| JSON robustness | parser has fallback | log invalid JSON rate and add retry/repair if needed |
+| Retrieval quality | local retrieval works | inspect top failures and tune alpha/top-k/citation filter |
+
 **Work Split**
 
 **1. Khoa — Lead, Orchestration, DevOps**

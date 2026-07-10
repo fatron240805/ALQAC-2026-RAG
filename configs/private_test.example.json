@@ -1,0 +1,9 @@
+{
+  "public_test_path": "data/private_test.json",
+  "run_tag": "private_qwen3_8b",
+  "max_case_retrieval_calls_per_case": 1,
+  "seconds_between_api_calls": 5.0,
+  "top_k_before_rerank": 50,
+  "top_k_after_rerank": 5,
+  "hybrid_alpha": 0.45
+}

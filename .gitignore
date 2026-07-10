@@ -22,6 +22,8 @@ dist/
 .ruff_cache/
 .coverage
 htmlcov/
+test_tmp/
+.test_tmp/
 
 # Jupyter / notebooks
 .ipynb_checkpoints/

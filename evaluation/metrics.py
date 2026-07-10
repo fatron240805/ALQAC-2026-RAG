@@ -1,9 +1,56 @@
-import numpy as np
-import pandas as pd
-from sklearn.metrics import confusion_matrix
+from __future__ import annotations
+
+from typing import Any
+
+try:
+    import pandas as pd  # type: ignore
+except ImportError:  # pragma: no cover - optional dependency
+    pd = None
+
+try:
+    from sklearn.metrics import confusion_matrix  # type: ignore
+except ImportError:  # pragma: no cover - optional dependency
+    confusion_matrix = None
 
 # Cố định đúng 4 nhãn chuẩn của ALQAC theo đặc tả của BTC
 ALQAC_LABELS = ["A_WIN", "PARTIAL_A_WIN", "PARTIAL_B_WIN", "B_WIN"]
+
+
+class SimpleConfusionMatrix:
+    """Small printable fallback when pandas/sklearn are not installed."""
+
+    def __init__(self, labels: list[str], matrix: list[list[int]]) -> None:
+        self.labels = labels
+        self.matrix = matrix
+
+    def to_dict(self) -> dict[str, dict[str, int]]:
+        return {
+            f"True_{true_label}": {
+                f"Pred_{pred_label}": self.matrix[row][col]
+                for col, pred_label in enumerate(self.labels)
+            }
+            for row, true_label in enumerate(self.labels)
+        }
+
+    def __str__(self) -> str:
+        return str(self.to_dict())
+
+
+def _build_confusion_matrix(y_true: list[str], y_pred: list[str], labels: list[str]) -> Any:
+    if confusion_matrix is not None and pd is not None:
+        cm = confusion_matrix(y_true, y_pred, labels=labels)
+        return pd.DataFrame(
+            cm,
+            index=[f"True_{label}" for label in labels],
+            columns=[f"Pred_{label}" for label in labels],
+        )
+
+    label_to_index = {label: index for index, label in enumerate(labels)}
+    matrix = [[0 for _ in labels] for _ in labels]
+    for true_label, pred_label in zip(y_true, y_pred):
+        if true_label in label_to_index and pred_label in label_to_index:
+            matrix[label_to_index[true_label]][label_to_index[pred_label]] += 1
+    return SimpleConfusionMatrix(labels, matrix)
 
 def evaluate_alqac_system(gold_data, pred_data):
     """Bộ đánh giá Local hoàn chỉnh mô phỏng chính xác 100% hệ thống ALQAC 2026.
@@ -159,8 +206,7 @@ def evaluate_alqac_system(gold_data, pred_data):
     final_score = (0.70 * accuracy) + (0.20 * avg_penalized_case_recall) + (0.10 * micro_f1)
     
     # Dựng ma trận nhầm lẫn cố định theo danh mục nhãn phục vụ chẩn đoán cho Thịnh
-    cm = confusion_matrix(y_true_list, y_pred_list, labels=ALQAC_LABELS)
-    cm_df = pd.DataFrame(cm, index=[f"True_{l}" for l in ALQAC_LABELS], columns=[f"Pred_{l}" for l in ALQAC_LABELS])
+    cm_df = _build_confusion_matrix(y_true_list, y_pred_list, ALQAC_LABELS)
     
     # Đóng gói báo cáo thực nghiệm sạch sẽ phục vụ ghi log tự động của Khoa
     report = {
