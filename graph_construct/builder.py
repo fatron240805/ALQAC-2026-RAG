@@ -119,6 +119,26 @@ def safe_node_part(value: Any) -> str:
     return re.sub(r"[^0-9A-Za-z._/-]+", "_", str(value or "unknown")).strip("_") or "unknown"
 
 
+def legal_article_number(chunk: dict[str, Any]) -> str | None:
+    article_index = chunk.get("article_index")
+    try:
+        return str(int(article_index))
+    except (TypeError, ValueError):
+        pass
+    for field in ("article_number", "article_label", "unit_path", "aid"):
+        value = chunk.get(field)
+        if value in (None, ""):
+            continue
+        match = ARTICLE_REF_RE.search(str(value))
+        if match:
+            return match.group(1).lower()
+        try:
+            return str(int(value))
+        except (TypeError, ValueError):
+            continue
+    return None
+
+
 @dataclass
 class GraphNode:
     node_id: str
@@ -219,8 +239,9 @@ def chunk_to_graph_records(chunk: dict[str, Any]) -> tuple[list[GraphNode], list
     if not chunk_id or not law_id or aid is None:
         return [], []
 
-    aid_part = safe_node_part(aid)
-    article_node_id = f"rule:{law_id}:{aid_part}"
+    article_number = legal_article_number(chunk) or str(aid)
+    article_part = safe_node_part(article_number)
+    article_node_id = f"rule:{law_id}:{article_part}"
     law_node_id = f"law:{law_id}"
     unit_type = str(chunk.get("unit_type") or "chunk").strip() or "chunk"
     chunk_node_id = f"chunk:{chunk_id}"
@@ -245,9 +266,11 @@ def chunk_to_graph_records(chunk: dict[str, Any]) -> tuple[list[GraphNode], list
                 "node_type": "article",
                 "law_id": law_id,
                 "aid": aid,
-                "article_number": str(chunk.get("article_number") or aid),
+                "source_aid": aid,
+                "article_number": article_number,
+                "article_index": chunk.get("article_index"),
                 "article_label": chunk.get("article_label"),
-                "text": unit_path or f"{law_id} Điều {aid}",
+                "text": unit_path or f"{law_id} Dieu {article_number}",
                 "source_chunk_id": chunk_id if unit_type == "article" else None,
             },
         ),
@@ -259,6 +282,9 @@ def chunk_to_graph_records(chunk: dict[str, Any]) -> tuple[list[GraphNode], list
                 "node_type": unit_type,
                 "law_id": law_id,
                 "aid": aid,
+                "source_aid": aid,
+                "article_number": article_number,
+                "article_index": chunk.get("article_index"),
                 "source_chunk_id": chunk_id,
                 "chunk_id": chunk_id,
                 "article_node_id": article_node_id,
@@ -305,7 +331,7 @@ def chunk_to_graph_records(chunk: dict[str, Any]) -> tuple[list[GraphNode], list
         )
 
     for referenced_aid in ARTICLE_REF_RE.findall(text):
-        if str(referenced_aid) == str(aid):
+        if str(referenced_aid) == str(article_number):
             continue
         edges.append(
             GraphEdge(

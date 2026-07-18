@@ -6,6 +6,7 @@ import json
 import re
 import sys
 import unicodedata
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterable
@@ -30,7 +31,8 @@ DEFAULT_CASES_PATH = PROJECT_ROOT / "experiments" / "retrieval_graph_benchmark_c
 DEFAULT_TOP_K = (1, 3, 5, 8, 10, 20)
 
 
-LAW_CODE_RE = re.compile(r"^\d+/\d{4}/[A-Z0-9-]+$", re.IGNORECASE)
+LAW_CODE_RE = re.compile(r"^\d+/\d{4}/[A-Z0-9ÄĐ-]+$", re.IGNORECASE)
+LAW_CODE_IN_TEXT_RE = re.compile(r"\b(\d{1,3}/\d{4}/[^\s,;:.()]+(?:-[^\s,;:.()]+)*)", re.IGNORECASE)
 ARTICLE_RE = re.compile(r"\bdieu\s+([0-9]+[a-z]?)\b", re.IGNORECASE)
 
 
@@ -82,14 +84,46 @@ def provision_key(law_code: str, article_number: Any) -> str:
     return f"{str(law_code).strip()}:{str(article_number).strip().lower()}"
 
 
-def canonical_law_code(value: Any) -> str | None:
+def normalize_law_code(value: Any) -> str:
+    code = str(value or "").strip()
+    code = code.replace("Ä", "Đ").replace("Ä‘", "đ")
+    code = code.strip(".,;:()[]{}")
+    return code.upper()
+
+
+def extract_law_code(value: Any) -> str | None:
     raw = str(value or "").strip()
     if not raw:
         return None
     if LAW_CODE_RE.match(raw):
-        return raw
+        return normalize_law_code(raw)
+    match = LAW_CODE_IN_TEXT_RE.search(raw)
+    if match:
+        return normalize_law_code(match.group(1))
+    return None
+
+
+def canonical_law_code(value: Any) -> str | None:
+    raw = str(value or "").strip()
+    if not raw:
+        return None
+    explicit_code = extract_law_code(raw)
+    if explicit_code:
+        return explicit_code
 
     text = normalize_text(raw)
+    if "bo luat dan su" in text and "2005" in text:
+        return "33/2005/QH11"
+    if "bo luat dan su" in text and "1995" in text:
+        return "44-L/CTN"
+    if "dat dai" in text and "2003" in text:
+        return "13/2003/QH11"
+    if "dat dai" in text and "1987" in text:
+        return "3-LCT/HDNN8"
+    if "phap lenh" in text and "an phi" in text:
+        return "10/2009/UBTVQH12"
+    if "bo luat to tung" in text and "dan su" not in text:
+        return "24/2004/QH11"
     if "91/2015/qh13" in text or ("bo luat dan su" in text and "2005" not in text and "1995" not in text):
         return "91/2015/QH13"
     if "92/2015/qh13" in text or "to tung dan su" in text:
@@ -133,6 +167,8 @@ class ProvisionNormalizer:
     def __init__(self, chunks_path: Path = DEFAULT_CHUNKS_PATH) -> None:
         self.chunk_to_key: dict[str, str] = {}
         self.raw_aid_to_article: dict[tuple[str, str], str] = {}
+        self.available_law_codes: set[str] = set()
+        self.available_keys: set[str] = set()
         self._load_chunks(chunks_path)
 
     def _load_chunks(self, chunks_path: Path) -> None:
@@ -146,10 +182,12 @@ class ProvisionNormalizer:
                 law_code = canonical_law_code(chunk.get("law_id"))
                 if not law_code:
                     continue
+                self.available_law_codes.add(law_code)
                 article_number = self._article_number_from_chunk(chunk)
                 if not article_number:
                     continue
                 key = provision_key(law_code, article_number)
+                self.available_keys.add(key)
                 chunk_id = str(chunk.get("chunk_id") or "").strip()
                 if chunk_id:
                     self.chunk_to_key[chunk_id] = key
@@ -195,7 +233,21 @@ class ProvisionNormalizer:
         return provision_key(law_code, article_number)
 
     def gold_key(self, item: GoldProvision) -> str | None:
-        return item.key
+        key = item.key
+        if not key or key not in self.available_keys:
+            return None
+        return key
+
+    def gold_mapping_status(self, item: GoldProvision) -> str:
+        if not item.law_code:
+            return "missing_law_code"
+        if not item.article_number:
+            return "missing_article_number"
+        if item.law_code not in self.available_law_codes:
+            return "law_not_in_index"
+        if item.key not in self.available_keys:
+            return "article_not_in_index"
+        return "mapped"
 
 
 def load_public_test_cases(path: Path) -> dict[str, str]:
@@ -430,6 +482,7 @@ def run_benchmark(args: argparse.Namespace) -> dict[str, Any]:
     raw_gold_items = 0
     mapped_gold_items = 0
     unmapped_gold_items = 0
+    gold_mapping_status_counts: Counter[str] = Counter()
     case_ids = [case_id for case_id in public_queries if case_id in gold_by_case]
     if args.limit is not None:
         case_ids = case_ids[: args.limit]
@@ -439,7 +492,9 @@ def run_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             query = public_queries[case_id]
             gold_items = gold_by_case.get(case_id, [])
             raw_gold_items += len(gold_items)
-            gold_keys = {item.key for item in gold_items if item.key}
+            gold_statuses = {item: normalizer.gold_mapping_status(item) for item in gold_items}
+            gold_mapping_status_counts.update(gold_statuses.values())
+            gold_keys = {normalizer.gold_key(item) for item in gold_items if normalizer.gold_key(item)}
             mapped_gold_items += len(gold_keys)
             unmapped_gold_items += max(0, len(gold_items) - len(gold_keys))
             candidates = retrieve(query)
@@ -466,9 +521,9 @@ def run_benchmark(args: argparse.Namespace) -> dict[str, Any]:
                 "matched_keys": sorted(gold_keys & set(predicted_keys)),
                 "missing_keys": sorted(gold_keys - set(predicted_keys)),
                 "unmapped_gold_provisions": [
-                    f"{item.law_title} | Article {item.article_number}"
+                    f"{item.law_title} | Article {item.article_number} | {gold_statuses[item]}"
                     for item in gold_items
-                    if item.key is None
+                    if normalizer.gold_key(item) is None
                 ],
             }
             for k in top_ks:
@@ -506,6 +561,8 @@ def run_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "unmapped_gold_items": unmapped_gold_items,
             "mapping_rate": round(mapped_gold_items / raw_gold_items, 4) if raw_gold_items else 0.0,
             "cases_with_mapped_gold": sum(1 for row in case_rows if row["mapped_gold_count"] > 0),
+            "mapping_status_counts": dict(sorted(gold_mapping_status_counts.items())),
+            "available_law_codes_in_index": sorted(normalizer.available_law_codes),
         },
         "Metrics": summarize_metrics(case_rows, top_ks),
         "Case_Rows": case_rows,

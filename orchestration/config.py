@@ -27,11 +27,15 @@ class PipelineConfig:
     gold_path: Path = PROJECT_ROOT / "data" / "local_validation_gold.json"
 
     # --- Retrieval (Plan.md defaults) ------------------------------------
-    embedding_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    embedding_model: str = "BAAI/bge-m3"
     chunk_size: str = "350-600 tokens (pre-chunked upstream by Hưng)"
     top_k_before_rerank: int = 80
     top_k_after_rerank: int = 8
-    use_sentence_transformer: bool = True
+    use_bge_m3: bool = True
+    retrieval_device: str = "auto"
+    retrieval_batch_size: int = 12
+    retrieval_max_length: int = 1024
+    use_sentence_transformer: bool = False
     hybrid_alpha: float = 0.50
     use_graph_retrieval: bool = True
     graph_expansion_depth_fast: int = 1
@@ -48,6 +52,10 @@ class PipelineConfig:
     neo4j_password_env: str = "NEO4J_PASSWORD"
     neo4j_database_env: str = "NEO4J_DATABASE"
     neo4j_import_batch_size: int = 200
+    reranker_model_name: str = "BAAI/bge-reranker-v2-m3"
+    use_gpu_reranker: bool = True
+    reranker_device: str = "auto"
+    reranker_batch_size: int = 16
 
     # --- Reasoning --------------------------------------------------------
     llm_model: str = "TBD"  # e.g. Qwen2.5-7B-Instruct / Mistral-7B-Instruct-v0.3

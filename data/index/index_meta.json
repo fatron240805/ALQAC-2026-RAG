@@ -1,5 +1,10 @@
 {
-  "embedding_dim": 384,
-  "model_name": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
-  "use_sentence_transformer": true
+  "embedding_dim": 1024,
+  "model_name": "BAAI/bge-m3",
+  "use_bge_m3": true,
+  "use_sentence_transformer": false,
+  "retrieval_backend": "bm25",
+  "device": "cpu",
+  "batch_size": 12,
+  "max_length": 1024
 }

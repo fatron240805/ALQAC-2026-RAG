@@ -21,15 +21,39 @@
   "Graph_Execution": {
     "cases_with_neo4j_expansion": 50,
     "cases_without_neo4j_expansion": 0,
-    "returned_graph_candidates": 499,
+    "returned_graph_candidates": 500,
     "returned_flat_fallback_candidates": 0
   },
   "Gold_Coverage": {
     "raw_gold_items": 677,
-    "mapped_gold_items": 529,
-    "unmapped_gold_items": 148,
-    "mapping_rate": 0.7814,
-    "cases_with_mapped_gold": 50
+    "mapped_gold_items": 527,
+    "unmapped_gold_items": 150,
+    "mapping_rate": 0.7784,
+    "cases_with_mapped_gold": 50,
+    "mapping_status_counts": {
+      "law_not_in_index": 149,
+      "mapped": 528
+    },
+    "available_law_codes_in_index": [
+      "02/2011/QH13",
+      "100/2015/QH13",
+      "19/2011/NĐ-CP",
+      "24/2012/NĐ-CP",
+      "26/2008/QH12",
+      "326/2016/UBTVQH14",
+      "37/2015/NĐ-CP",
+      "39/2009/QH12",
+      "45/2013/QH13",
+      "47/2010/QH12",
+      "50/2014/QH13",
+      "52/2010/QH12",
+      "52/2014/QH13",
+      "60/2014/QH13",
+      "66/2014/QH13",
+      "91/2015/QH13",
+      "92/2015/QH13",
+      "93/2015/QH13"
+    ]
   },
   "Metrics": {
     "@1": {
@@ -44,48 +68,48 @@
       "MRR": 0.06
     },
     "@3": {
-      "Case_Hit_Accuracy": 0.12,
+      "Case_Hit_Accuracy": 0.1,
       "Exact_Set_Accuracy": 0.0,
-      "Macro_Precision": 0.04,
-      "Macro_Recall": 0.0079,
-      "Macro_F1": 0.013,
-      "Micro_Precision": 0.04,
-      "Micro_Recall": 0.0113,
-      "Micro_F1": 0.0177,
-      "MRR": 0.0867
+      "Macro_Precision": 0.0333,
+      "Macro_Recall": 0.0062,
+      "Macro_F1": 0.0103,
+      "Micro_Precision": 0.0333,
+      "Micro_Recall": 0.0095,
+      "Micro_F1": 0.0148,
+      "MRR": 0.0733
     },
     "@5": {
-      "Case_Hit_Accuracy": 0.18,
+      "Case_Hit_Accuracy": 0.16,
       "Exact_Set_Accuracy": 0.0,
-      "Macro_Precision": 0.048,
-      "Macro_Recall": 0.0198,
-      "Macro_F1": 0.0265,
-      "Micro_Precision": 0.048,
-      "Micro_Recall": 0.0227,
-      "Micro_F1": 0.0308,
-      "MRR": 0.1007
+      "Macro_Precision": 0.036,
+      "Macro_Recall": 0.014,
+      "Macro_F1": 0.0193,
+      "Micro_Precision": 0.036,
+      "Micro_Recall": 0.0171,
+      "Micro_F1": 0.0232,
+      "MRR": 0.0863
     },
     "@8": {
-      "Case_Hit_Accuracy": 0.3,
+      "Case_Hit_Accuracy": 0.34,
       "Exact_Set_Accuracy": 0.0,
-      "Macro_Precision": 0.0537,
-      "Macro_Recall": 0.033,
-      "Macro_F1": 0.0394,
-      "Micro_Precision": 0.0536,
-      "Micro_Recall": 0.0397,
+      "Macro_Precision": 0.0529,
+      "Macro_Recall": 0.0431,
+      "Macro_F1": 0.0422,
+      "Micro_Precision": 0.0533,
+      "Micro_Recall": 0.0398,
       "Micro_F1": 0.0456,
-      "MRR": 0.119
+      "MRR": 0.1119
     },
     "@10": {
-      "Case_Hit_Accuracy": 0.36,
+      "Case_Hit_Accuracy": 0.38,
       "Exact_Set_Accuracy": 0.0,
-      "Macro_Precision": 0.0567,
-      "Macro_Recall": 0.0383,
-      "Macro_F1": 0.0442,
-      "Micro_Precision": 0.0566,
-      "Micro_Recall": 0.0473,
-      "Micro_F1": 0.0515,
-      "MRR": 0.1254
+      "Macro_Precision": 0.0575,
+      "Macro_Recall": 0.0495,
+      "Macro_F1": 0.0486,
+      "Micro_Precision": 0.0579,
+      "Micro_Recall": 0.0493,
+      "Micro_F1": 0.0533,
+      "MRR": 0.1162
     }
   }
 }

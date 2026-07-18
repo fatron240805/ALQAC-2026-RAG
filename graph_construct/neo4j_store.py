@@ -135,6 +135,7 @@ class Neo4jGraphStore:
             "CREATE CONSTRAINT legalnode_node_id IF NOT EXISTS FOR (n:LegalNode) REQUIRE n.node_id IS UNIQUE",
             "CREATE CONSTRAINT law_law_id IF NOT EXISTS FOR (n:Law) REQUIRE n.law_id IS UNIQUE",
             "CREATE INDEX article_lookup IF NOT EXISTS FOR (n:Article) ON (n.law_id, n.aid)",
+            "CREATE INDEX article_number_lookup IF NOT EXISTS FOR (n:Article) ON (n.law_id, n.article_number)",
             "CREATE INDEX concept_alias IF NOT EXISTS FOR (n:Concept) ON (n.normalized_alias)",
             "CREATE INDEX sourcechunk_chunk_id IF NOT EXISTS FOR (n:SourceChunk) ON (n.chunk_id)",
         ]
@@ -251,6 +252,9 @@ class Neo4jGraphStore:
             f"candidate.node_type AS node_type, "
             f"candidate.law_id AS law_id, "
             f"candidate.aid AS aid, "
+            f"candidate.source_aid AS source_aid, "
+            f"candidate.article_number AS article_number, "
+            f"candidate.article_index AS article_index, "
             f"candidate.source_chunk_id AS source_chunk_id, "
             f"candidate.chunk_id AS chunk_id, "
             f"candidate.text AS text, "

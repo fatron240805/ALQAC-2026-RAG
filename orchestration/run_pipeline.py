@@ -79,7 +79,11 @@ def build_index(config: PipelineConfig) -> HybridIndexer:
 
     indexer = HybridIndexer(
         model_name=config.embedding_model,
+        use_bge_m3=config.use_bge_m3,
         use_sentence_transformer=config.use_sentence_transformer,
+        device=config.retrieval_device,
+        batch_size=config.retrieval_batch_size,
+        max_length=config.retrieval_max_length,
     )
     indexer.build_index(docs)
     indexer.save_index(config.index_path)
@@ -96,6 +100,9 @@ def load_or_build_index(config: PipelineConfig, force_rebuild: bool = False) -> 
         except Exception:
             meta = {}
         if isinstance(meta, dict):
+            if bool(meta.get("use_bge_m3")) != bool(config.use_bge_m3):
+                logger.info("Index retrieval backend changed; rebuilding %s", index_dir)
+                return build_index(config)
             if bool(meta.get("use_sentence_transformer")) != bool(config.use_sentence_transformer):
                 logger.info("Index semantic mode changed; rebuilding %s", index_dir)
                 return build_index(config)
@@ -106,7 +113,11 @@ def load_or_build_index(config: PipelineConfig, force_rebuild: bool = False) -> 
         return HybridIndexer.load_index(
             index_dir,
             model_name=config.embedding_model,
+            use_bge_m3=config.use_bge_m3,
             use_sentence_transformer=config.use_sentence_transformer,
+            device=config.retrieval_device,
+            batch_size=config.retrieval_batch_size,
+            max_length=config.retrieval_max_length,
         )
     return build_index(config)
 
@@ -354,7 +365,12 @@ def run_pipeline(
         llm_client = LocalOllamaClient.from_env()
         
     reasoning_agent = PromptTemplateReasoningAgent(llm_client=llm_client, prompt_path=config.prompt_path)
-    reranker = LexicalOverlapReranker()
+    reranker = LexicalOverlapReranker(
+        use_gpu_reranker=config.use_gpu_reranker,
+        reranker_model_name=config.reranker_model_name,
+        device=config.reranker_device,
+        batch_size=config.reranker_batch_size,
+    )
     citation_filter = HeuristicCitationUsefulnessFilter(max_results=config.top_k_after_rerank)
     verifier = StatutoryConsistencyVerifier()
     graph_retriever = build_graph_retriever(

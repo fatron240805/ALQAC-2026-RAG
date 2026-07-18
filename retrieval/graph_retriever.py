@@ -142,7 +142,8 @@ class LegalGraphRetriever:
         text = str(row.get("text") or row.get("unit_path") or node_id)
         lexical = lexical_overlap_score(query, text)
         graph_score = 1.0 / (1.0 + max(0, distance))
-        exact_citation = self._exact_citation_score(analysis, law_id, aid, text)
+        citation_aid = row.get("article_number") or row.get("article_index") or aid
+        exact_citation = self._exact_citation_score(analysis, law_id, citation_aid, text)
         issue_match = lexical
         freshness = 0.0 if str(row.get("deprecated") or "").lower() in {"true", "1"} else 1.0
         fused_score = (
@@ -164,6 +165,9 @@ class LegalGraphRetriever:
             "node_type": node_type,
             "law_id": law_id,
             "aid": aid,
+            "source_aid": row.get("source_aid"),
+            "article_number": row.get("article_number"),
+            "article_index": row.get("article_index"),
             "source_chunk_id": source_chunk_id,
             "chunk_id": row.get("chunk_id") or source_chunk_id,
             "graph_path": graph_path,

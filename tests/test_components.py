@@ -9,7 +9,9 @@ from unittest.mock import patch
 
 from evaluation.metrics import evaluate_alqac_system
 from evaluation.retrieval_benchmark import (
+    GoldProvision,
     ProvisionNormalizer,
+    canonical_law_code,
     extract_article_numbers,
     is_graph_candidate,
     load_public_test_gold,
@@ -264,6 +266,32 @@ class RetrievalComponentTests(unittest.TestCase):
         self.assertIn("ontology:issue:tort_damage", node_ids)
         self.assertGreaterEqual(stats["node_count"], 3)
         self.assertGreaterEqual(len(edges), 2)
+
+    def test_build_graph_records_uses_legal_article_number_not_source_aid(self) -> None:
+        with workspace_tempdir() as tmp:
+            chunks_path = Path(tmp) / "chunks.jsonl"
+            chunks_path.write_text(
+                json.dumps(
+                    {
+                        "chunk_id": "chunk_584",
+                        "law_id": "91/2015/QH13",
+                        "aid": 53354,
+                        "article_number": "53354",
+                        "article_index": 584,
+                        "unit_type": "article",
+                        "unit_path": "91/2015/QH13 Dieu 584",
+                        "text": "Dieu 584. Boi thuong thiet hai.",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            nodes, _, _ = build_graph_records(chunks_path)
+
+        article = next(node for node in nodes if node["node_id"] == "rule:91/2015/QH13:584")
+        self.assertEqual(article["properties"]["aid"], 53354)
+        self.assertEqual(article["properties"]["source_aid"], 53354)
+        self.assertEqual(article["properties"]["article_number"], "584")
+        self.assertEqual(article["properties"]["article_index"], 584)
 
     def test_legal_graph_retriever_returns_graph_backed_law_nodes(self) -> None:
         class FakeGraphStore:
@@ -600,6 +628,34 @@ class EvaluationTests(unittest.TestCase):
         self.assertFalse(is_graph_candidate({"metadata": {"chunk_id": "chunk_civil"}}))
         self.assertEqual(per_case_metrics(gold_keys, predicted_keys, 1)["recall"], 0.5)
         self.assertEqual(per_case_metrics(gold_keys, predicted_keys, 2)["full_recall"], 1.0)
+
+    def test_retrieval_benchmark_separates_legacy_laws_missing_from_index(self) -> None:
+        with workspace_tempdir() as tmp:
+            chunks_path = Path(tmp) / "chunks.jsonl"
+            chunks_path.write_text(
+                json.dumps(
+                    {
+                        "chunk_id": "chunk_current",
+                        "law_id": "91/2015/QH13",
+                        "aid": 53354,
+                        "article_number": "53354",
+                        "article_index": 584,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            normalizer = ProvisionNormalizer(chunks_path)
+
+        self.assertEqual(canonical_law_code("Bo luat Dan su nam 2005"), "33/2005/QH11")
+        legacy = GoldProvision(
+            case_id="case_legacy",
+            law_title="Bo luat Dan su nam 2005",
+            article_number="604",
+            law_code="33/2005/QH11",
+            source="test",
+        )
+        self.assertIsNone(normalizer.gold_key(legacy))
+        self.assertEqual(normalizer.gold_mapping_status(legacy), "law_not_in_index")
 
     def test_graph_benchmark_scores_only_neo4j_traversal_candidates(self) -> None:
         with workspace_tempdir() as tmp:

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import pickle
 import re
 import unicodedata
@@ -21,12 +22,20 @@ except ImportError:  # pragma: no cover - optional dependency
     SentenceTransformer = None
 
 try:
+    from FlagEmbedding import BGEM3FlagModel  # type: ignore
+except ImportError:  # pragma: no cover - optional dependency
+    BGEM3FlagModel = None
+
+try:
     from rank_bm25 import BM25Okapi  # type: ignore
 except ImportError:  # pragma: no cover - optional dependency
     BM25Okapi = None
 
 
 TOKEN_RE = re.compile(r"\b[\wÀ-ỹ]+\b", re.UNICODE)
+
+
+logger = logging.getLogger(__name__)
 
 
 class _SimpleBM25:
@@ -86,13 +95,24 @@ class HybridIndexer:
     def __init__(
         self,
         model_name: str | None = None,
-        embedding_dim: int = 384,
+        embedding_dim: int = 1024,
         *,
+        use_bge_m3: bool = True,
         use_sentence_transformer: bool = False,
+        device: str = "auto",
+        batch_size: int = 12,
+        max_length: int = 1024,
     ) -> None:
-        self.model_name = model_name or "sentence-transformers/all-MiniLM-L6-v2"
+        self.use_bge_m3 = use_bge_m3
         self.embedding_dim = embedding_dim
         self.use_sentence_transformer = use_sentence_transformer
+        self.device = self._resolve_device(device)
+        self.batch_size = batch_size
+        self.max_length = max_length
+        self.use_fp16 = self.device.startswith("cuda")
+        self.model_name = model_name or (
+            "BAAI/bge-m3" if self.use_bge_m3 else "sentence-transformers/all-MiniLM-L6-v2"
+        )
         self.documents: list[dict[str, Any]] = []
         self.doc_ids: list[str] = []
         self.contents: list[str] = []
@@ -100,6 +120,19 @@ class HybridIndexer:
         self.bm25_model: Any = None
         self.embeddings: np.ndarray | None = None
         self.embedding_model: Any = None
+        self.sparse_weights: list[dict[str, float]] = []
+        self.retrieval_backend: str = "fallback_hash"
+
+    @staticmethod
+    def _resolve_device(device: str) -> str:
+        value = (device or "auto").strip().lower()
+        if value not in {"auto", "cpu", "cuda", "cuda:0"}:
+            return value
+        if value == "cpu":
+            return "cpu"
+        if torch is not None and hasattr(torch, "cuda") and torch.cuda.is_available():
+            return "cuda:0"
+        return "cpu"
 
     @staticmethod
     def _tokenize(text: str) -> list[str]:
@@ -191,16 +224,65 @@ class HybridIndexer:
             return BM25Okapi(tokenized)
         return _SimpleBM25(tokenized)
 
-    def _build_dense_embeddings(self, texts: Sequence[str]) -> np.ndarray:
-        if self.use_sentence_transformer and SentenceTransformer is not None and torch is not None:
-            self.embedding_model = SentenceTransformer(self.model_name)
-            embeddings = self.embedding_model.encode(list(texts), convert_to_numpy=True, normalize_embeddings=True)
-            return np.asarray(embeddings, dtype=np.float32)
+    def _load_bge_model(self) -> bool:
+        if not self.use_bge_m3 or BGEM3FlagModel is None:
+            return False
+        try:
+            kwargs: dict[str, Any] = {"use_fp16": self.use_fp16}
+            if self.device != "cpu":
+                kwargs["device"] = self.device
+            self.embedding_model = BGEM3FlagModel(self.model_name, **kwargs)
+            self.retrieval_backend = "bge_m3"
+            return True
+        except TypeError:
+            try:
+                self.embedding_model = BGEM3FlagModel(self.model_name, use_fp16=self.use_fp16)
+                self.retrieval_backend = "bge_m3"
+                return True
+            except Exception as exc:
+                logger.warning("BGE-M3 init failed, falling back to classic retrieval: %s", exc)
+        except Exception as exc:
+            logger.warning("BGE-M3 init failed, falling back to classic retrieval: %s", exc)
+        self.embedding_model = None
+        return False
 
-        # Deterministic fallback for environments without sentence-transformers.
-        # We hash word unigrams, word bigrams, and accent-stripped variants so the
-        # vector space behaves a little more like a semantic encoder than plain
-        # token counts.
+    def _build_dense_embeddings(self, texts: Sequence[str]) -> np.ndarray:
+        self.sparse_weights = []
+        if self._load_bge_model():
+            try:
+                output = self.embedding_model.encode(  # type: ignore[union-attr]
+                    list(texts),
+                    batch_size=self.batch_size,
+                    max_length=self.max_length,
+                    return_dense=True,
+                    return_sparse=True,
+                    return_colbert_vecs=False,
+                )
+                embeddings = np.asarray(output.get("dense_vecs"), dtype=np.float32)
+                sparse_weights = output.get("lexical_weights") or output.get("sparse_vecs") or []
+                self.sparse_weights = [
+                    {str(token): float(weight) for token, weight in dict(weights).items() if float(weight) > 0.0}
+                    for weights in sparse_weights
+                ]
+                if embeddings.ndim == 2 and embeddings.shape[1] > 0:
+                    self.embedding_dim = int(embeddings.shape[1])
+                return embeddings
+            except Exception as exc:
+                logger.warning("BGE-M3 encoding failed, falling back to classic retrieval: %s", exc)
+                self.embedding_model = None
+                self.retrieval_backend = "fallback_hash"
+
+        if self.use_sentence_transformer and SentenceTransformer is not None and torch is not None:
+            try:
+                self.embedding_model = SentenceTransformer(self.model_name)
+                embeddings = self.embedding_model.encode(list(texts), convert_to_numpy=True, normalize_embeddings=True)
+                self.retrieval_backend = "sentence_transformer"
+                return np.asarray(embeddings, dtype=np.float32)
+            except Exception as exc:
+                logger.warning("SentenceTransformer encoding failed, falling back to hash vectors: %s", exc)
+                self.embedding_model = None
+
+        # Deterministic fallback for environments without GPU retrieval models.
         vectors: list[np.ndarray] = []
         for text in texts:
             tokens = self._tokenize(text)
@@ -218,6 +300,7 @@ class HybridIndexer:
             if np.linalg.norm(vector) > 0:
                 vector /= np.linalg.norm(vector)
             vectors.append(vector)
+        self.retrieval_backend = "fallback_hash"
         return np.vstack(vectors) if vectors else np.zeros((0, self.embedding_dim), dtype=np.float32)
 
     def build_index(self, corpus: Iterable[Mapping[str, Any]]) -> "HybridIndexer":
@@ -232,8 +315,12 @@ class HybridIndexer:
             self.embeddings = np.zeros((0, self.embedding_dim), dtype=np.float32)
             return self
 
-        self.bm25_model = self._build_bm25(self.contents)
         self.embeddings = self._build_dense_embeddings(semantic_texts)
+        if self.use_bge_m3 and self.sparse_weights:
+            self.bm25_model = self.sparse_weights
+        else:
+            self.bm25_model = self._build_bm25(self.contents)
+            self.retrieval_backend = "bm25"
         return self
 
     def save_index(self, path: str | Path) -> Path:
@@ -254,7 +341,12 @@ class HybridIndexer:
                 {
                     "embedding_dim": self.embedding_dim,
                     "model_name": self.model_name,
+                    "use_bge_m3": self.use_bge_m3,
                     "use_sentence_transformer": self.use_sentence_transformer,
+                    "retrieval_backend": self.retrieval_backend,
+                    "device": self.device,
+                    "batch_size": self.batch_size,
+                    "max_length": self.max_length,
                 },
                 handle,
                 ensure_ascii=False,
@@ -269,25 +361,28 @@ class HybridIndexer:
 
         return save_path
 
-    # ------------------------------------------------------------------
-    # Query-time API (added for orchestration/run_pipeline.py, T0-1/T1-3).
-    # HybridIndexer previously only supported build_index()/save_index();
-    # these methods close the gap so the pipeline can actually retrieve.
-    # Hưng: feel free to move/refactor this into retrieval/router.py (T2-1)
-    # once query decomposition / routing lands on top of it.
-    # ------------------------------------------------------------------
-
-    def encode_query(self, query: str) -> np.ndarray:
-        """Encode a single query string into the same embedding space as the corpus."""
+    def _encode_query_dense(self, query: str) -> np.ndarray:
         text = query or ""
-        if self.embedding_model is not None:
-            vector = self.embedding_model.encode(
-                [text], convert_to_numpy=True, normalize_embeddings=True
-            )
+        if self.use_bge_m3 and self.embedding_model is not None and hasattr(self.embedding_model, "encode"):
+            try:
+                output = self.embedding_model.encode(  # type: ignore[union-attr]
+                    [text],
+                    batch_size=1,
+                    max_length=self.max_length,
+                    return_dense=True,
+                    return_sparse=True,
+                    return_colbert_vecs=False,
+                )
+                dense_vecs = output.get("dense_vecs")
+                if dense_vecs is not None and len(dense_vecs) > 0:
+                    return np.asarray(dense_vecs[0], dtype=np.float32)
+            except Exception as exc:
+                logger.warning("BGE-M3 query dense encoding failed: %s", exc)
+
+        if self.embedding_model is not None and not self.use_bge_m3:
+            vector = self.embedding_model.encode([text], convert_to_numpy=True, normalize_embeddings=True)
             return np.asarray(vector[0], dtype=np.float32)
 
-        # Must mirror _build_dense_embeddings' fallback exactly, or query and
-        # corpus vectors would live in inconsistent spaces.
         tokens = self._tokenize(text)
         stripped_tokens = self._tokenize(self._strip_diacritics(text))
         vector = np.zeros(self.embedding_dim, dtype=np.float32)
@@ -304,10 +399,50 @@ class HybridIndexer:
             vector /= np.linalg.norm(vector)
         return vector
 
+    def _encode_query_sparse(self, query: str) -> dict[str, float]:
+        text = query or ""
+        if self.use_bge_m3 and self.embedding_model is not None and hasattr(self.embedding_model, "encode"):
+            try:
+                output = self.embedding_model.encode(  # type: ignore[union-attr]
+                    [text],
+                    batch_size=1,
+                    max_length=self.max_length,
+                    return_dense=True,
+                    return_sparse=True,
+                    return_colbert_vecs=False,
+                )
+                sparse_weights = output.get("lexical_weights") or output.get("sparse_vecs") or []
+                if sparse_weights:
+                    return {str(token): float(weight) for token, weight in dict(sparse_weights[0]).items() if float(weight) > 0.0}
+            except Exception as exc:
+                logger.warning("BGE-M3 query sparse encoding failed: %s", exc)
+
+        return {token: float(count) for token, count in Counter(self._tokenize(text)).items() if count > 0}
+
+    # ------------------------------------------------------------------
+    # Query-time API (added for orchestration/run_pipeline.py, T0-1/T1-3).
+    # HybridIndexer previously only supported build_index()/save_index();
+    # these methods close the gap so the pipeline can actually retrieve.
+    # Hưng: feel free to move/refactor this into retrieval/router.py (T2-1)
+    # once query decomposition / routing lands on top of it.
+    # ------------------------------------------------------------------
+
+    def encode_query(self, query: str) -> np.ndarray:
+        """Encode a single query string into the same embedding space as the corpus."""
+        return self._encode_query_dense(query)
+
     def bm25_scores(self, query: str) -> np.ndarray:
         """Score every indexed document against a raw query string."""
-        if self.bm25_model is None or not self.doc_ids:
+        if not self.doc_ids:
             return np.zeros(0, dtype=np.float32)
+
+        if self.use_bge_m3 and isinstance(self.bm25_model, list):
+            query_weights = self._encode_query_sparse(query)
+            scores = [self._sparse_score(query_weights, doc_weights) for doc_weights in self.bm25_model]
+            return np.asarray(scores, dtype=np.float32)
+
+        if self.bm25_model is None:
+            return np.zeros(len(self.doc_ids), dtype=np.float32)
 
         tokens = self._tokenize(query)
         if isinstance(self.bm25_model, _SimpleBM25):
@@ -324,6 +459,17 @@ class HybridIndexer:
         if max_v - min_v < 1e-9:
             return np.zeros_like(scores)
         return (scores - min_v) / (max_v - min_v)
+
+    def _sparse_score(self, query_weights: dict[str, float], doc_weights: dict[str, float]) -> float:
+        if self.use_bge_m3 and self.embedding_model is not None and hasattr(self.embedding_model, "compute_lexical_matching_score"):
+            try:
+                return float(self.embedding_model.compute_lexical_matching_score(query_weights, doc_weights))
+            except Exception:
+                pass
+        if not query_weights or not doc_weights:
+            return 0.0
+        overlap = set(query_weights) & set(doc_weights)
+        return float(sum(query_weights[token] * doc_weights[token] for token in overlap))
 
     def search(self, query: str, top_k: int = 10, alpha: float = 0.45) -> list[dict[str, Any]]:
         """Hybrid BM25 + dense retrieval: score = alpha*BM25_norm + (1-alpha)*cosine.
@@ -371,13 +517,21 @@ class HybridIndexer:
         path: str | Path,
         model_name: str | None = None,
         *,
+        use_bge_m3: bool = True,
         use_sentence_transformer: bool = False,
+        device: str = "auto",
+        batch_size: int = 12,
+        max_length: int = 1024,
     ) -> "HybridIndexer":
         """Reconstruct an indexer instance from artifacts written by save_index()."""
         load_path = Path(path)
         indexer = cls(
             model_name=model_name,
+            use_bge_m3=use_bge_m3,
             use_sentence_transformer=use_sentence_transformer,
+            device=device,
+            batch_size=batch_size,
+            max_length=max_length,
         )
 
         with (load_path / "documents.jsonl").open("r", encoding="utf-8") as handle:
@@ -396,8 +550,18 @@ class HybridIndexer:
                         indexer.embedding_dim = int(meta["embedding_dim"])
                     if model_name is None and isinstance(meta.get("model_name"), str):
                         indexer.model_name = meta["model_name"]
+                    if "use_bge_m3" in meta:
+                        indexer.use_bge_m3 = bool(meta["use_bge_m3"])
                     if "use_sentence_transformer" in meta:
                         indexer.use_sentence_transformer = bool(meta["use_sentence_transformer"])
+                    if isinstance(meta.get("device"), str) and device == "auto":
+                        indexer.device = meta["device"]
+                    if "batch_size" in meta:
+                        indexer.batch_size = int(meta["batch_size"])
+                    if "max_length" in meta:
+                        indexer.max_length = int(meta["max_length"])
+                    if isinstance(meta.get("retrieval_backend"), str):
+                        indexer.retrieval_backend = meta["retrieval_backend"]
             except Exception:
                 pass
 
@@ -409,8 +573,16 @@ class HybridIndexer:
         indexer.contents = [doc.get("content", "") for doc in indexer.documents]
         indexer.metadata = [doc.get("metadata", {}) for doc in indexer.documents]
 
-        if indexer.use_sentence_transformer and SentenceTransformer is not None and torch is not None:
+        if indexer.use_bge_m3:
+            indexer._load_bge_model()
+        elif indexer.use_sentence_transformer and SentenceTransformer is not None and torch is not None:
             indexer.embedding_model = SentenceTransformer(indexer.model_name)
+
+        if isinstance(indexer.bm25_model, list):
+            indexer.sparse_weights = indexer.bm25_model
+            indexer.retrieval_backend = "bge_m3"
+        elif indexer.bm25_model is not None:
+            indexer.retrieval_backend = "bm25"
 
         return indexer
 
