@@ -64,6 +64,7 @@ class LocalOllamaClient(LLMClient):
         max_retries: int = 5,
         provider: str = "ollama",
         timeout_seconds: float = 300.0,
+        api_key: str | None = None,
     ):
         # Normalize common base URL variants before appending provider endpoints.
         clean_url = (
@@ -80,6 +81,7 @@ class LocalOllamaClient(LLMClient):
         self.max_retries = max_retries
         self.timeout_seconds = timeout_seconds
         self.provider = provider.strip().lower() or "ollama"
+        self.api_key = api_key.strip() if isinstance(api_key, str) and api_key.strip() else None
         if self.provider not in self.OLLAMA_PROVIDERS | self.OPENAI_COMPATIBLE_PROVIDERS:
             raise ValueError(
                 "Unsupported ALQAC_LLM_PROVIDER="
@@ -92,6 +94,7 @@ class LocalOllamaClient(LLMClient):
         base_url = os.environ.get("ALQAC_LLM_BASE_URL")
         model_name = os.environ.get("ALQAC_LLM_MODEL_NAME", "qwen2.5:7b-instruct")
         provider = os.environ.get("ALQAC_LLM_PROVIDER", "ollama")
+        api_key = os.environ.get("ALQAC_LLM_API_KEY")
         try:
             timeout_seconds = float(os.environ.get("ALQAC_LLM_TIMEOUT_SECONDS", "300"))
         except ValueError:
@@ -108,11 +111,14 @@ class LocalOllamaClient(LLMClient):
             provider=provider,
             max_retries=max_retries,
             timeout_seconds=timeout_seconds,
+            api_key=api_key,
         )
 
     def generate(self, prompt: str, *, max_tokens: int = 1024, temperature: float = 0.1) -> str:
         headers = {"Content-Type": "application/json"}
         request_url, payload = self._build_request(prompt, max_tokens=max_tokens, temperature=temperature)
+        if self.api_key and self.provider in self.OPENAI_COMPATIBLE_PROVIDERS:
+            headers["Authorization"] = f"Bearer {self.api_key}"
 
         # Cơ chế hồi phục Exponential Backoff tự động ngủ bù tăng dần tại tầng LLM
         for attempt in range(self.max_retries):

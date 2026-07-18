@@ -1,0 +1,5 @@
+{
+  "embedding_dim": 384,
+  "model_name": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "use_sentence_transformer": true
+}

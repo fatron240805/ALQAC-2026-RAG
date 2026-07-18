@@ -1,0 +1,24 @@
+{
+  "backend": "neo4j",
+  "chunks_seen": 6381,
+  "chunks_skipped": 93,
+  "edge_count": 25355,
+  "edge_types": {
+    "CITES": 1498,
+    "CONTAINS": 9710,
+    "GOVERNED_BY": 5780,
+    "RELATED_TO": 8367
+  },
+  "node_count": 9739,
+  "node_labels": {
+    "Article": 3329,
+    "ArticleUnit": 3162,
+    "Clause": 1127,
+    "Concept": 11,
+    "Law": 18,
+    "LegalNode": 9739,
+    "Point": 2092,
+    "SourceChunk": 6381
+  },
+  "schema_version": 1
+}

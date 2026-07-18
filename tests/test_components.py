@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import unittest
 import uuid
@@ -7,6 +8,17 @@ from pathlib import Path
 from unittest.mock import patch
 
 from evaluation.metrics import evaluate_alqac_system
+from evaluation.retrieval_benchmark import (
+    ProvisionNormalizer,
+    extract_article_numbers,
+    is_graph_candidate,
+    load_public_test_gold,
+    per_case_metrics,
+    provision_key,
+    run_benchmark,
+)
+from graph_construct.builder import build_graph_records
+from graph_construct.neo4j_store import Neo4jConfig
 from orchestration.config import PipelineConfig
 from orchestration.data_adapters import chunk_to_indexer_doc, stream_active_indexer_docs
 from orchestration.interfaces import (
@@ -14,11 +26,18 @@ from orchestration.interfaces import (
     PromptTemplateReasoningAgent,
     StatutoryConsistencyVerifier,
 )
-from orchestration.run_pipeline import build_submission_json, check_runtime, run_pipeline, validate_prediction_output
+from orchestration.run_pipeline import (
+    build_graph_retriever,
+    build_submission_json,
+    check_runtime,
+    run_pipeline,
+    validate_prediction_output,
+)
 from prepare_corpus import build_corpus_records, normalize_text
 from retrieval.citation_usefulness import HeuristicCitationUsefulnessFilter
 from retrieval.cleaning import build_clean_corpus
 from retrieval.deprecated_filter import DeprecatedFilter
+from retrieval.graph_retriever import GraphRetrieverConfig, LegalGraphRetriever
 from retrieval.indexing import HybridIndexer
 from retrieval.reranker import LexicalOverlapReranker
 from retrieval.router import DocumentRouter, QueryAnalyzer
@@ -91,12 +110,12 @@ class CleaningTests(unittest.TestCase):
                 encoding="utf-8",
             )
 
-            _, articles, chunks, audit = build_clean_corpus(raw_path)
+            _, articles, chunks, audit = build_clean_corpus(raw_path, target_tokens=1)
 
-        self.assertEqual(audit["schema_version"], 3)
+        self.assertEqual(audit["schema_version"], 4)
         self.assertEqual(articles[0].article_number, "12")
         self.assertEqual(articles[0].article_number_source, "aid")
-        self.assertTrue(any(chunk.unit_type == "point" for chunk in chunks))
+        self.assertTrue(any(chunk.unit_type.startswith("point") for chunk in chunks))
         self.assertIn("điểm a", {chunk.unit_path for chunk in chunks if chunk.point_label == "a"}.pop())
 
 
@@ -126,13 +145,40 @@ class DeprecatedFilterTests(unittest.TestCase):
 
 
 class RetrievalComponentTests(unittest.TestCase):
+    def test_neo4j_config_accepts_aura_uri_and_small_pool(self) -> None:
+        with patch.dict(
+            "os.environ",
+            {
+                "NEO4J_URI": "neo4j+s://abc123.databases.neo4j.io",
+                "NEO4J_USERNAME": "neo4j",
+                "NEO4J_PASSWORD": "test-password",
+                "NEO4J_DATABASE": "neo4j",
+                "NEO4J_MAX_CONNECTION_POOL_SIZE": "8",
+                "NEO4J_CONNECTION_ACQUISITION_TIMEOUT": "30",
+            },
+            clear=False,
+        ):
+            config = Neo4jConfig.from_env()
+
+        self.assertTrue(config.is_aura)
+        self.assertEqual(config.max_connection_pool_size, 8)
+        self.assertEqual(config.connection_acquisition_timeout, 30.0)
+
     def test_hybrid_indexer_search_ranks_matching_document(self) -> None:
         corpus = [
-            {"doc_id": "dog", "content": "trách nhiệm bồi thường thiệt hại do vật nuôi", "metadata": {}},
-            {"doc_id": "bank", "content": "hoạt động ngân hàng và tổ chức tín dụng", "metadata": {}},
+            {
+                "doc_id": "dog",
+                "content": "Chủ sở hữu súc vật phải bồi thường thiệt hại do súc vật gây ra.",
+                "metadata": {"law_id": "91/2015/QH13", "aid": 584, "unit_path": "91/2015/QH13 Điều 584"},
+            },
+            {
+                "doc_id": "bank",
+                "content": "Hoạt động ngân hàng và tổ chức tín dụng.",
+                "metadata": {"law_id": "47/2010/QH12", "aid": 1, "unit_path": "47/2010/QH12 Điều 1"},
+            },
         ]
         indexer = HybridIndexer(embedding_dim=64).build_index(corpus)
-        results = indexer.search("bồi thường thiệt hại vật nuôi", top_k=1)
+        results = indexer.search("Điều 584 bồi thường thiệt hại do súc vật gây ra", top_k=1)
         self.assertEqual(results[0]["doc_id"], "dog")
         self.assertGreater(results[0]["fused_score"], 0)
 
@@ -167,6 +213,111 @@ class RetrievalComponentTests(unittest.TestCase):
         self.assertEqual(useful[0]["doc_id"], "c1")
         self.assertIn(useful[0]["citation_judgment"]["judgment"], {"useful", "uncertain"})
 
+    def test_reranker_prefers_statute_aligned_candidate(self) -> None:
+        query = "Điều 584 bồi thường thiệt hại do súc vật gây ra"
+        candidates = [
+            {
+                "doc_id": "weak",
+                "content": "Bài viết về trách nhiệm dân sự chung.",
+                "metadata": {"law_id": "91/2015/QH13", "aid": 500, "unit_path": "91/2015/QH13 Điều 500"},
+                "fused_score": 0.48,
+            },
+            {
+                "doc_id": "strong",
+                "content": "Chủ sở hữu súc vật phải bồi thường thiệt hại do súc vật gây ra.",
+                "metadata": {"law_id": "91/2015/QH13", "aid": 584, "unit_path": "91/2015/QH13 Điều 584"},
+                "fused_score": 0.4,
+            },
+        ]
+
+        reranked = LexicalOverlapReranker().rerank(query, candidates, top_k=2)
+
+        self.assertEqual(reranked[0]["doc_id"], "strong")
+        self.assertGreater(reranked[0]["citation_alignment_score"], reranked[1]["citation_alignment_score"])
+
+    def test_build_graph_records_creates_rule_and_concept_nodes(self) -> None:
+        with workspace_tempdir() as tmp:
+            chunks_path = Path(tmp) / "chunks.jsonl"
+            chunks_path.write_text(
+                "\n".join(
+                    [
+                        json.dumps(
+                            {
+                                "chunk_id": "chunk_1",
+                                "law_id": "91/2015/QH13",
+                                "aid": 584,
+                                "unit_type": "article",
+                                "unit_path": "91/2015/QH13 Điều 584",
+                                "text": "Chủ sở hữu súc vật phải bồi thường thiệt hại do súc vật gây ra.",
+                            },
+                            ensure_ascii=False,
+                        )
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            nodes, edges, stats = build_graph_records(chunks_path)
+
+        node_ids = {node["node_id"] for node in nodes}
+        self.assertIn("law:91/2015/QH13", node_ids)
+        self.assertIn("rule:91/2015/QH13:584", node_ids)
+        self.assertIn("ontology:issue:tort_damage", node_ids)
+        self.assertGreaterEqual(stats["node_count"], 3)
+        self.assertGreaterEqual(len(edges), 2)
+
+    def test_legal_graph_retriever_returns_graph_backed_law_nodes(self) -> None:
+        class FakeGraphStore:
+            def seed_nodes_for_chunk(self, chunk_id: str) -> list[str]:
+                return ["rule:91/2015/QH13:584"] if chunk_id == "c1" else []
+
+            def expand_from_seeds(
+                self,
+                seed_node_ids: list[str],
+                *,
+                depth: int = 1,
+                target_layers: list[str] | None = None,
+                limit: int = 20,
+            ) -> list[dict[str, Any]]:
+                return [
+                    {
+                        "node_id": "rule:91/2015/QH13:584",
+                        "layer": "rule",
+                        "node_type": "article",
+                        "law_id": "91/2015/QH13",
+                        "aid": 584,
+                        "source_chunk_id": "c1",
+                        "chunk_id": "c1",
+                        "text": "Chủ sở hữu súc vật phải bồi thường thiệt hại do súc vật gây ra.",
+                        "unit_path": "91/2015/QH13 Điều 584",
+                        "distance": 1,
+                        "graph_path": ["chunk:c1", "rule:91/2015/QH13:584"],
+                    }
+                ]
+
+        indexer = HybridIndexer(embedding_dim=64).build_index(
+            [{"doc_id": "c1", "content": "bồi thường thiệt hại do súc vật", "metadata": {}}]
+        )
+        retriever = LegalGraphRetriever(
+            indexer,
+            graph_store=FakeGraphStore(),
+            config=GraphRetrieverConfig(seed_top_k=5, chain_top_k=3),
+        )
+        results = retriever.retrieve("Chủ sở hữu súc vật phải bồi thường thiệt hại như thế nào?")
+
+        self.assertTrue(results)
+        self.assertEqual(results[0]["metadata"]["law_id"], "91/2015/QH13")
+        self.assertEqual(results[0]["metadata"]["aid"], 584)
+        self.assertIn("rule:91/2015/QH13:584", results[0]["graph_path"])
+
+    def test_build_graph_retriever_can_require_graph(self) -> None:
+        indexer = HybridIndexer(embedding_dim=32).build_index(
+            [{"doc_id": "c1", "content": "bá»“i thÆ°á»ng thiá»‡t háº¡i", "metadata": {}}]
+        )
+        config = PipelineConfig(use_graph_retrieval=False)
+
+        with self.assertRaisesRegex(RuntimeError, "Graph retrieval is disabled"):
+            build_graph_retriever(config, indexer, require_graph=True)
+
 
 class ReasoningAndRuntimeTests(unittest.TestCase):
     def test_local_ollama_client_uses_native_chat_endpoint(self) -> None:
@@ -197,6 +348,39 @@ class ReasoningAndRuntimeTests(unittest.TestCase):
         self.assertFalse(kwargs["json"]["stream"])
         self.assertEqual(kwargs["json"]["options"]["num_predict"], 128)
         self.assertEqual(kwargs["json"]["model"], "qwen2.5:7b-instruct")
+
+    def test_openai_compatible_client_uses_chat_completions_endpoint(self) -> None:
+        class FakeResponse:
+            def raise_for_status(self) -> None:
+                return None
+
+            def json(self) -> dict[str, object]:
+                return {
+                    "choices": [
+                        {
+                            "message": {
+                                "content": '{"label":"A_WIN","confidence":0.8,"evidence_ids":[],"justification":"ok"}'
+                            }
+                        }
+                    ]
+                }
+
+        client = LocalOllamaClient(
+            base_url="http://localhost:8000/v1",
+            model_name="luanngo/Qwen3-4B-VietNamese-Legal-Chat",
+            provider="openai-compatible",
+            api_key="secret",
+        )
+        with patch("orchestration.interfaces.requests.post", return_value=FakeResponse()) as post:
+            raw = client.generate("Return JSON", max_tokens=256, temperature=0.0)
+
+        self.assertIn('"label":"A_WIN"', raw)
+        _, kwargs = post.call_args
+        self.assertEqual(post.call_args.args[0], "http://localhost:8000/v1/chat/completions")
+        self.assertEqual(kwargs["headers"]["Authorization"], "Bearer secret")
+        self.assertEqual(kwargs["json"]["response_format"], {"type": "json_object"})
+        self.assertEqual(kwargs["json"]["max_tokens"], 256)
+        self.assertEqual(kwargs["json"]["model"], "luanngo/Qwen3-4B-VietNamese-Legal-Chat")
 
     def test_reasoning_parser_extracts_and_normalizes_json(self) -> None:
         parsed = PromptTemplateReasoningAgent._parse_json_output(
@@ -349,6 +533,136 @@ class EvaluationTests(unittest.TestCase):
         report, cm = evaluate_alqac_system(gold, pred)
         self.assertEqual(report["ALQAC_Final_Score"], 1.0)
         self.assertIn("A_WIN", str(cm))
+
+    def test_retrieval_benchmark_maps_public_law_labels_to_topk_metrics(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            public_path = root / "public.json"
+            chunks_path = root / "chunks.jsonl"
+            public_path.write_text(
+                json.dumps(
+                    [
+                        {
+                            "case_id": "case_1",
+                            "case_query": "boi thuong thiet hai va an phi",
+                            "related_law_provisions": (
+                                "Bộ luật Dân sự năm 2015 | Điều 584\n"
+                                "Bộ luật Tố tụng dân sự | Khoản 1 Điều 157\n"
+                            ),
+                        }
+                    ],
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            chunks_path.write_text(
+                "\n".join(
+                    json.dumps(row, ensure_ascii=False)
+                    for row in [
+                        {
+                            "chunk_id": "chunk_civil",
+                            "law_id": "91/2015/QH13",
+                            "aid": 53353,
+                            "article_number": "53353",
+                            "article_index": 584,
+                        },
+                        {
+                            "chunk_id": "chunk_proc",
+                            "law_id": "92/2015/QH13",
+                            "aid": 50822,
+                            "article_number": "50822",
+                            "article_index": 157,
+                        },
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            gold = load_public_test_gold(public_path)
+            normalizer = ProvisionNormalizer(chunks_path)
+            predicted = [
+                {"metadata": {"chunk_id": "chunk_civil"}},
+                {"metadata": {"chunk_id": "chunk_proc"}},
+            ]
+
+        gold_keys = {item.key for item in gold["case_1"] if item.key}
+        predicted_keys = [normalizer.candidate_key(item) for item in predicted]
+        self.assertEqual(
+            gold_keys,
+            {provision_key("91/2015/QH13", 584), provision_key("92/2015/QH13", 157)},
+        )
+        self.assertEqual(
+            predicted_keys,
+            [provision_key("91/2015/QH13", 584), provision_key("92/2015/QH13", 157)],
+        )
+        self.assertEqual(extract_article_numbers("Dieu 584, Dieu 585"), ["584", "585"])
+        self.assertTrue(is_graph_candidate({"metadata": {"graph_path": ["seed", "rule:law:584"]}}))
+        self.assertFalse(is_graph_candidate({"metadata": {"chunk_id": "chunk_civil"}}))
+        self.assertEqual(per_case_metrics(gold_keys, predicted_keys, 1)["recall"], 0.5)
+        self.assertEqual(per_case_metrics(gold_keys, predicted_keys, 2)["full_recall"], 1.0)
+
+    def test_graph_benchmark_scores_only_neo4j_traversal_candidates(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            public_path = root / "public.json"
+            chunks_path = root / "chunks.jsonl"
+            public_path.write_text(
+                json.dumps(
+                    [
+                        {
+                            "case_id": "case_1",
+                            "case_query": "boi thuong thiet hai",
+                            "related_law_provisions": "Bo luat Dan su nam 2015 | Dieu 584",
+                        }
+                    ]
+                ),
+                encoding="utf-8",
+            )
+            chunks_path.write_text(
+                json.dumps(
+                    {
+                        "chunk_id": "graph_chunk",
+                        "law_id": "91/2015/QH13",
+                        "aid": 53354,
+                        "article_number": "53354",
+                        "article_index": 584,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            args = argparse.Namespace(
+                public_test=public_path,
+                gold=None,
+                chunks=chunks_path,
+                index=root / "index",
+                retriever="graph",
+                top_k=[1],
+                seed_top_k=5,
+                alpha=0.5,
+                include_flat_fallback=False,
+                limit=None,
+                rebuild_index=False,
+            )
+
+            def retrieve(_: str) -> list[dict[str, object]]:
+                return [
+                    {"metadata": {"chunk_id": "flat_fallback"}},
+                    {
+                        "metadata": {"chunk_id": "graph_chunk"},
+                        "graph_path": ["chunk:seed", "rule:91/2015/QH13:53354"],
+                    },
+                ]
+
+            with patch(
+                "evaluation.retrieval_benchmark.build_retriever",
+                return_value=(retrieve, {"backend": "neo4j", "legal_node_count": 2}, lambda: None),
+            ):
+                report = run_benchmark(args)
+
+        self.assertEqual(report["Retrieval_Benchmark"]["score_scope"], "neo4j_traversal_only")
+        self.assertEqual(report["Graph_Execution"]["cases_with_neo4j_expansion"], 1)
+        self.assertEqual(report["Metrics"]["@1"]["Case_Hit_Accuracy"], 1.0)
+        self.assertEqual(report["Case_Rows"][0]["flat_fallback_candidate_count"], 1)
 
 
 class PipelineDryRunTests(unittest.TestCase):

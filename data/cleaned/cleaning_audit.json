@@ -4,30 +4,30 @@
     "aid": 3352
   },
   "avg_article_tokens": 218.12,
-  "avg_chunk_tokens": 54.45,
-  "chunk_count": 17535,
+  "avg_chunk_tokens": 125.71,
+  "chunk_count": 6474,
   "chunk_unit_counts": {
-    "article": 674,
-    "article_intro": 224,
-    "clause": 7783,
-    "clause_intro": 1700,
-    "point": 7152,
-    "point_part": 2
+    "article": 3169,
+    "article_intro": 13,
+    "clause": 702,
+    "clause_intro": 435,
+    "point": 2155
   },
-  "cleaned_at": "2026-07-03T13:38:32.945832+00:00",
+  "chunking_policy": "multi_granular_pattern_based: article-level by default; clause/point fallback for oversized dense articles; sentence fallback only for oversized legal units",
+  "cleaned_at": "2026-07-16T10:42:07.523292+00:00",
   "cleaning_notes": "deprecated=True is a candidate signal for human audit, not a conclusive determination; inline clause/point splitting skips cross-references (e.g. 'tại khoản 2.').",
   "deprecated_article_count": 23,
   "deprecated_document_count": 14,
   "document_count": 18,
   "duplicate_law_ids": [],
   "empty_article_count": 0,
-  "overlap_tokens": 90,
+  "overlap_tokens": 100,
   "raw_path": "data/raw/ALQAC/corpus_law_pub.json",
-  "schema_version": 3,
-  "target_tokens": 450,
+  "schema_version": 4,
+  "target_tokens": 600,
   "written": {
     "articles": 3352,
-    "chunks": 17535,
+    "chunks": 6474,
     "documents": 18
   }
 }

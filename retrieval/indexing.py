@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import pickle
 import re
+import unicodedata
 from collections import Counter
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
@@ -104,6 +105,50 @@ class HybridIndexer:
     def _tokenize(text: str) -> list[str]:
         return [token.lower() for token in TOKEN_RE.findall(text)]
 
+    @staticmethod
+    def _strip_diacritics(text: str) -> str:
+        normalized = unicodedata.normalize("NFKD", text or "")
+        return "".join(char for char in normalized if not unicodedata.combining(char))
+
+    def _semantic_text(self, document: Mapping[str, Any]) -> str:
+        """Compose a richer text view for dense retrieval.
+
+        Legal queries often mention article numbers, law ids, or unit paths that
+        do not appear verbatim in the paragraph body. Folding those signals into
+        the dense side helps the semantic retriever connect references to the
+        right provision even when the wording differs.
+        """
+        pieces: list[str] = []
+        for key in (
+            "content",
+            "text",
+            "body",
+            "unit_path",
+            "article_label",
+            "article_number",
+            "law_id",
+            "aid",
+            "source_type",
+        ):
+            value = document.get(key)
+            if value is None:
+                continue
+            text = str(value).strip()
+            if text:
+                pieces.append(text)
+
+        metadata = document.get("metadata") if isinstance(document.get("metadata"), dict) else {}
+        if isinstance(metadata, dict):
+            for key in ("law_id", "aid", "unit_path", "article_label", "article_number", "point_label", "clause_number"):
+                value = metadata.get(key)
+                if value is None:
+                    continue
+                text = str(value).strip()
+                if text:
+                    pieces.append(text)
+
+        return " \n ".join(pieces)
+
     def _document_text(self, document: Mapping[str, Any]) -> str:
         if isinstance(document.get("content"), str):
             return document["content"]
@@ -117,7 +162,12 @@ class HybridIndexer:
         metadata = document.get("metadata") if isinstance(document.get("metadata"), dict) else {}
         if not isinstance(metadata, dict):
             metadata = {}
-        return dict(metadata)
+        merged = dict(metadata)
+        for key in ("law_id", "aid", "unit_path", "article_label", "article_number", "point_label", "clause_number", "source_type"):
+            value = document.get(key)
+            if value is not None and key not in merged:
+                merged[key] = value
+        return merged
 
     def _prepare_documents(self, corpus: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
         prepared: list[dict[str, Any]] = []
@@ -148,13 +198,23 @@ class HybridIndexer:
             return np.asarray(embeddings, dtype=np.float32)
 
         # Deterministic fallback for environments without sentence-transformers.
+        # We hash word unigrams, word bigrams, and accent-stripped variants so the
+        # vector space behaves a little more like a semantic encoder than plain
+        # token counts.
         vectors: list[np.ndarray] = []
         for text in texts:
             tokens = self._tokenize(text)
+            stripped_tokens = self._tokenize(self._strip_diacritics(text))
             vector = np.zeros(self.embedding_dim, dtype=np.float32)
             for token in tokens:
                 index = abs(hash(token)) % self.embedding_dim
                 vector[index] += 1.0
+            for token in stripped_tokens:
+                index = abs(hash(f"noaccent:{token}")) % self.embedding_dim
+                vector[index] += 0.75
+            for left, right in zip(tokens, tokens[1:]):
+                index = abs(hash(f"bi:{left} {right}")) % self.embedding_dim
+                vector[index] += 1.5
             if np.linalg.norm(vector) > 0:
                 vector /= np.linalg.norm(vector)
             vectors.append(vector)
@@ -165,6 +225,7 @@ class HybridIndexer:
         self.doc_ids = [doc["doc_id"] for doc in self.documents]
         self.contents = [doc["content"] for doc in self.documents]
         self.metadata = [doc["metadata"] for doc in self.documents]
+        semantic_texts = [self._semantic_text(doc) for doc in self.documents]
 
         if not self.contents:
             self.bm25_model = None
@@ -172,7 +233,7 @@ class HybridIndexer:
             return self
 
         self.bm25_model = self._build_bm25(self.contents)
-        self.embeddings = self._build_dense_embeddings(self.contents)
+        self.embeddings = self._build_dense_embeddings(semantic_texts)
         return self
 
     def save_index(self, path: str | Path) -> Path:
@@ -187,6 +248,18 @@ class HybridIndexer:
 
         with (save_path / "doc_ids.json").open("w", encoding="utf-8") as handle:
             json.dump(self.doc_ids, handle, ensure_ascii=False, indent=2)
+
+        with (save_path / "index_meta.json").open("w", encoding="utf-8") as handle:
+            json.dump(
+                {
+                    "embedding_dim": self.embedding_dim,
+                    "model_name": self.model_name,
+                    "use_sentence_transformer": self.use_sentence_transformer,
+                },
+                handle,
+                ensure_ascii=False,
+                indent=2,
+            )
 
         with (save_path / "bm25_model.pkl").open("wb") as handle:
             pickle.dump(self.bm25_model, handle)
@@ -216,10 +289,17 @@ class HybridIndexer:
         # Must mirror _build_dense_embeddings' fallback exactly, or query and
         # corpus vectors would live in inconsistent spaces.
         tokens = self._tokenize(text)
+        stripped_tokens = self._tokenize(self._strip_diacritics(text))
         vector = np.zeros(self.embedding_dim, dtype=np.float32)
         for token in tokens:
             index = abs(hash(token)) % self.embedding_dim
             vector[index] += 1.0
+        for token in stripped_tokens:
+            index = abs(hash(f"noaccent:{token}")) % self.embedding_dim
+            vector[index] += 0.75
+        for left, right in zip(tokens, tokens[1:]):
+            index = abs(hash(f"bi:{left} {right}")) % self.embedding_dim
+            vector[index] += 1.5
         if np.linalg.norm(vector) > 0:
             vector /= np.linalg.norm(vector)
         return vector
@@ -248,7 +328,9 @@ class HybridIndexer:
     def search(self, query: str, top_k: int = 10, alpha: float = 0.45) -> list[dict[str, Any]]:
         """Hybrid BM25 + dense retrieval: score = alpha*BM25_norm + (1-alpha)*cosine.
 
-        Matches the fusion formula and default alpha=0.45 from Plan.md.
+        The dense side uses metadata-enriched semantic text and n-gram hashing
+        (or sentence-transformer embeddings when enabled), so article numbers,
+        law ids, and unit paths can influence the semantic neighborhood.
         Returns a list of result dicts ordered by descending fused_score.
         """
         if not self.doc_ids:
@@ -304,6 +386,20 @@ class HybridIndexer:
             indexer.doc_ids = json.load(handle)
         with (load_path / "bm25_model.pkl").open("rb") as handle:
             indexer.bm25_model = pickle.load(handle)
+
+        meta_path = load_path / "index_meta.json"
+        if meta_path.exists():
+            try:
+                meta = json.loads(meta_path.read_text(encoding="utf-8"))
+                if isinstance(meta, dict):
+                    if "embedding_dim" in meta:
+                        indexer.embedding_dim = int(meta["embedding_dim"])
+                    if model_name is None and isinstance(meta.get("model_name"), str):
+                        indexer.model_name = meta["model_name"]
+                    if "use_sentence_transformer" in meta:
+                        indexer.use_sentence_transformer = bool(meta["use_sentence_transformer"])
+            except Exception:
+                pass
 
         embeddings_path = load_path / "dense_embeddings.npy"
         indexer.embeddings = np.load(embeddings_path) if embeddings_path.exists() else None

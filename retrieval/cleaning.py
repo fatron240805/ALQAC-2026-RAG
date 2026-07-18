@@ -62,7 +62,7 @@ CHUNKS_OUTPUT_PATH = Path("data/chunks.jsonl")
 AUDIT_OUTPUT_PATH = Path("data/cleaned/cleaning_audit.json")
 
 SOURCE_TYPE = "statute"
-SCHEMA_VERSION = 3
+SCHEMA_VERSION = 4
 
 
 CONTROL_CHARS_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
@@ -590,7 +590,23 @@ def split_clause_points(
 
 
 def split_article_units(article: ArticleRecord, *, target_tokens: int) -> list[LegalUnit]:
-    """Split one article into article/clause/point units without crossing law boundaries."""
+    """Split one article with multi-granular, pattern-based legal chunking.
+
+    Article-level units are the default because legal context is usually held
+    across the whole article. Only dense/oversized articles are split by legal
+    section markers such as clauses and points. Sentence-level splitting is
+    left to split_oversized_unit as the last-resort size fallback.
+    """
+    if estimate_tokens(article.article_text) <= target_tokens:
+        return [
+            LegalUnit(
+                unit_type="article",
+                char_start=0,
+                char_end=len(article.article_text),
+                text=article.article_text,
+            )
+        ]
+
     has_structured_units = bool(
         CLAUSE_START_RE.search(article.article_text)
         or POINT_START_RE.search(article.article_text)
@@ -698,10 +714,10 @@ def tail_by_tokens(parts: list[str], token_limit: int) -> list[str]:
 def chunk_article(
     article: ArticleRecord,
     *,
-    target_tokens: int = 450,
-    overlap_tokens: int = 90,
+    target_tokens: int = 600,
+    overlap_tokens: int = 100,
 ) -> list[ChunkRecord]:
-    """Chunk one article using legal structure before size-based fallback."""
+    """Chunk one article using legal markers before size-based fallback."""
     legal_units: list[LegalUnit] = []
     for unit in split_article_units(article, target_tokens=target_tokens):
         legal_units.extend(
@@ -759,8 +775,8 @@ def build_unit_path(article: ArticleRecord, unit: LegalUnit) -> str:
 def build_clean_corpus(
     raw_path: Path,
     *,
-    target_tokens: int = 450,
-    overlap_tokens: int = 90,
+    target_tokens: int = 600,
+    overlap_tokens: int = 100,
 ) -> tuple[list[DocumentRecord], list[ArticleRecord], list[ChunkRecord], dict[str, Any]]:
     raw = read_json(raw_path)
     cleaned_at = datetime.now(timezone.utc).isoformat()
@@ -818,6 +834,11 @@ def build_clean_corpus(
             2,
         ),
         "schema_version": SCHEMA_VERSION,
+        "chunking_policy": (
+            "multi_granular_pattern_based: article-level by default; "
+            "clause/point fallback for oversized dense articles; sentence "
+            "fallback only for oversized legal units"
+        ),
         "cleaning_notes": (
             "deprecated=True is a candidate signal for human audit, not a "
             "conclusive determination; inline clause/point splitting skips "
@@ -835,8 +856,8 @@ def main() -> int:
     parser.add_argument("--articles-out", type=Path, default=ARTICLES_OUTPUT_PATH)
     parser.add_argument("--chunks-out", type=Path, default=CHUNKS_OUTPUT_PATH)
     parser.add_argument("--audit-out", type=Path, default=AUDIT_OUTPUT_PATH)
-    parser.add_argument("--target-tokens", type=int, default=450)
-    parser.add_argument("--overlap-tokens", type=int, default=90)
+    parser.add_argument("--target-tokens", type=int, default=600)
+    parser.add_argument("--overlap-tokens", type=int, default=100)
     args = parser.parse_args()
 
     documents, articles, chunks, audit = build_clean_corpus(

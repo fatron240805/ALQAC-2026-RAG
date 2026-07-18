@@ -1,0 +1,799 @@
+﻿case_id,gold_label,law_rank,law_id,aid,article_label,law_snippet,evidence_count_in_case
+case_4101,PARTIAL_A_WIN,1,Bộ luật Dân sự năm 2015,584,Điều 53354,"1. Người nào có hành vi xâm phạm tính mạng, sức khỏe, danh dự, nhân phẩm, uy tín, tài sản, quyền, lợi ích hợp pháp khác của người khác mà gây thiệt hại thì phải bồi thường, trừ trường hợp Bộ luật này, luật khác có liên q...",6
+case_4101,PARTIAL_A_WIN,2,Bộ luật Dân sự năm 2015,558,Điều 53328,"1. Yêu cầu bên gửi trả tiền công theo thỏa thuận.
+
+2. Yêu cầu bên gửi trả chi phí hợp lý để bảo quản tài sản trong trường hợp gửi không trả tiền công.
+
+3. Yêu cầu bên gửi nhận lại tài sản bất cứ lúc nào, nhưng phải báo t...",6
+case_4101,PARTIAL_A_WIN,3,Bộ luật Dân sự năm 2015,590,Điều 53360,"1. Thiệt hại do sức khỏe bị xâm phạm bao gồm:
+a) Chi phí hợp lý cho việc cứu chữa, bồi dưỡng, phục hồi sức khỏe và chức năng bị mất, bị giảm sút của người bị thiệt hại;
+b) Thu nhập thực tế bị mất hoặc bị giảm sút của ngư...",6
+case_4101,PARTIAL_A_WIN,4,Bộ luật Dân sự năm 2015,603,Điều 53373,"1. Chủ sở hữu súc vật phải bồi thường thiệt hại do súc vật gây ra cho người khác. Người chiếm hữu, sử dụng súc vật phải bồi thường thiệt hại trong thời gian chiếm hữu, sử dụng súc vật, trừ trường hợp có thỏa thuận khác....",6
+case_4101,PARTIAL_A_WIN,5,Bộ luật Tố tụng dân sự,157,Điều 57119,"1. Có đủ năng lực hoạt động thi công xây dựng công trình tương ứng với loại, cấp công trình xây dựng.
+
+2. Chỉ huy trưởng công trường có năng lực hành nghề thi công xây dựng công trình và chứng chỉ hành nghề phù hợp.
+
+3....",6
+case_4101,PARTIAL_A_WIN,6,Bộ luật Tố tụng dân sự,158,Điều 57120,"Cá nhân hành nghề độc lập thiết kế quy hoạch xây dựng, khảo sát xây dựng, thiết kế xây dựng công trình, giám sát khảo sát xây dựng, giám sát thi công xây dựng công trình, định giá xây dựng phải đáp ứng các điều kiện sau:...",6
+case_4834,PARTIAL_A_WIN,1,Bộ luật Dân sự 2015,357,Điều 14662,"1. Người yêu cầu Tòa án xem xét, thẩm định tại chỗ phải nộp tiền tạm ứng chi phí xem xét, thẩm định tại chỗ theo yêu cầu của Tòa án.
+
+2. Trường hợp Tòa án xét thấy cần thiết và quyết định xem xét, thẩm định tại chỗ thì n...",11
+case_4834,PARTIAL_A_WIN,2,Bộ luật Dân sự 2015,584,Điều 53354,"1. Người nào có hành vi xâm phạm tính mạng, sức khỏe, danh dự, nhân phẩm, uy tín, tài sản, quyền, lợi ích hợp pháp khác của người khác mà gây thiệt hại thì phải bồi thường, trừ trường hợp Bộ luật này, luật khác có liên q...",11
+case_4834,PARTIAL_A_WIN,3,Bộ luật Dân sự 2015,585,Điều 53355,"1. Thiệt hại thực tế phải được bồi thường toàn bộ và kịp thời. Các bên có thể thỏa thuận về mức bồi thường, hình thức bồi thường bằng tiền, bằng hiện vật hoặc thực hiện một công việc, phương thức bồi thường một lần hoặc...",11
+case_4834,PARTIAL_A_WIN,4,Bộ luật Dân sự 2015,586,Điều 53356,"1. Người từ đủ mười tám tuổi trở lên gây thiệt hại thì phải tự bồi thường.
+
+2. Người chưa đủ mười lăm tuổi gây thiệt hại mà còn cha, mẹ thì cha, mẹ phải bồi thường toàn bộ thiệt hại; nếu tài sản của cha, mẹ không đủ để b...",11
+case_4834,PARTIAL_A_WIN,5,Bộ luật Dân sự 2015,587,Điều 53357,Trường hợp nhiều người cùng gây thiệt hại thì những người đó phải liên đới bồi thường cho người bị thiệt hại. Trách nhiệm bồi thường của từng người cùng gây thiệt hại được xác định tương ứng với mức độ lỗi của mỗi người;...,11
+case_4834,PARTIAL_A_WIN,6,Bộ luật Dân sự 2015,590,Điều 53360,"1. Thiệt hại do sức khỏe bị xâm phạm bao gồm:
+a) Chi phí hợp lý cho việc cứu chữa, bồi dưỡng, phục hồi sức khỏe và chức năng bị mất, bị giảm sút của người bị thiệt hại;
+b) Thu nhập thực tế bị mất hoặc bị giảm sút của ngư...",11
+case_4834,PARTIAL_A_WIN,7,Bộ luật Tố tụng Dân sự 2015,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",11
+case_4834,PARTIAL_A_WIN,8,Bộ luật Tố tụng Dân sự 2015,266,Điều 14571,"1. Ủy ban Thẩm phán Tòa án nhân dân cấp cao giám đốc thẩm bản án, quyết định đã có hiệu lực pháp luật của Tòa án cấp tỉnh, Tòa án cấp huyện trong phạm vi thẩm quyền theo lãnh thổ bị kháng nghị như sau:a) Ủy ban Thẩm phán...",11
+case_4834,PARTIAL_A_WIN,9,Bộ luật Tố tụng Dân sự 2015,271,Điều 14576,"1. Hội đồng xét xử giám đốc thẩm chỉ xem xét phần quyết định của bản án, quyết định đã có hiệu lực pháp luật bị kháng nghị hoặc có liên quan đến việc xem xét nội dung kháng nghị.
+
+2. Hội đồng xét xử giám đốc thẩm có quyề...",11
+case_4834,PARTIAL_A_WIN,10,Bộ luật Tố tụng Dân sự 2015,273,Điều 14578,"Hội đồng xét xử giám đốc thẩm ra quyết định hủy bản án, quyết định đã có hiệu lực pháp luật bị kháng nghị và giữ nguyên bản án, quyết định của Tòa án cấp dưới xét xử đúng pháp luật, nhưng đã bị bản án, quyết định đã có h...",11
+case_4834,PARTIAL_A_WIN,11,Nghị quyết 326/2016/UBTVQH14 ngày 30/12/2016 của Ủy ban Thường vụ Quốc hội,2,Điều 56964,"Luật này áp dụng đối với cơ quan, tổ chức, cá nhân trong nước; tổ chức, cá nhân nước ngoài hoạt động đầu tư xây dựng trên lãnh thổ Việt Nam.Trường hợp điều ước quốc tế mà Cộng hòa xã hội chủ nghĩa Việt Nam là thành viên...",11
+case_669,B_WIN,1,Bộ Luật tố tụng dân sự,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,4
+case_669,B_WIN,2,Bộ luật dân sự năm 2005,297,Điều 14602,"Trong thời hạn 30 ngày kể từ ngày Hội đồng Thẩm phán Tòa án nhân dân tối cao ra quyết định quy định tại khoản 1 Điều 296 của Luật này thì Tòa án nhân dân tối cao gửi quyết định cho Ủy ban thường vụ Quốc hội, Ủy ban tư ph...",4
+case_669,B_WIN,3,Bộ luật dân sự năm 2015,688,Điều 53458,"1. Đối với giao dịch dân sự được xác lập trước ngày Bộ luật này có hiệu lực thì việc áp dụng pháp luật được quy định như sau:
+a) Giao dịch dân sự chưa được thực hiện mà có nội dung, hình thức khác với quy định của Bộ luậ...",4
+case_669,B_WIN,4,"Nghị quyết số: 326/2016/UBTVQH14, ngày 30/12/2016",48,Điều 57010,"1. Ủy ban nhân dân cấp tỉnh có trách nhiệm chỉ đạo xây dựng chương trình, kế hoạch thực hiện quy hoạch xây dựng phát triển đô thị, nông thôn, khu chức năng đặc thù thuộc địa bàn mình quản lý theo quy hoạch xây dựng đã đư...",4
+case_4616,A_WIN,1,Bộ luật Tố tụng dân sự 2015,30,Điều 56992,"1. Nhiệm vụ quy hoạch chung xây dựng xã gồm mục tiêu, phạm vi ranh giới xã; tính chất, chức năng của xã; xác định yếu tố tác động đến phát triển kinh tế - xã hội của xã; dự báo quy mô dân số, lao động; quy mô đất đai, ch...",2
+case_4616,A_WIN,2,Bộ Luật dân sự 2005,122,Điều 57084,"1. Nhà thầu giám sát thi công xây dựng công trình có các quyền sau:
+a) Tham gia nghiệm thu, xác nhận công việc, công trình đã hoàn thành thi công xây dựng;
+b) Yêu cầu nhà thầu thi công xây dựng công trình thực hiện đúng...",2
+case_6616,A_WIN,1,Bộ luật Tố tụng dân sự năm 2015,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",8
+case_6616,A_WIN,2,Bộ luật Dân sự năm 2015,9,Điều 56971,"1. Bảo hiểm trong hoạt động đầu tư xây dựng gồm:
+a) Bảo hiểm công trình trong thời gian xây dựng;
+b) Bảo hiểm trách nhiệm nghề nghiệp tư vấn đầu tư xây dựng;
+c) Bảo hiểm đối với vật tư, vật liệu, phương tiện, thiết bị th...",8
+case_6616,A_WIN,3,Luật Hôn nhân và gia đình năm 2014,33,Điều 56995,1. Bộ Xây dựng quyết định thành lập Hội đồng thẩm định nhiệm vụ và đồ án quy hoạch xây dựng thuộc thẩm quyền phê duyệt của Thủ tướng Chính phủ và đồ án quy hoạch xây dựng do Bộ Xây dựng tổ chức lập. Bộ Xây dựng là cơ qua...,8
+case_6616,A_WIN,4,Luật Hộ tịch,21,Điều 56983,"1. Cơ quan, tổ chức, chủ đầu tư lập quy hoạch xây dựng phải thực hiện việc lưu trữ hồ sơ đồ án quy hoạch xây dựng được phê duyệt theo quy định của pháp luật về lưu trữ.
+
+2. Cơ quan quản lý nhà nước về quy hoạch xây dựng,...",8
+case_6616,A_WIN,5,Luật Đất đai năm 1987,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",8
+case_6616,A_WIN,6,Luật đất đai năm 2013,100,Điều 57062,"1. Giấy phép xây dựng được cấp lại trong trường hợp bị rách, nát hoặc bị mất.
+
+2. Hồ sơ đề nghị cấp lại giấy phép xây dựng gồm:
+a) Đơn đề nghị cấp lại giấy phép xây dựng;
+b) Bản chính giấy phép xây dựng đã được cấp đối v...",8
+case_6616,A_WIN,7,Nghị quyết số 326/2016/UBTVQH14,12,Điều 56974,"1. Quyết định đầu tư xây dựng không đúng với quy định của Luật này.
+
+2. Khởi công xây dựng công trình khi chưa đủ điều kiện khởi công theo quy định của Luật này.
+
+3. Xây dựng công trình trong khu vực cấm xây dựng; xây dự...",8
+case_6616,A_WIN,8,Án lệ số 06/2016/AL,220,Điều 14525,"Tòa án cấp phúc thẩm chỉ xem xét lại phần bản án, quyết định của Tòa án cấp sơ thẩm có kháng cáo, kháng nghị hoặc có liên quan đến nội dung kháng cáo, kháng nghị.",8
+case_950,B_WIN,1,Bộ luật Tố tụng dân sự năm 2015,144,Điều 57106,"1. Việc thanh toán hợp đồng xây dựng phải phù hợp với loại hợp đồng, giá hợp đồng và các điều kiện trong hợp đồng mà các bên đã ký kết.
+
+2. Các bên hợp đồng thỏa thuận về phương thức thanh toán, thời gian thanh toán, hồ...",13
+case_950,B_WIN,2,Bộ luật Tố tụng dân sự năm 2015,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,13
+case_950,B_WIN,3,Bộ luật Tố tụng dân sự năm 2015,157,Điều 57119,"1. Có đủ năng lực hoạt động thi công xây dựng công trình tương ứng với loại, cấp công trình xây dựng.
+
+2. Chỉ huy trưởng công trường có năng lực hành nghề thi công xây dựng công trình và chứng chỉ hành nghề phù hợp.
+
+3....",13
+case_950,B_WIN,4,Bộ luật Tố tụng dân sự năm 2015,165,Điều 57127,"1. Thanh tra xây dựng thuộc Bộ Xây dựng, Sở Xây dựng thực hiện chức năng thanh tra hành chính và thanh tra chuyên ngành về xây dựng đối với tổ chức, cá nhân tham gia hoạt động đầu tư xây dựng.
+
+2. Bộ Xây dựng chịu trách...",13
+case_950,B_WIN,5,Bộ luật Tố tụng dân sự năm 2015,227,Điều 14532,"1. Đương sự được quyền giao nộp bổ sung tài liệu, chứng cứ trong giai đoạn chuẩn bị xét xử phúc thẩm trong những trường hợp sau đây:
+a) Những tài liệu, chứng cứ mà Tòa án cấp sơ thẩm đã yêu cầu giao nộp nhưng đương sự kh...",13
+case_950,B_WIN,6,Bộ luật Tố tụng dân sự năm 2015,228,Điều 14533,"1. Tòa án cấp phúc thẩm ra quyết định tạm đình chỉ xét xử phúc thẩm vụ án, hậu quả của việc tạm đình chỉ xét xử phúc thẩm vụ án và tiếp tục xét xử phúc thẩm vụ án được thực hiện theo quy định tại Điều 141 và Điều 142 của...",13
+case_950,B_WIN,7,Bộ luật Dân sự năm 2005,234,Điều 14539,"1. Trước khi mở phiên tòa hoặc tại phiên tòa phúc thẩm mà người khởi kiện rút đơn khởi kiện thì Hội đồng xét xử phúc thẩm phải hỏi người bị kiện có đồng ý hay không và tùy từng trường hợp mà giải quyết như sau:
+a) Người...",13
+case_950,B_WIN,8,Bộ luật Dân sự năm 2005,604,Điều 53374,"Chủ sở hữu, người chiếm hữu, người được giao quản lý phải bồi thường thiệt hại do cây cối gây ra.",13
+case_950,B_WIN,9,Luật Đất đai năm 2003,49,Điều 57011,"1. Dự án đầu tư xây dựng được phân loại theo quy mô, tính chất, loại công trình xây dựng và nguồn vốn sử dụng.
+
+2. Dự án đầu tư xây dựng được phân loại theo quy mô, tính chất, loại công trình xây dựng của dự án gồm dự án...",13
+case_950,B_WIN,10,Luật Đất đai năm 2003,50,Điều 57012,"1. Trình tự đầu tư xây dựng có 03 giai đoạn gồm chuẩn bị dự án, thực hiện dự án và kết thúc xây dựng đưa công trình của dự án vào khai thác sử dụng, trừ trường hợp xây dựng nhà ở riêng lẻ.
+
+2. Dự án quan trọng quốc gia,...",13
+case_950,B_WIN,11,Luật Đất đai năm 2003,52,Điều 57014,"1. Khi đầu tư xây dựng, chủ đầu tư phải lập Báo cáo nghiên cứu khả thi đầu tư xây dựng, trừ trường hợp quy định tại khoản 3 và khoản 4 Điều này. Nội dung Báo cáo nghiên cứu khả thi đầu tư xây dựng phải phù hợp với yêu cầ...",13
+case_950,B_WIN,12,Luật Đất đai năm 2003,105,Điều 57067,"1. Thực hiện trách nhiệm theo quy định tại điểm đ khoản 1 Điều 102 của Luật này.
+
+2. Thực hiện các biện pháp cần thiết khi nhận được thông báo của cơ quan có thẩm quyền xử lý vi phạm đối với công trình xây dựng sai quy h...",13
+case_950,B_WIN,13,Luật Đất đai năm 2003,123,Điều 57085,"1. Việc nghiệm thu công trình xây dựng gồm:
+a) Nghiệm thu công việc xây dựng trong quá trình thi công và nghiệm thu các giai đoạn chuyển bước thi công khi cần thiết;
+b) Nghiệm thu hoàn thành hạng mục công trình, hoàn thà...",13
+case_149,PARTIAL_B_WIN,1,Bộ luật tố tụng dân sự,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",7
+case_149,PARTIAL_B_WIN,2,Bộ luật tố tụng dân sự,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",7
+case_149,PARTIAL_B_WIN,3,Bộ luật tố tụng dân sự,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,7
+case_149,PARTIAL_B_WIN,4,Luật Đất đai,167,Điều 57129,"1. Luật này có hiệu lực thi hành từ ngày 01 tháng 01 năm 2015.2. Luật xây dựng số 16/2003/QH11 và Điều 1 của Luật sửa đổi, bổ sung một số điều của các luật liên quan đến đầu tư xây dựng cơ bản số 38/2009/QH12 hết liệu lự...",7
+case_149,PARTIAL_B_WIN,5,Luật hôn nhân và gia đình,45,Điều 57007,"1. Việc quản lý đầu tư xây dựng phải căn cứ vào quy hoạch xây dựng được cơ quan có thẩm quyền phê duyệt.
+
+2. Việc đầu tư xây dựng mới, sửa chữa, cải tạo công trình kiến trúc, công trình hạ tầng kỹ thuật, công trình hạ tầ...",7
+case_149,PARTIAL_B_WIN,6,"Nghị quyết số 326/2016/UBTVQH14 ngày 30/12/2016 Quy định về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí Tòa án.",12,Điều 56974,"1. Quyết định đầu tư xây dựng không đúng với quy định của Luật này.
+
+2. Khởi công xây dựng công trình khi chưa đủ điều kiện khởi công theo quy định của Luật này.
+
+3. Xây dựng công trình trong khu vực cấm xây dựng; xây dự...",7
+case_149,PARTIAL_B_WIN,7,"Nghị quyết số 326/2016/UBTVQH14 ngày 30/12/2016 Quy định về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí Tòa án.",26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",7
+case_614,PARTIAL_A_WIN,1,Bộ luật Tố tụng dân sự 2015,5,Điều 56967,"1. Công trình xây dựng được phân theo loại và cấp công trình.
+
+2. Loại công trình được xác định theo công năng sử dụng gồm công trình dân dụng, công trình công nghiệp, công trình giao thông, công trình nông nghiệp và phá...",21
+case_614,PARTIAL_A_WIN,2,Bộ luật Tố tụng dân sự 2015,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",21
+case_614,PARTIAL_A_WIN,3,Bộ luật Tố tụng dân sự 2015,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",21
+case_614,PARTIAL_A_WIN,4,Bộ luật Tố tụng dân sự 2015,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,21
+case_614,PARTIAL_A_WIN,5,Bộ luật Tố tụng dân sự 2015,157,Điều 57119,"1. Có đủ năng lực hoạt động thi công xây dựng công trình tương ứng với loại, cấp công trình xây dựng.
+
+2. Chỉ huy trưởng công trường có năng lực hành nghề thi công xây dựng công trình và chứng chỉ hành nghề phù hợp.
+
+3....",21
+case_614,PARTIAL_A_WIN,6,Bộ luật Tố tụng dân sự 2015,165,Điều 57127,"1. Thanh tra xây dựng thuộc Bộ Xây dựng, Sở Xây dựng thực hiện chức năng thanh tra hành chính và thanh tra chuyên ngành về xây dựng đối với tổ chức, cá nhân tham gia hoạt động đầu tư xây dựng.
+
+2. Bộ Xây dựng chịu trách...",21
+case_614,PARTIAL_A_WIN,7,Bộ luật Tố tụng dân sự 2015,184,Điều 14489,"1. Vật chứng, ảnh hoặc biên bản xác nhận vật chứng được đưa ra để xem xét tại phiên tòa.
+
+2. Hội đồng xét xử có thể cùng với các đương sự đến xem xét tại chỗ vật chứng không thể đưa đến phiên tòa được nếu xét thấy cần th...",21
+case_614,PARTIAL_A_WIN,8,Bộ luật Tố tụng dân sự 2015,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",21
+case_614,PARTIAL_A_WIN,9,Bộ luật Tố tụng dân sự 2015,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",21
+case_614,PARTIAL_A_WIN,10,Bộ luật Tố tụng dân sự 2015,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",21
+case_614,PARTIAL_A_WIN,11,Bộ luật Dân sự 2015,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",21
+case_614,PARTIAL_A_WIN,12,Bộ luật Dân sự 2005,633,Điều 53403,Người lập di chúc phải tự viết và ký vào bản di chúc.Việc lập di chúc bằng văn bản không có người làm chứng phải tuân theo quy định tại Điều 631 của Bộ luật này.,21
+case_614,PARTIAL_A_WIN,13,Bộ luật Dân sự 2005,635,Điều 53405,Người lập di chúc có thể yêu cầu công chứng hoặc chứng thực bản di chúc.,21
+case_614,PARTIAL_A_WIN,14,Bộ luật Dân sự 2005,674,Điều 53444,"1. Năng lực hành vi dân sự của cá nhân được xác định theo pháp luật của nước mà người đó có quốc tịch, trừ trường hợp quy định tại khoản 2 Điều này.
+
+2. Trường hợp người nước ngoài xác lập, thực hiện các giao dịch dân sự...",21
+case_614,PARTIAL_A_WIN,15,Bộ luật Dân sự 2005,675,Điều 53445,"1. Việc xác định một cá nhân mất tích hoặc chết tuân theo pháp luật của nước mà người đó có quốc tịch vào thời điểm trước khi có tin tức cuối cùng về người đó, trừ trường hợp quy định tại khoản 2 Điều này.
+
+2. Việc xác đ...",21
+case_614,PARTIAL_A_WIN,16,Bộ luật Dân sự 2005,676,Điều 53446,"1. Quốc tịch của pháp nhân được xác định theo pháp luật của nước nơi pháp nhân thành lập.
+
+2. Năng lực pháp luật dân sự của pháp nhân; tên gọi của pháp nhân; đại diện theo pháp luật của pháp nhân; việc tổ chức, tổ chức l...",21
+case_614,PARTIAL_A_WIN,17,Bộ luật Dân sự 2005,681,Điều 53451,"1. Năng lực lập di chúc, thay đổi hoặc hủy bỏ di chúc được xác định theo pháp luật của nước mà người lập di chúc có quốc tịch tại thời điểm lập, thay đổi hoặc hủy bỏ di chúc.
+
+2. Hình thức của di chúc được xác định theo...",21
+case_614,PARTIAL_A_WIN,18,Bộ luật Dân sự 2005,685,Điều 53455,"Nghĩa vụ hoàn trả do chiếm hữu, sử dụng, được lợi về tài sản không có căn cứ pháp luật được xác định theo pháp luật của nước nơi thực hiện việc chiếm hữu, sử dụng tài sản hoặc nơi phát sinh lợi ích được hưởng mà không có...",21
+case_614,PARTIAL_A_WIN,19,Bộ luật Dân sự 2015,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",21
+case_614,PARTIAL_A_WIN,20,Bộ luật Dân sự 2015,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",21
+case_614,PARTIAL_A_WIN,21,Nghị quyết số 326/2016/UBTVQH14,7,Điều 56969,"1. Chủ đầu tư do người quyết định đầu tư quyết định trước khi lập dự án hoặc khi phê duyệt dự án.
+
+2. Tùy thuộc nguồn vốn sử dụng cho dự án, chủ đầu tư được xác định cụ thể như sau:
+a) Đối với dự án sử dụng vốn ngân sách...",21
+case_7467,PARTIAL_B_WIN,1,Bộ luật tố tụng dân sự năm 2015,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",16
+case_7467,PARTIAL_B_WIN,2,Bộ luật tố tụng dân sự năm 2015,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",16
+case_7467,PARTIAL_B_WIN,3,Bộ luật tố tụng dân sự năm 2015,39,Điều 57001,"1. Cơ quan tổ chức lập quy hoạch xây dựng lập báo cáo nội dung và kế hoạch điều chỉnh cục bộ quy hoạch xây dựng, tổ chức xin ý kiến cộng đồng dân cư trong khu vực điều chỉnh quy hoạch và khu vực xung quanh có ảnh hưởng t...",16
+case_7467,PARTIAL_B_WIN,4,Bộ luật tố tụng dân sự năm 2015,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,16
+case_7467,PARTIAL_B_WIN,5,Bộ luật tố tụng dân sự năm 2015,157,Điều 57119,"1. Có đủ năng lực hoạt động thi công xây dựng công trình tương ứng với loại, cấp công trình xây dựng.
+
+2. Chỉ huy trưởng công trường có năng lực hành nghề thi công xây dựng công trình và chứng chỉ hành nghề phù hợp.
+
+3....",16
+case_7467,PARTIAL_B_WIN,6,Bộ luật tố tụng dân sự năm 2015,165,Điều 57127,"1. Thanh tra xây dựng thuộc Bộ Xây dựng, Sở Xây dựng thực hiện chức năng thanh tra hành chính và thanh tra chuyên ngành về xây dựng đối với tổ chức, cá nhân tham gia hoạt động đầu tư xây dựng.
+
+2. Bộ Xây dựng chịu trách...",16
+case_7467,PARTIAL_B_WIN,7,Bộ luật tố tụng dân sự năm 2015,228,Điều 14533,"1. Tòa án cấp phúc thẩm ra quyết định tạm đình chỉ xét xử phúc thẩm vụ án, hậu quả của việc tạm đình chỉ xét xử phúc thẩm vụ án và tiếp tục xét xử phúc thẩm vụ án được thực hiện theo quy định tại Điều 141 và Điều 142 của...",16
+case_7467,PARTIAL_B_WIN,8,Bộ luật dân sự năm 2015,623,Điều 53393,"1. Thời hiệu để người thừa kế yêu cầu chia di sản là 30 năm đối với bất động sản, 10 năm đối với động sản, kể từ thời điểm mở thừa kế. Hết thời hạn này thì di sản thuộc về người thừa kế đang quản lý di sản đó. Trường hợp...",16
+case_7467,PARTIAL_B_WIN,9,Bộ luật dân sự năm 2015,630,Điều 53400,"1. Di chúc hợp pháp phải có đủ các điều kiện sau đây:
+a) Người lập di chúc minh mẫn, sáng suốt trong khi lập di chúc; không bị lừa dối, đe doạ, cưỡng ép;
+b) Nội dung của di chúc không vi phạm điều cấm của luật, không trá...",16
+case_7467,PARTIAL_B_WIN,10,Bộ luật dân sự năm 2015,643,Điều 53413,"1. Di chúc có hiệu lực từ thời điểm mở thừa kế.
+
+2. Di chúc không có hiệu lực toàn bộ hoặc một phần trong trường hợp sau đây:
+a) Người thừa kế theo di chúc chết trước hoặc chết cùng thời điểm với người lập di chúc;
+b) Cơ...",16
+case_7467,PARTIAL_B_WIN,11,Bộ luật dân sự năm 2015,650,Điều 53420,"1. Thừa kế theo pháp luật được áp dụng trong trường hợp sau đây:
+a) Không có di chúc;
+b) Di chúc không hợp pháp;
+c) Những người thừa kế theo di chúc chết trước hoặc chết cùng thời điểm với người lập di chúc; cơ quan, tổ...",16
+case_7467,PARTIAL_B_WIN,12,Bộ luật dân sự năm 2015,651,Điều 53421,"1. Những người thừa kế theo pháp luật được quy định theo thứ tự sau đây:
+a) Hàng thừa kế thứ nhất gồm: vợ, chồng, cha đẻ, mẹ đẻ, cha nuôi, mẹ nuôi, con đẻ, con nuôi của người chết;
+b) Hàng thừa kế thứ hai gồm: ông nội, b...",16
+case_7467,PARTIAL_B_WIN,13,Bộ luật dân sự năm 2015,652,Điều 53422,Trường hợp con của người để lại di sản chết trước hoặc cùng một thời điểm với người để lại di sản thì cháu được hưởng phần di sản mà cha hoặc mẹ của cháu được hưởng nếu còn sống; nếu cháu cũng chết trước hoặc cùng một th...,16
+case_7467,PARTIAL_B_WIN,14,"Nghị quyết số 326/2016/UBTVQH14 ngày 30/12/2016 của Ủy ban Thường vụ Quốc hội quy định về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí tòa án.",12,Điều 56974,"1. Quyết định đầu tư xây dựng không đúng với quy định của Luật này.
+
+2. Khởi công xây dựng công trình khi chưa đủ điều kiện khởi công theo quy định của Luật này.
+
+3. Xây dựng công trình trong khu vực cấm xây dựng; xây dự...",16
+case_7467,PARTIAL_B_WIN,15,"Nghị quyết số 326/2016/UBTVQH14 ngày 30/12/2016 của Ủy ban Thường vụ Quốc hội quy định về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí tòa án.",26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",16
+case_7467,PARTIAL_B_WIN,16,"Nghị quyết số 326/2016/UBTVQH14 ngày 30/12/2016 của Ủy ban Thường vụ Quốc hội quy định về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí tòa án.",27,Điều 56989,"1. Nhiệm vụ quy hoạch phân khu xây dựng khu chức năng đặc thù gồm:
+a) Yêu cầu về diện tích sử dụng đất, quy mô, phạm vi quy hoạch của phân khu, hệ thống công trình hạ tầng kỹ thuật, hạ tầng xã hội trong khu vực quy hoạch...",16
+case_8219,A_WIN,1,Bộ luật Tố tụng dân sự năm 2015,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",4
+case_8219,A_WIN,2,Bộ luật Dân sự năm 2005,471,Điều 53241,"1. Họ, hụi, biêu, phường (sau đây gọi chung là họ) là hình thức giao dịch về tài sản theo tập quán trên cơ sở thỏa thuận của một nhóm người tập hợp nhau lại cùng định ra số người, thời gian, số tiền hoặc tài sản khác, th...",4
+case_8219,A_WIN,3,Bộ luật Dân sự năm 2015,357,Điều 14662,"1. Người yêu cầu Tòa án xem xét, thẩm định tại chỗ phải nộp tiền tạm ứng chi phí xem xét, thẩm định tại chỗ theo yêu cầu của Tòa án.
+
+2. Trường hợp Tòa án xét thấy cần thiết và quyết định xem xét, thẩm định tại chỗ thì n...",4
+case_8219,A_WIN,4,Nghị quyết số 326/2016/UBTVQH14,12,Điều 56974,"1. Quyết định đầu tư xây dựng không đúng với quy định của Luật này.
+
+2. Khởi công xây dựng công trình khi chưa đủ điều kiện khởi công theo quy định của Luật này.
+
+3. Xây dựng công trình trong khu vực cấm xây dựng; xây dự...",4
+case_2705,A_WIN,1,Bộ luật Tố tụng dân sự,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,4
+case_2705,A_WIN,2,Bộ luật Dân sự,123,Điều 57085,"1. Việc nghiệm thu công trình xây dựng gồm:
+a) Nghiệm thu công việc xây dựng trong quá trình thi công và nghiệm thu các giai đoạn chuyển bước thi công khi cần thiết;
+b) Nghiệm thu hoàn thành hạng mục công trình, hoàn thà...",4
+case_2705,A_WIN,3,"Pháp lệnh án phí, lệ phí Tòa án",27,Điều 56989,"1. Nhiệm vụ quy hoạch phân khu xây dựng khu chức năng đặc thù gồm:
+a) Yêu cầu về diện tích sử dụng đất, quy mô, phạm vi quy hoạch của phân khu, hệ thống công trình hạ tầng kỹ thuật, hạ tầng xã hội trong khu vực quy hoạch...",4
+case_2705,A_WIN,4,Nghị quyết số 326/2016/UBTVQH14,48,Điều 57010,"1. Ủy ban nhân dân cấp tỉnh có trách nhiệm chỉ đạo xây dựng chương trình, kế hoạch thực hiện quy hoạch xây dựng phát triển đô thị, nông thôn, khu chức năng đặc thù thuộc địa bàn mình quản lý theo quy hoạch xây dựng đã đư...",4
+case_3263,A_WIN,1,Bộ luật Tố tụng dân sự,228,Điều 14533,"1. Tòa án cấp phúc thẩm ra quyết định tạm đình chỉ xét xử phúc thẩm vụ án, hậu quả của việc tạm đình chỉ xét xử phúc thẩm vụ án và tiếp tục xét xử phúc thẩm vụ án được thực hiện theo quy định tại Điều 141 và Điều 142 của...",4
+case_3263,A_WIN,2,Bộ luật Dân sự,357,Điều 14662,"1. Người yêu cầu Tòa án xem xét, thẩm định tại chỗ phải nộp tiền tạm ứng chi phí xem xét, thẩm định tại chỗ theo yêu cầu của Tòa án.
+
+2. Trường hợp Tòa án xét thấy cần thiết và quyết định xem xét, thẩm định tại chỗ thì n...",4
+case_3263,A_WIN,3,Luật Hôn nhân và gia đình,37,Điều 56999,"1. Điều chỉnh tổng thể quy hoạch xây dựng được quy định như sau:
+a) Điều chỉnh tổng thể quy hoạch xây dựng được tiến hành khi tính chất, chức năng, quy mô của vùng, của khu vực lập quy hoạch thay đổi hoặc nội dung dự kiế...",4
+case_3263,A_WIN,4,Nghị quyết số 326/2016/UBTVQH14,27,Điều 56989,"1. Nhiệm vụ quy hoạch phân khu xây dựng khu chức năng đặc thù gồm:
+a) Yêu cầu về diện tích sử dụng đất, quy mô, phạm vi quy hoạch của phân khu, hệ thống công trình hạ tầng kỹ thuật, hạ tầng xã hội trong khu vực quy hoạch...",4
+case_9125,A_WIN,1,Bộ luật Tố tụng dân sự,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",4
+case_9125,A_WIN,2,Bộ luật Dân sự năm 2015,115,Điều 57077,"1. Trong quá trình thi công xây dựng, chủ đầu tư, nhà thầu thi công xây dựng có trách nhiệm bảo đảm an toàn cho công trình, người lao động, thiết bị, phương tiện thi công làm việc trên công trường xây dựng.
+
+2. Chủ đầu t...",4
+case_9125,A_WIN,3,Luật Đất đai năm 2013,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",4
+case_9125,A_WIN,4,Nghị quyết số 326/2016/UBTVQH14,12,Điều 56974,"1. Quyết định đầu tư xây dựng không đúng với quy định của Luật này.
+
+2. Khởi công xây dựng công trình khi chưa đủ điều kiện khởi công theo quy định của Luật này.
+
+3. Xây dựng công trình trong khu vực cấm xây dựng; xây dự...",4
+case_2035,PARTIAL_A_WIN,1,Bộ luật tố tụng,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",12
+case_2035,PARTIAL_A_WIN,2,Bộ luật tố tụng,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",12
+case_2035,PARTIAL_A_WIN,3,Bộ luật tố tụng,39,Điều 57001,"1. Cơ quan tổ chức lập quy hoạch xây dựng lập báo cáo nội dung và kế hoạch điều chỉnh cục bộ quy hoạch xây dựng, tổ chức xin ý kiến cộng đồng dân cư trong khu vực điều chỉnh quy hoạch và khu vực xung quanh có ảnh hưởng t...",12
+case_2035,PARTIAL_A_WIN,4,Bộ luật tố tụng,144,Điều 57106,"1. Việc thanh toán hợp đồng xây dựng phải phù hợp với loại hợp đồng, giá hợp đồng và các điều kiện trong hợp đồng mà các bên đã ký kết.
+
+2. Các bên hợp đồng thỏa thuận về phương thức thanh toán, thời gian thanh toán, hồ...",12
+case_2035,PARTIAL_A_WIN,5,Bộ luật tố tụng,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,12
+case_2035,PARTIAL_A_WIN,6,Bộ luật tố tụng,227,Điều 14532,"1. Đương sự được quyền giao nộp bổ sung tài liệu, chứng cứ trong giai đoạn chuẩn bị xét xử phúc thẩm trong những trường hợp sau đây:
+a) Những tài liệu, chứng cứ mà Tòa án cấp sơ thẩm đã yêu cầu giao nộp nhưng đương sự kh...",12
+case_2035,PARTIAL_A_WIN,7,Bộ luật tố tụng,235,Điều 14540,"1. Trường hợp người bị kiện sửa đổi, hủy bỏ quyết định hành chính, quyết định kỷ luật buộc thôi việc, quyết định giải quyết khiếu nại về quyết định xử lý vụ việc cạnh tranh hoặc dừng, khắc phục hành vi hành chính bị khởi...",12
+case_2035,PARTIAL_A_WIN,8,Bộ luật Dân sự 2015,266,Điều 14571,"1. Ủy ban Thẩm phán Tòa án nhân dân cấp cao giám đốc thẩm bản án, quyết định đã có hiệu lực pháp luật của Tòa án cấp tỉnh, Tòa án cấp huyện trong phạm vi thẩm quyền theo lãnh thổ bị kháng nghị như sau:a) Ủy ban Thẩm phán...",12
+case_2035,PARTIAL_A_WIN,9,Bộ luật Dân sự 2015,271,Điều 14576,"1. Hội đồng xét xử giám đốc thẩm chỉ xem xét phần quyết định của bản án, quyết định đã có hiệu lực pháp luật bị kháng nghị hoặc có liên quan đến việc xem xét nội dung kháng nghị.
+
+2. Hội đồng xét xử giám đốc thẩm có quyề...",12
+case_2035,PARTIAL_A_WIN,10,Luật Đất đai 2013,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",12
+case_2035,PARTIAL_A_WIN,11,Luật Đất đai 2013,166,Điều 57128,"1. Dự án đầu tư xây dựng đã được phê duyệt trước ngày Luật này có hiệu lực thì không phải phê duyệt lại, các hoạt động tiếp theo chưa được thực hiện thì thực hiện theo quy định của Luật này.
+
+2. Ban quản lý dự án đầu tư...",12
+case_2035,PARTIAL_A_WIN,12,Luật Đất đai 2013,170,Điều 14475,"Trường hợp tại phiên tòa có người yêu cầu thay đổi người tiến hành tố tụng, người giám định, người phiên dịch thì Hội đồng xét xử phải xem xét, quyết định việc chấp nhận hoặc không chấp nhận yêu cầu theo quy định của Luậ...",12
+case_8303,PARTIAL_A_WIN,1,Bộ luật dân sự năm 2005,122,Điều 57084,"1. Nhà thầu giám sát thi công xây dựng công trình có các quyền sau:
+a) Tham gia nghiệm thu, xác nhận công việc, công trình đã hoàn thành thi công xây dựng;
+b) Yêu cầu nhà thầu thi công xây dựng công trình thực hiện đúng...",20
+case_8303,PARTIAL_A_WIN,2,Bộ luật dân sự năm 2005,124,Điều 57086,"1. Việc bàn giao công trình xây dựng phải tuân thủ các quy định sau:
+a) Đã thực hiện nghiệm thu công trình xây dựng theo đúng quy định của pháp luật về xây dựng;
+b) Bảo đảm an toàn trong vận hành, khai thác khi đưa công...",20
+case_8303,PARTIAL_A_WIN,3,Bộ luật dân sự năm 2005,343,Điều 14648,"Viện kiểm sát kiểm sát việc tuân theo pháp luật trong việc giải quyết khiếu nại, tố cáo trong tố tụng hành chính theo quy định của pháp luật. Viện kiểm sát có quyền yêu cầu, kiến nghị đối với Tòa án cùng cấp, Tòa án cấp...",20
+case_8303,PARTIAL_A_WIN,4,Bộ luật dân sự năm 2005,351,Điều 14656,"Căn cứ vào quy định của Luật phí và lệ phí và Luật này, Ủy ban thường vụ Quốc hội quy định cụ thể về án phí, lệ phí Tòa án; mức thu án phí, lệ phí Tòa án đối với mỗi loại vụ án; các trường hợp được miễn, giảm hoặc không...",20
+case_8303,PARTIAL_A_WIN,5,Bộ luật dân sự năm 2005,355,Điều 14660,1. Trường hợp người đã nộp tiền tạm ứng chi phí ủy thác tư pháp không phải chịu chi phí ủy thác tư pháp thì người phải chịu chi phí ủy thác tư pháp theo quyết định của Tòa án phải hoàn trả cho người đã nộp tiền tạm ứng c...,20
+case_8303,PARTIAL_A_WIN,6,Bộ luật dân sự năm 2005,422,Điều 56866,"1. Người nào trong thời bình hay trong chiến tranh mà thực hiện hành vi tiêu diệt hàng loạt dân cư của một khu vực, phá hủy nguồn sống, phá hoại cuộc sống văn hóa, tinh thần của một quốc gia hoặc một vùng lãnh thổ độc lậ...",20
+case_8303,PARTIAL_A_WIN,7,Bộ luật dân sự năm 2005,721,,,20
+case_8303,PARTIAL_A_WIN,8,Luật các tổ chức tín dụng,91,Điều 57053,"1. Phù hợp với quy hoạch chi tiết xây dựng đã được cơ quan nhà nước có thẩm quyền phê duyệt. Đối với công trình xây dựng ở khu vực, tuyến phố trong đô thị đã ổn định nhưng chưa có quy hoạch chi tiết xây dựng thì phải phù...",20
+case_8303,PARTIAL_A_WIN,9,Luật các tổ chức tín dụng,95,Điều 57057,"1. Hồ sơ đề nghị cấp giấy phép xây dựng mới đối với nhà ở riêng lẻ gồm:
+a) Đơn đề nghị cấp giấy phép xây dựng;
+b) Bản sao một trong những giấy tờ chứng minh quyền sử dụng đất theo quy định của pháp luật về đất đai;
+c) Bả...",20
+case_8303,PARTIAL_A_WIN,10,Bộ luật tố tụng dân sự năm 2015,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",20
+case_8303,PARTIAL_A_WIN,11,Bộ luật tố tụng dân sự năm 2015,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",20
+case_8303,PARTIAL_A_WIN,12,Bộ luật tố tụng dân sự năm 2015,39,Điều 57001,"1. Cơ quan tổ chức lập quy hoạch xây dựng lập báo cáo nội dung và kế hoạch điều chỉnh cục bộ quy hoạch xây dựng, tổ chức xin ý kiến cộng đồng dân cư trong khu vực điều chỉnh quy hoạch và khu vực xung quanh có ảnh hưởng t...",20
+case_8303,PARTIAL_A_WIN,13,Bộ luật tố tụng dân sự năm 2015,95,Điều 57057,"1. Hồ sơ đề nghị cấp giấy phép xây dựng mới đối với nhà ở riêng lẻ gồm:
+a) Đơn đề nghị cấp giấy phép xây dựng;
+b) Bản sao một trong những giấy tờ chứng minh quyền sử dụng đất theo quy định của pháp luật về đất đai;
+c) Bả...",20
+case_8303,PARTIAL_A_WIN,14,Bộ luật tố tụng dân sự năm 2015,146,Điều 57108,"1. Thưởng, phạt hợp đồng xây dựng phải được các bên thỏa thuận và ghi trong hợp đồng.
+
+2. Đối với công trình xây dựng sử dụng vốn nhà nước, mức phạt hợp đồng không vượt quá 12% giá trị phần hợp đồng bị vi phạm. Ngoài mức...",20
+case_8303,PARTIAL_A_WIN,15,Bộ luật tố tụng dân sự năm 2015,227,Điều 14532,"1. Đương sự được quyền giao nộp bổ sung tài liệu, chứng cứ trong giai đoạn chuẩn bị xét xử phúc thẩm trong những trường hợp sau đây:
+a) Những tài liệu, chứng cứ mà Tòa án cấp sơ thẩm đã yêu cầu giao nộp nhưng đương sự kh...",20
+case_8303,PARTIAL_A_WIN,16,Bộ luật tố tụng dân sự năm 2015,228,Điều 14533,"1. Tòa án cấp phúc thẩm ra quyết định tạm đình chỉ xét xử phúc thẩm vụ án, hậu quả của việc tạm đình chỉ xét xử phúc thẩm vụ án và tiếp tục xét xử phúc thẩm vụ án được thực hiện theo quy định tại Điều 141 và Điều 142 của...",20
+case_8303,PARTIAL_A_WIN,17,Bộ luật tố tụng dân sự năm 2015,271,Điều 14576,"1. Hội đồng xét xử giám đốc thẩm chỉ xem xét phần quyết định của bản án, quyết định đã có hiệu lực pháp luật bị kháng nghị hoặc có liên quan đến việc xem xét nội dung kháng nghị.
+
+2. Hội đồng xét xử giám đốc thẩm có quyề...",20
+case_8303,PARTIAL_A_WIN,18,Bộ luật tố tụng dân sự năm 2015,273,Điều 14578,"Hội đồng xét xử giám đốc thẩm ra quyết định hủy bản án, quyết định đã có hiệu lực pháp luật bị kháng nghị và giữ nguyên bản án, quyết định của Tòa án cấp dưới xét xử đúng pháp luật, nhưng đã bị bản án, quyết định đã có h...",20
+case_8303,PARTIAL_A_WIN,19,Nghị quyết số 326/2016/UBTVQH14 ngày 30/12/2016 của Ủy ban thường vụ Quốc hội,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",20
+case_8303,PARTIAL_A_WIN,20,"Pháp lệnh án phí, lệ phí Tòa án",14,Điều 56976,"1. Yêu cầu đối với quy hoạch xây dựng gồm:
+a) Phù hợp với mục tiêu của chiến lược, quy hoạch tổng thể phát triển kinh tế - xã hội; bảo đảm quốc phòng, an ninh, tạo động lực phát triển kinh tế - xã hội bền vững; thống nhấ...",20
+case_3735,PARTIAL_A_WIN,1,Bộ luật Tố tụng dân sự 2015,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",13
+case_3735,PARTIAL_A_WIN,2,Bộ luật Tố tụng dân sự 2015,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",13
+case_3735,PARTIAL_A_WIN,3,Bộ luật Tố tụng dân sự 2015,39,Điều 57001,"1. Cơ quan tổ chức lập quy hoạch xây dựng lập báo cáo nội dung và kế hoạch điều chỉnh cục bộ quy hoạch xây dựng, tổ chức xin ý kiến cộng đồng dân cư trong khu vực điều chỉnh quy hoạch và khu vực xung quanh có ảnh hưởng t...",13
+case_3735,PARTIAL_A_WIN,4,Bộ luật Tố tụng dân sự 2015,91,Điều 57053,"1. Phù hợp với quy hoạch chi tiết xây dựng đã được cơ quan nhà nước có thẩm quyền phê duyệt. Đối với công trình xây dựng ở khu vực, tuyến phố trong đô thị đã ổn định nhưng chưa có quy hoạch chi tiết xây dựng thì phải phù...",13
+case_3735,PARTIAL_A_WIN,5,Bộ luật Tố tụng dân sự 2015,144,Điều 57106,"1. Việc thanh toán hợp đồng xây dựng phải phù hợp với loại hợp đồng, giá hợp đồng và các điều kiện trong hợp đồng mà các bên đã ký kết.
+
+2. Các bên hợp đồng thỏa thuận về phương thức thanh toán, thời gian thanh toán, hồ...",13
+case_3735,PARTIAL_A_WIN,6,Bộ luật Tố tụng dân sự 2015,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,13
+case_3735,PARTIAL_A_WIN,7,Bộ luật Tố tụng dân sự 2015,157,Điều 57119,"1. Có đủ năng lực hoạt động thi công xây dựng công trình tương ứng với loại, cấp công trình xây dựng.
+
+2. Chỉ huy trưởng công trường có năng lực hành nghề thi công xây dựng công trình và chứng chỉ hành nghề phù hợp.
+
+3....",13
+case_3735,PARTIAL_A_WIN,8,Bộ luật Tố tụng dân sự 2015,229,Điều 14534,"1. Tòa án cấp phúc thẩm ra quyết định đình chỉ xét xử phúc thẩm vụ án trong các trường hợp sau đây:
+a) Trường hợp quy định tại điểm a khoản 1 Điều 143 của Luật này;
+b) Trường hợp trả lại đơn kháng cáo theo quy định của L...",13
+case_3735,PARTIAL_A_WIN,9,Bộ luật Dân sự 2015,468,Điều 53238,"1. Lãi suất vay do các bên thỏa thuận.Trường hợp các bên có thỏa thuận về lãi suất thì lãi suất theo thỏa thuận không được vượt quá 20%/năm của khoản tiền vay, trừ trường hợp luật khác có liên quan quy định khác. Căn cứ...",13
+case_3735,PARTIAL_A_WIN,10,Bộ luật Dân sự 2015,504,Điều 53274,"1. Hợp đồng hợp tác là sự thỏa thuận giữa các cá nhân, pháp nhân về việc cùng đóng góp tài sản, công sức để thực hiện công việc nhất định, cùng hưởng lợi và cùng chịu trách nhiệm.
+
+2. Hợp đồng hợp tác phải được lập thành...",13
+case_3735,PARTIAL_A_WIN,11,Bộ luật Dân sự 2015,509,Điều 53279,Các thành viên hợp tác chịu trách nhiệm dân sự chung bằng tài sản chung; nếu tài sản chung không đủ để thực hiện nghĩa vụ chung thì thành viên hợp tác phải chịu trách nhiệm bằng tài sản riêng theo phần tương ứng với phần...,13
+case_3735,PARTIAL_A_WIN,12,Bộ luật Dân sự 2015,510,Điều 53280,"1. Thành viên có quyền rút khỏi hợp đồng hợp tác trong trường hợp sau đây:
+a) Theo điều kiện đã thỏa thuận trong hợp đồng hợp tác;
+b) Có lý do chính đáng và được sự đồng ý của hơn một nửa tổng số thành viên hợp tác.
+
+2....",13
+case_3735,PARTIAL_A_WIN,13,Nghị quyết 326/2016/UBTVQH14,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",13
+case_8758,B_WIN,1,Luật đất đai năm 2013,95,Điều 57057,"1. Hồ sơ đề nghị cấp giấy phép xây dựng mới đối với nhà ở riêng lẻ gồm:
+a) Đơn đề nghị cấp giấy phép xây dựng;
+b) Bản sao một trong những giấy tờ chứng minh quyền sử dụng đất theo quy định của pháp luật về đất đai;
+c) Bả...",22
+case_8758,B_WIN,2,Luật đất đai năm 2013,166,Điều 57128,"1. Dự án đầu tư xây dựng đã được phê duyệt trước ngày Luật này có hiệu lực thì không phải phê duyệt lại, các hoạt động tiếp theo chưa được thực hiện thì thực hiện theo quy định của Luật này.
+
+2. Ban quản lý dự án đầu tư...",22
+case_8758,B_WIN,3,Luật đất đai năm 2013,170,Điều 14475,"Trường hợp tại phiên tòa có người yêu cầu thay đổi người tiến hành tố tụng, người giám định, người phiên dịch thì Hội đồng xét xử phải xem xét, quyết định việc chấp nhận hoặc không chấp nhận yêu cầu theo quy định của Luậ...",22
+case_8758,B_WIN,4,Luật đất đai năm 2013,171,Điều 14476,"1. Trước khi người làm chứng được hỏi về những vấn đề mà họ biết được có liên quan đến việc giải quyết vụ án, Chủ tọa phiên tòa có thể quyết định những biện pháp cần thiết để những người làm chứng không nghe được lời kha...",22
+case_8758,B_WIN,5,Luật đất đai năm 2013,202,Điều 14507,"1. Bản án, quyết định đình chỉ vụ án giải quyết khiếu kiện về danh sách cử tri có hiệu lực thi hành ngay. Đương sự không có quyền kháng cáo, Viện kiểm sát không có quyền kháng nghị.
+
+2. Tòa án phải gửi ngay bản án, quyết...",22
+case_8758,B_WIN,6,Luật đất đai năm 2013,203,Điều 14508,"Xét xử phúc thẩm là việc Tòa án cấp phúc thẩm xét xử lại vụ án mà bản án, quyết định của Tòa án cấp sơ thẩm chưa có hiệu lực pháp luật bị kháng cáo hoặc kháng nghị.",22
+case_8758,B_WIN,7,Bộ luật dân sự,254,Điều 14559,"Giám đốc thẩm là xét lại bản án, quyết định của Tòa án đã có hiệu lực pháp luật nhưng bị kháng nghị giám đốc thẩm khi có căn cứ quy định tại Điều 255 của Luật này.",22
+case_8758,B_WIN,8,Bộ luật dân sự,257,Điều 14562,"1. Đơn đề nghị phải có các nội dung chính sau đây:
+a) Ngày, tháng, năm làm đơn đề nghị;
+b) Tên, địa chỉ của người đề nghị;
+c) Tên bản án, quyết định của Tòa án đã có hiệu lực pháp luật đề nghị xem xét theo thủ tục giám đ...",22
+case_8758,B_WIN,9,Bộ luật dân sự,265,Điều 14570,"1. Người đã kháng nghị giám đốc thẩm có quyền thay đổi, bổ sung quyết định kháng nghị, nếu chưa hết thời hạn kháng nghị quy định tại Điều 263 của Luật này.
+
+2. Trước khi mở phiên tòa hoặc tại phiên tòa, người kháng nghị...",22
+case_8758,B_WIN,10,Bộ luật dân sự,266,Điều 14571,"1. Ủy ban Thẩm phán Tòa án nhân dân cấp cao giám đốc thẩm bản án, quyết định đã có hiệu lực pháp luật của Tòa án cấp tỉnh, Tòa án cấp huyện trong phạm vi thẩm quyền theo lãnh thổ bị kháng nghị như sau:a) Ủy ban Thẩm phán...",22
+case_8758,B_WIN,11,Bộ luật Tố tụng dân sự,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",22
+case_8758,B_WIN,12,Bộ luật Tố tụng dân sự,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",22
+case_8758,B_WIN,13,Bộ luật Tố tụng dân sự,144,Điều 57106,"1. Việc thanh toán hợp đồng xây dựng phải phù hợp với loại hợp đồng, giá hợp đồng và các điều kiện trong hợp đồng mà các bên đã ký kết.
+
+2. Các bên hợp đồng thỏa thuận về phương thức thanh toán, thời gian thanh toán, hồ...",22
+case_8758,B_WIN,14,Bộ luật Tố tụng dân sự,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,22
+case_8758,B_WIN,15,Bộ luật Tố tụng dân sự,155,Điều 57117,"1. Có đủ điều kiện năng lực phù hợp với công việc giám sát thi công xây dựng công trình, kiểm định xây dựng.
+
+2. Cá nhân tư vấn giám sát thi công xây dựng công trình, kiểm định xây dựng phải có chứng chỉ hành nghề phù hợ...",22
+case_8758,B_WIN,16,Bộ luật Tố tụng dân sự,157,Điều 57119,"1. Có đủ năng lực hoạt động thi công xây dựng công trình tương ứng với loại, cấp công trình xây dựng.
+
+2. Chỉ huy trưởng công trường có năng lực hành nghề thi công xây dựng công trình và chứng chỉ hành nghề phù hợp.
+
+3....",22
+case_8758,B_WIN,17,Bộ luật Tố tụng dân sự,158,Điều 57120,"Cá nhân hành nghề độc lập thiết kế quy hoạch xây dựng, khảo sát xây dựng, thiết kế xây dựng công trình, giám sát khảo sát xây dựng, giám sát thi công xây dựng công trình, định giá xây dựng phải đáp ứng các điều kiện sau:...",22
+case_8758,B_WIN,18,Bộ luật Tố tụng dân sự,163,Điều 57125,"1. Bộ quản lý công trình xây dựng chuyên ngành trong phạm vi quyền hạn của mình có trách nhiệm sau:
+a) Phối hợp với Bộ Xây dựng để thực hiện quản lý nhà nước về hoạt động đầu tư xây dựng và chịu trách nhiệm về quản lý ch...",22
+case_8758,B_WIN,19,Bộ luật Tố tụng dân sự,165,Điều 57127,"1. Thanh tra xây dựng thuộc Bộ Xây dựng, Sở Xây dựng thực hiện chức năng thanh tra hành chính và thanh tra chuyên ngành về xây dựng đối với tổ chức, cá nhân tham gia hoạt động đầu tư xây dựng.
+
+2. Bộ Xây dựng chịu trách...",22
+case_8758,B_WIN,20,Bộ luật Tố tụng dân sự,166,Điều 57128,"1. Dự án đầu tư xây dựng đã được phê duyệt trước ngày Luật này có hiệu lực thì không phải phê duyệt lại, các hoạt động tiếp theo chưa được thực hiện thì thực hiện theo quy định của Luật này.
+
+2. Ban quản lý dự án đầu tư...",22
+case_8758,B_WIN,21,Bộ luật Tố tụng dân sự,217,Điều 14522,"1. Ngay sau khi nhận được hồ sơ vụ án, đơn kháng cáo, quyết định kháng nghị và tài liệu, chứng cứ kèm theo, Tòa án cấp phúc thẩm phải vào sổ thụ lý.Trong thời hạn 03 ngày làm việc kể từ ngày thụ lý vụ án, Tòa án phải thô...",22
+case_8758,B_WIN,22,Bộ luật Tố tụng dân sự,273,Điều 14578,"Hội đồng xét xử giám đốc thẩm ra quyết định hủy bản án, quyết định đã có hiệu lực pháp luật bị kháng nghị và giữ nguyên bản án, quyết định của Tòa án cấp dưới xét xử đúng pháp luật, nhưng đã bị bản án, quyết định đã có h...",22
+case_6425,A_WIN,1,Bộ luật Dân sự 2005,608,Điều 53378,"Cá nhân, pháp nhân sản xuất, kinh doanh hàng hóa, dịch vụ không bảo đảm chất lượng hàng hóa, dịch vụ mà gây thiệt hại cho người tiêu dùng thì phải bồi thường.",8
+case_6425,A_WIN,2,Bộ luật Dân sự 2005,268,Điều 14573,"Trong thời hạn 60 ngày kể từ ngày nhận được kháng nghị kèm theo hồ sơ vụ án, Tòa án có thẩm quyền giám đốc thẩm phải mở phiên tòa.",8
+case_6425,A_WIN,3,Bộ luật Dân sự 2005,604,Điều 53374,"Chủ sở hữu, người chiếm hữu, người được giao quản lý phải bồi thường thiệt hại do cây cối gây ra.",8
+case_6425,A_WIN,4,Bộ luật Dân sự 2005,605,Điều 53375,"Chủ sở hữu, người chiếm hữu, người được giao quản lý, sử dụng nhà cửa, công trình xây dựng khác phải bồi thường thiệt hại do nhà cửa, công trình xây dựng khác đó gây thiệt hại cho người khác.Khi người thi công có lỗi tro...",8
+case_6425,A_WIN,5,Bộ luật Dân sự 2005,2,Điều 56964,"Luật này áp dụng đối với cơ quan, tổ chức, cá nhân trong nước; tổ chức, cá nhân nước ngoài hoạt động đầu tư xây dựng trên lãnh thổ Việt Nam.Trường hợp điều ước quốc tế mà Cộng hòa xã hội chủ nghĩa Việt Nam là thành viên...",8
+case_6425,A_WIN,6,Bộ luật Tố tụng dân sự 2015,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",8
+case_6425,A_WIN,7,"Pháp lệnh án phí, lệ phí Tòa án",27,Điều 56989,"1. Nhiệm vụ quy hoạch phân khu xây dựng khu chức năng đặc thù gồm:
+a) Yêu cầu về diện tích sử dụng đất, quy mô, phạm vi quy hoạch của phân khu, hệ thống công trình hạ tầng kỹ thuật, hạ tầng xã hội trong khu vực quy hoạch...",8
+case_6425,A_WIN,8,Nghị quyết 01/2012/NQ-HĐTP,13,Điều 56975,"1. Quy hoạch xây dựng gồm các loại sau:
+a) Quy hoạch vùng;
+b) Quy hoạch đô thị;
+c) Quy hoạch khu chức năng đặc thù;
+d) Quy hoạch nông thôn.
+
+2. Quy hoạch xây dựng được lập căn cứ vào các nội dung sau:
+a) Chiến lược, quy...",8
+case_127,B_WIN,1,Bộ luật Tố tụng dân sự,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",34
+case_127,B_WIN,2,Bộ luật Tố tụng dân sự,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",34
+case_127,B_WIN,3,Bộ luật Tố tụng dân sự,39,Điều 57001,"1. Cơ quan tổ chức lập quy hoạch xây dựng lập báo cáo nội dung và kế hoạch điều chỉnh cục bộ quy hoạch xây dựng, tổ chức xin ý kiến cộng đồng dân cư trong khu vực điều chỉnh quy hoạch và khu vực xung quanh có ảnh hưởng t...",34
+case_127,B_WIN,4,Bộ luật Tố tụng dân sự,144,Điều 57106,"1. Việc thanh toán hợp đồng xây dựng phải phù hợp với loại hợp đồng, giá hợp đồng và các điều kiện trong hợp đồng mà các bên đã ký kết.
+
+2. Các bên hợp đồng thỏa thuận về phương thức thanh toán, thời gian thanh toán, hồ...",34
+case_127,B_WIN,5,Bộ luật Tố tụng dân sự,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,34
+case_127,B_WIN,6,Bộ luật Tố tụng dân sự,266,Điều 14571,"1. Ủy ban Thẩm phán Tòa án nhân dân cấp cao giám đốc thẩm bản án, quyết định đã có hiệu lực pháp luật của Tòa án cấp tỉnh, Tòa án cấp huyện trong phạm vi thẩm quyền theo lãnh thổ bị kháng nghị như sau:a) Ủy ban Thẩm phán...",34
+case_127,B_WIN,7,Bộ luật Tố tụng dân sự,273,Điều 14578,"Hội đồng xét xử giám đốc thẩm ra quyết định hủy bản án, quyết định đã có hiệu lực pháp luật bị kháng nghị và giữ nguyên bản án, quyết định của Tòa án cấp dưới xét xử đúng pháp luật, nhưng đã bị bản án, quyết định đã có h...",34
+case_127,B_WIN,8,Bộ luật Tố tụng dân sự,280,Điều 14585,"Tái thẩm là xét lại bản án, quyết định đã có hiệu lực pháp luật nhưng bị kháng nghị vì có những tình tiết mới được phát hiện có thể làm thay đổi cơ bản nội dung của bản án, quyết định mà Tòa án, đương sự không biết được...",34
+case_127,B_WIN,9,Bộ luật Dân sự năm 2005,121,Điều 57083,"1. Chủ đầu tư có các quyền sau:
+a) Tự thực hiện giám sát thi công xây dựng công trình khi có đủ điều kiện năng lực giám sát thi công xây dựng và tự chịu trách nhiệm về việc giám sát của mình;
+b) Đàm phán, ký kết hợp đồng...",34
+case_127,B_WIN,10,Bộ luật Dân sự năm 2005,122,Điều 57084,"1. Nhà thầu giám sát thi công xây dựng công trình có các quyền sau:
+a) Tham gia nghiệm thu, xác nhận công việc, công trình đã hoàn thành thi công xây dựng;
+b) Yêu cầu nhà thầu thi công xây dựng công trình thực hiện đúng...",34
+case_127,B_WIN,11,Bộ luật Dân sự năm 2005,123,Điều 57085,"1. Việc nghiệm thu công trình xây dựng gồm:
+a) Nghiệm thu công việc xây dựng trong quá trình thi công và nghiệm thu các giai đoạn chuyển bước thi công khi cần thiết;
+b) Nghiệm thu hoàn thành hạng mục công trình, hoàn thà...",34
+case_127,B_WIN,12,Bộ luật Dân sự năm 2005,124,Điều 57086,"1. Việc bàn giao công trình xây dựng phải tuân thủ các quy định sau:
+a) Đã thực hiện nghiệm thu công trình xây dựng theo đúng quy định của pháp luật về xây dựng;
+b) Bảo đảm an toàn trong vận hành, khai thác khi đưa công...",34
+case_127,B_WIN,13,Bộ luật Dân sự năm 2005,255,Điều 14560,"1. Bản án, quyết định của Tòa án đã có hiệu lực pháp luật bị kháng nghị theo thủ tục giám đốc thẩm khi có một trong những căn cứ sau đây:
+a) Kết luận trong bản án, quyết định không phù hợp với những tình tiết khách quan...",34
+case_127,B_WIN,14,Bộ luật Dân sự năm 2005,256,Điều 14561,"1. Trong thời hạn 01 năm kể từ ngày bản án, quyết định của Tòa án có hiệu lực pháp luật, nếu phát hiện có một trong các căn cứ quy định tại khoản 1 Điều 255 của Luật này thì đương sự có quyền đề nghị bằng văn bản với nhữ...",34
+case_127,B_WIN,15,Bộ luật Dân sự năm 2005,280,Điều 14585,"Tái thẩm là xét lại bản án, quyết định đã có hiệu lực pháp luật nhưng bị kháng nghị vì có những tình tiết mới được phát hiện có thể làm thay đổi cơ bản nội dung của bản án, quyết định mà Tòa án, đương sự không biết được...",34
+case_127,B_WIN,16,Bộ luật Dân sự năm 2005,281,Điều 14586,"Bản án, quyết định của Tòa án đã có hiệu lực pháp luật bị kháng nghị theo thủ tục tái thẩm khi có một trong những căn cứ sau đây:
+
+1. Mới phát hiện được tình tiết quan trọng của vụ án mà Tòa án, đương sự đã không thể biế...",34
+case_127,B_WIN,17,Bộ luật Dân sự năm 2005,290,Điều 14595,"1. Viện trưởng Viện kiểm sát nhân dân tối cao tham dự phiên họp của Hội đồng Thẩm phán Tòa án nhân dân tối cao để xem xét kiến nghị của Ủy ban tư pháp của Quốc hội, kiến nghị của Viện trưởng Viện kiểm sát nhân dân tối ca...",34
+case_127,B_WIN,18,Bộ luật Dân sự năm 2005,401,Điều 56845,"1. Người nào tự ý rời bỏ vị trí chiến đấu hoặc không làm nhiệm vụ trong chiến đấu, thì bị phạt tù từ 02 năm đến 07 năm.
+
+2. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 05 năm đến 12 năm:
+a) Là chỉ...",34
+case_127,B_WIN,19,Bộ luật Dân sự năm 2005,439,Điều 53209,"Trường hợp tài sản được giao không đúng chủng loại thì bên mua có một trong các quyền sau đây:
+
+1. Nhận và thanh toán theo giá do các bên thỏa thuận.
+
+2. Yêu cầu giao tài sản đúng chủng loại và bồi thường thiệt hại.
+
+3....",34
+case_127,B_WIN,20,Bộ luật Dân sự năm 2005,439,Điều 53209,"Trường hợp tài sản được giao không đúng chủng loại thì bên mua có một trong các quyền sau đây:
+
+1. Nhận và thanh toán theo giá do các bên thỏa thuận.
+
+2. Yêu cầu giao tài sản đúng chủng loại và bồi thường thiệt hại.
+
+3....",34
+case_127,B_WIN,21,Bộ luật Dân sự năm 2005,450,Điều 53220,"1. Trường hợp mua bán quyền tài sản thì bên bán phải chuyển giấy tờ và làm thủ tục chuyển quyền sở hữu cho bên mua, bên mua phải trả tiền cho bên bán.
+
+2. Trường hợp quyền tài sản là quyền đòi nợ và bên bán cam kết bảo đ...",34
+case_127,B_WIN,22,Bộ luật Dân sự năm 2005,451,Điều 53221,"Tài sản có thể được đem bán đấu giá theo ý chí của chủ sở hữu hoặc theo quy định của pháp luật. Tài sản thuộc sở hữu chung đem bán đấu giá phải có sự đồng ý của tất cả các chủ sở hữu chung, trừ trường hợp có thỏa thuận k...",34
+case_127,B_WIN,23,Bộ luật Dân sự năm 2005,452,Điều 53222,"1. Các bên có thể thỏa thuận về việc bên mua được dùng thử vật mua trong một thời hạn gọi là thời hạn dùng thử. Trong thời hạn dùng thử, bên mua có thể trả lời mua hoặc không mua; nếu hết thời hạn dùng thử mà bên mua khô...",34
+case_127,B_WIN,24,Bộ luật Dân sự năm 2005,454,Điều 53224,1. Bên bán có thể thỏa thuận với bên mua về quyền chuộc lại tài sản đã bán sau một thời hạn gọi là thời hạn chuộc lại.Thời hạn chuộc lại tài sản do các bên thỏa thuận; trường hợp không có thỏa thuận thì thời hạn chuộc lạ...,34
+case_127,B_WIN,25,Bộ luật Dân sự năm 2005,471,Điều 53241,"1. Họ, hụi, biêu, phường (sau đây gọi chung là họ) là hình thức giao dịch về tài sản theo tập quán trên cơ sở thỏa thuận của một nhóm người tập hợp nhau lại cùng định ra số người, thời gian, số tiền hoặc tài sản khác, th...",34
+case_127,B_WIN,26,Bộ luật Dân sự năm 2005,474,Điều 53244,"1. Thời hạn thuê do các bên thỏa thuận; nếu không có thỏa thuận thì được xác định theo mục đích thuê.
+
+2. Trường hợp các bên không thỏa thuận về thời hạn thuê và thời hạn thuê không thể xác định được theo mục đích thuê t...",34
+case_127,B_WIN,27,Bộ luật Dân sự năm 2005,697,,,34
+case_127,B_WIN,28,Bộ luật Dân sự năm 2005,698,,,34
+case_127,B_WIN,29,Bộ luật Dân sự năm 2005,699,,,34
+case_127,B_WIN,30,Bộ luật Dân sự năm 2005,700,,,34
+case_127,B_WIN,31,Bộ luật Dân sự năm 2005,701,,,34
+case_127,B_WIN,32,Bộ luật Dân sự năm 2005,702,,,34
+case_127,B_WIN,33,Bộ luật Dân sự năm 2015,155,Điều 57117,"1. Có đủ điều kiện năng lực phù hợp với công việc giám sát thi công xây dựng công trình, kiểm định xây dựng.
+
+2. Cá nhân tư vấn giám sát thi công xây dựng công trình, kiểm định xây dựng phải có chứng chỉ hành nghề phù hợ...",34
+case_127,B_WIN,34,Bộ luật Dân sự năm 2015,688,Điều 53458,"1. Đối với giao dịch dân sự được xác lập trước ngày Bộ luật này có hiệu lực thì việc áp dụng pháp luật được quy định như sau:
+a) Giao dịch dân sự chưa được thực hiện mà có nội dung, hình thức khác với quy định của Bộ luậ...",34
+case_2978,B_WIN,1,Bộ luật Tố tụng Dân sự 2015,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",6
+case_2978,B_WIN,2,Bộ luật Tố tụng Dân sự 2015,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",6
+case_2978,B_WIN,3,Bộ luật Tố tụng Dân sự 2015,39,Điều 57001,"1. Cơ quan tổ chức lập quy hoạch xây dựng lập báo cáo nội dung và kế hoạch điều chỉnh cục bộ quy hoạch xây dựng, tổ chức xin ý kiến cộng đồng dân cư trong khu vực điều chỉnh quy hoạch và khu vực xung quanh có ảnh hưởng t...",6
+case_2978,B_WIN,4,Bộ luật Tố tụng Dân sự 2015,203,Điều 14508,"Xét xử phúc thẩm là việc Tòa án cấp phúc thẩm xét xử lại vụ án mà bản án, quyết định của Tòa án cấp sơ thẩm chưa có hiệu lực pháp luật bị kháng cáo hoặc kháng nghị.",6
+case_2978,B_WIN,5,Bộ luật Tố tụng Dân sự 2015,227,Điều 14532,"1. Đương sự được quyền giao nộp bổ sung tài liệu, chứng cứ trong giai đoạn chuẩn bị xét xử phúc thẩm trong những trường hợp sau đây:
+a) Những tài liệu, chứng cứ mà Tòa án cấp sơ thẩm đã yêu cầu giao nộp nhưng đương sự kh...",6
+case_2978,B_WIN,6,Bộ luật Tố tụng Dân sự 2015,228,Điều 14533,"1. Tòa án cấp phúc thẩm ra quyết định tạm đình chỉ xét xử phúc thẩm vụ án, hậu quả của việc tạm đình chỉ xét xử phúc thẩm vụ án và tiếp tục xét xử phúc thẩm vụ án được thực hiện theo quy định tại Điều 141 và Điều 142 của...",6
+case_2238,PARTIAL_B_WIN,1,Bộ luật Tố tụng dân sự 2015,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",17
+case_2238,PARTIAL_B_WIN,2,Bộ luật Tố tụng dân sự 2015,34,Điều 56996,"1. Thủ tướng Chính phủ phê duyệt nhiệm vụ và đồ án quy hoạch xây dựng sau:
+a) Quy hoạch xây dựng vùng liên tỉnh, quy hoạch xây dựng vùng tỉnh, quy hoạch xây dựng vùng chức năng đặc thù và quy hoạch xây dựng vùng dọc tuyế...",17
+case_2238,PARTIAL_B_WIN,3,Bộ luật Tố tụng dân sự 2015,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",17
+case_2238,PARTIAL_B_WIN,4,Bộ luật Tố tụng dân sự 2015,39,Điều 57001,"1. Cơ quan tổ chức lập quy hoạch xây dựng lập báo cáo nội dung và kế hoạch điều chỉnh cục bộ quy hoạch xây dựng, tổ chức xin ý kiến cộng đồng dân cư trong khu vực điều chỉnh quy hoạch và khu vực xung quanh có ảnh hưởng t...",17
+case_2238,PARTIAL_B_WIN,5,Bộ luật Tố tụng dân sự 2015,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",17
+case_2238,PARTIAL_B_WIN,6,Bộ luật Tố tụng dân sự 2015,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",17
+case_2238,PARTIAL_B_WIN,7,Bộ luật Tố tụng dân sự 2015,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",17
+case_2238,PARTIAL_B_WIN,8,Bộ luật Dân sự 2005,122,Điều 57084,"1. Nhà thầu giám sát thi công xây dựng công trình có các quyền sau:
+a) Tham gia nghiệm thu, xác nhận công việc, công trình đã hoàn thành thi công xây dựng;
+b) Yêu cầu nhà thầu thi công xây dựng công trình thực hiện đúng...",17
+case_2238,PARTIAL_B_WIN,9,Bộ luật Dân sự 2005,127,Điều 57089,"1. Chủ đầu tư, chủ quản lý khai thác sử dụng công trình hoặc cơ quan nhà nước có thẩm quyền quyết định việc dừng khai thác sử dụng công trình xây dựng khi công trình hết thời hạn sử dụng, có nguy cơ gây mất an toàn, gây...",17
+case_2238,PARTIAL_B_WIN,10,Bộ luật Dân sự 2005,128,Điều 57090,"1. Công trình xây dựng đặc thù gồm:
+a) Công trình bí mật nhà nước;
+b) Công trình được xây dựng theo lệnh khẩn cấp;
+c) Công trình xây dựng tạm.
+
+2. Chính phủ quy định chi tiết Điều này.",17
+case_2238,PARTIAL_B_WIN,11,Bộ luật Dân sự 2005,2,Điều 56964,"Luật này áp dụng đối với cơ quan, tổ chức, cá nhân trong nước; tổ chức, cá nhân nước ngoài hoạt động đầu tư xây dựng trên lãnh thổ Việt Nam.Trường hợp điều ước quốc tế mà Cộng hòa xã hội chủ nghĩa Việt Nam là thành viên...",17
+case_2238,PARTIAL_B_WIN,12,Bộ luật Dân sự 2005,219,Điều 14524,"1. Trước khi mở phiên tòa hoặc tại phiên tòa phúc thẩm, người kháng cáo, Viện kiểm sát kháng nghị, người có quyền lợi, nghĩa vụ liên quan đến kháng cáo, kháng nghị, người bảo vệ quyền và lợi ích hợp pháp của đương sự có...",17
+case_2238,PARTIAL_B_WIN,13,Bộ luật Dân sự 2005,223,Điều 14528,"1. Phiên tòa chỉ được tiến hành khi có đủ thành viên Hội đồng xét xử và Thư ký phiên tòa.
+
+2. Trường hợp có Thẩm phán vắng mặt hoặc không thể tiếp tục tham gia xét xử vụ án nhưng có Thẩm phán dự khuyết tham gia phiên tòa...",17
+case_2238,PARTIAL_B_WIN,14,Luật Đất đai 2003,106,Điều 57068,"1. Tổ chức, cá nhân đề nghị cấp giấy phép xây dựng có các quyền sau:
+a) Yêu cầu cơ quan cấp giấy phép xây dựng giải thích, hướng dẫn và thực hiện đúng các quy định về cấp giấy phép xây dựng;
+b) Khiếu nại, khởi kiện, tố c...",17
+case_2238,PARTIAL_B_WIN,15,Luật Hôn nhân và Gia đình 2000,28,Điều 56990,"1. Nhiệm vụ quy hoạch chi tiết xây dựng trong khu chức năng đặc thù gồm:
+a) Yêu cầu về diện tích sử dụng đất, quy mô, phạm vi quy hoạch chi tiết, thiết kế đô thị, hệ thống công trình hạ tầng kỹ thuật, hạ tầng xã hội tron...",17
+case_2238,PARTIAL_B_WIN,16,"Pháp lệnh Án phí, lệ phí Tòa án 2009",3,Điều 56965,"Trong Luật này, các từ ngữ dưới đây được hiểu như sau:
+
+1. Báo cáo nghiên cứu tiền khả thi đầu tư xây dựng là tài liệu trình bày các nội dung nghiên cứu sơ bộ về sự cần thiết, tính khả thi và hiệu quả của việc đầu tư xây...",17
+case_2238,PARTIAL_B_WIN,17,Bộ luật Dân sự 2015,2,Điều 56964,"Luật này áp dụng đối với cơ quan, tổ chức, cá nhân trong nước; tổ chức, cá nhân nước ngoài hoạt động đầu tư xây dựng trên lãnh thổ Việt Nam.Trường hợp điều ước quốc tế mà Cộng hòa xã hội chủ nghĩa Việt Nam là thành viên...",17
+case_5236,PARTIAL_A_WIN,1,Bộ luật dân sự năm 2005,389,Điều 56833,"1. Người nào không hứa hẹn trước mà che giấu một trong các tội phạm quy định tại các điều sau đây, nếu không thuộc trường hợp quy định tại khoản 2 Điều 18 của Bộ luật này, thì bị phạt cải tạo không giam giữ đến 03 năm ho...",17
+case_5236,PARTIAL_A_WIN,2,Bộ luật dân sự năm 2005,401,Điều 56845,"1. Người nào tự ý rời bỏ vị trí chiến đấu hoặc không làm nhiệm vụ trong chiến đấu, thì bị phạt tù từ 02 năm đến 07 năm.
+
+2. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 05 năm đến 12 năm:
+a) Là chỉ...",17
+case_5236,PARTIAL_A_WIN,3,Bộ luật dân sự năm 2005,402,Điều 56846,"1. Người nào rời bỏ hàng ngũ quân đội nhằm trốn tránh nghĩa vụ trong thời chiến hoặc đã bị xử lý kỷ luật về hành vi này mà còn vi phạm hoặc gây hậu quả nghiêm trọng, thì bị phạt cải tạo không giam giữ đến 03 năm hoặc phạ...",17
+case_5236,PARTIAL_A_WIN,4,Bộ luật dân sự năm 2005,403,Điều 56847,"1. Người nào tự gây thương tích, gây tổn hại cho sức khỏe của mình hoặc dùng thủ đoạn gian dối khác để trốn tránh nhiệm vụ, thì bị phạt cải tạo không giam giữ đến 02 năm hoặc phạt tù từ 03 tháng đến 02 năm.
+
+2. Phạm tội...",17
+case_5236,PARTIAL_A_WIN,5,Bộ luật dân sự năm 2005,404,Điều 56848,"1. Người nào cố ý làm lộ bí mật công tác quân sự, nếu không thuộc một trong các trường hợp quy định tại các điều 110, 337 và 361 của Bộ luật này, thì bị phạt tù từ 06 tháng đến 05 năm.
+
+2. Phạm tội thuộc một trong các tr...",17
+case_5236,PARTIAL_A_WIN,6,Bộ luật dân sự năm 2005,479,Điều 53249,"1. Bên thuê phải bảo quản tài sản thuê, phải bảo dưỡng và sửa chữa nhỏ; nếu làm mất, hư hỏng thì phải bồi thường.Bên thuê không chịu trách nhiệm về những hao mòn tự nhiên do sử dụng tài sản thuê.
+
+2. Bên thuê có thể tu s...",17
+case_5236,PARTIAL_A_WIN,7,Bộ luật dân sự,288,Điều 14593,"Sau khi nhận được yêu cầu của Ủy ban thường vụ Quốc hội, kiến nghị của Ủy ban tư pháp của Quốc hội hoặc sau khi Chánh án Tòa án nhân dân tối cao có văn bản đề nghị xem xét lại quyết định của Hội đồng Thẩm phán Tòa án nhâ...",17
+case_5236,PARTIAL_A_WIN,8,Bộ luật dân sự,357,Điều 14662,"1. Người yêu cầu Tòa án xem xét, thẩm định tại chỗ phải nộp tiền tạm ứng chi phí xem xét, thẩm định tại chỗ theo yêu cầu của Tòa án.
+
+2. Trường hợp Tòa án xét thấy cần thiết và quyết định xem xét, thẩm định tại chỗ thì n...",17
+case_5236,PARTIAL_A_WIN,9,Luật hôn nhân và gia đình,27,Điều 56989,"1. Nhiệm vụ quy hoạch phân khu xây dựng khu chức năng đặc thù gồm:
+a) Yêu cầu về diện tích sử dụng đất, quy mô, phạm vi quy hoạch của phân khu, hệ thống công trình hạ tầng kỹ thuật, hạ tầng xã hội trong khu vực quy hoạch...",17
+case_5236,PARTIAL_A_WIN,10,Luật hôn nhân và gia đình,37,Điều 56999,"1. Điều chỉnh tổng thể quy hoạch xây dựng được quy định như sau:
+a) Điều chỉnh tổng thể quy hoạch xây dựng được tiến hành khi tính chất, chức năng, quy mô của vùng, của khu vực lập quy hoạch thay đổi hoặc nội dung dự kiế...",17
+case_5236,PARTIAL_A_WIN,11,Bộ luật tố tụng dân sự,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",17
+case_5236,PARTIAL_A_WIN,12,Bộ luật tố tụng dân sự,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",17
+case_5236,PARTIAL_A_WIN,13,Bộ luật tố tụng dân sự,39,Điều 57001,"1. Cơ quan tổ chức lập quy hoạch xây dựng lập báo cáo nội dung và kế hoạch điều chỉnh cục bộ quy hoạch xây dựng, tổ chức xin ý kiến cộng đồng dân cư trong khu vực điều chỉnh quy hoạch và khu vực xung quanh có ảnh hưởng t...",17
+case_5236,PARTIAL_A_WIN,14,Bộ luật tố tụng dân sự,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,17
+case_5236,PARTIAL_A_WIN,15,Bộ luật tố tụng dân sự,228,Điều 14533,"1. Tòa án cấp phúc thẩm ra quyết định tạm đình chỉ xét xử phúc thẩm vụ án, hậu quả của việc tạm đình chỉ xét xử phúc thẩm vụ án và tiếp tục xét xử phúc thẩm vụ án được thực hiện theo quy định tại Điều 141 và Điều 142 của...",17
+case_5236,PARTIAL_A_WIN,16,Bộ luật tố tụng dân sự,271,Điều 14576,"1. Hội đồng xét xử giám đốc thẩm chỉ xem xét phần quyết định của bản án, quyết định đã có hiệu lực pháp luật bị kháng nghị hoặc có liên quan đến việc xem xét nội dung kháng nghị.
+
+2. Hội đồng xét xử giám đốc thẩm có quyề...",17
+case_5236,PARTIAL_A_WIN,17,Bộ luật tố tụng dân sự,273,Điều 14578,"Hội đồng xét xử giám đốc thẩm ra quyết định hủy bản án, quyết định đã có hiệu lực pháp luật bị kháng nghị và giữ nguyên bản án, quyết định của Tòa án cấp dưới xét xử đúng pháp luật, nhưng đã bị bản án, quyết định đã có h...",17
+case_6663,PARTIAL_A_WIN,1,Bộ luật Tố tụng dân sự,19,Điều 56981,"1. Nhà nước bảo đảm kinh phí theo quy định của pháp luật cho công tác lập quy hoạch xây dựng.
+
+2. Nhà nước khuyến khích tổ chức, cá nhân trong nước và tổ chức, cá nhân nước ngoài tài trợ kinh phí để lập quy hoạch xây dựn...",23
+case_6663,PARTIAL_A_WIN,2,Bộ luật Tố tụng dân sự,30,Điều 56992,"1. Nhiệm vụ quy hoạch chung xây dựng xã gồm mục tiêu, phạm vi ranh giới xã; tính chất, chức năng của xã; xác định yếu tố tác động đến phát triển kinh tế - xã hội của xã; dự báo quy mô dân số, lao động; quy mô đất đai, ch...",23
+case_6663,PARTIAL_A_WIN,3,Bộ luật Tố tụng dân sự,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",23
+case_6663,PARTIAL_A_WIN,4,Bộ luật Tố tụng dân sự,39,Điều 57001,"1. Cơ quan tổ chức lập quy hoạch xây dựng lập báo cáo nội dung và kế hoạch điều chỉnh cục bộ quy hoạch xây dựng, tổ chức xin ý kiến cộng đồng dân cư trong khu vực điều chỉnh quy hoạch và khu vực xung quanh có ảnh hưởng t...",23
+case_6663,PARTIAL_A_WIN,5,Bộ luật Tố tụng dân sự,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,23
+case_6663,PARTIAL_A_WIN,6,Bộ luật Tố tụng dân sự,227,Điều 14532,"1. Đương sự được quyền giao nộp bổ sung tài liệu, chứng cứ trong giai đoạn chuẩn bị xét xử phúc thẩm trong những trường hợp sau đây:
+a) Những tài liệu, chứng cứ mà Tòa án cấp sơ thẩm đã yêu cầu giao nộp nhưng đương sự kh...",23
+case_6663,PARTIAL_A_WIN,7,Bộ luật Tố tụng dân sự,228,Điều 14533,"1. Tòa án cấp phúc thẩm ra quyết định tạm đình chỉ xét xử phúc thẩm vụ án, hậu quả của việc tạm đình chỉ xét xử phúc thẩm vụ án và tiếp tục xét xử phúc thẩm vụ án được thực hiện theo quy định tại Điều 141 và Điều 142 của...",23
+case_6663,PARTIAL_A_WIN,8,Bộ luật Dân sự năm 2005,471,Điều 53241,"1. Họ, hụi, biêu, phường (sau đây gọi chung là họ) là hình thức giao dịch về tài sản theo tập quán trên cơ sở thỏa thuận của một nhóm người tập hợp nhau lại cùng định ra số người, thời gian, số tiền hoặc tài sản khác, th...",23
+case_6663,PARTIAL_A_WIN,9,Bộ luật Dân sự năm 2005,473,Điều 53243,"1. Giá thuê do các bên thỏa thuận hoặc do người thứ ba xác định theo yêu cầu của các bên, trừ trường hợp luật có quy định khác.
+
+2. Trường hợp không có thỏa thuận hoặc thỏa thuận không rõ ràng thì giá thuê được xác định...",23
+case_6663,PARTIAL_A_WIN,10,Bộ luật Dân sự năm 2005,474,Điều 53244,"1. Thời hạn thuê do các bên thỏa thuận; nếu không có thỏa thuận thì được xác định theo mục đích thuê.
+
+2. Trường hợp các bên không thỏa thuận về thời hạn thuê và thời hạn thuê không thể xác định được theo mục đích thuê t...",23
+case_6663,PARTIAL_A_WIN,11,Bộ luật Dân sự năm 2005,476,Điều 53246,"1. Bên cho thuê phải giao tài sản cho bên thuê đúng số lượng, chất lượng, chủng loại, tình trạng, thời điểm, địa điểm đã thỏa thuận và cung cấp thông tin cần thiết về việc sử dụng tài sản đó.
+
+2. Trường hợp bên cho thuê...",23
+case_6663,PARTIAL_A_WIN,12,Bộ luật Dân sự năm 2015,292,Điều 14597,"Trong thời hạn 05 ngày làm việc kể từ ngày kết thúc phiên họp xem xét kiến nghị, đề nghị xem xét lại quyết định của Hội đồng Thẩm phán Tòa án nhân dân tối cao, Hội đồng Thẩm phán Tòa án nhân dân tối cao gửi cho Viện trưở...",23
+case_6663,PARTIAL_A_WIN,13,Bộ luật Dân sự năm 2015,299,Điều 14604,"1. Người nước ngoài, cơ quan, tổ chức nước ngoài, chi nhánh, văn phòng đại diện của cơ quan, tổ chức nước ngoài, tổ chức quốc tế, cơ quan đại diện của tổ chức quốc tế tại Việt Nam có quyền khởi kiện đến Tòa án Việt Nam đ...",23
+case_6663,PARTIAL_A_WIN,14,Bộ luật Dân sự năm 2015,317,Điều 14622,"Người có hành vi xúc phạm uy tín của Tòa án, danh dự, nhân phẩm của những người tiến hành tố tụng hoặc những người khác thực hiện nhiệm vụ theo yêu cầu của Tòa án thì tùy theo tính chất, mức độ vi phạm mà bị xử phạt vi p...",23
+case_6663,PARTIAL_A_WIN,15,Bộ luật Dân sự năm 2015,320,Điều 14625,"Người nào bằng ảnh hưởng của mình có hành vi tác động dưới bất kỳ hình thức nào đối với Thẩm phán, thành viên Hội đồng xét xử nhằm làm cho việc giải quyết vụ án không khách quan, không đúng pháp luật thì tùy theo tính ch...",23
+case_6663,PARTIAL_A_WIN,16,Bộ luật Dân sự năm 2015,323,Điều 14628,"Người có hành vi đe dọa, hành hung hoặc lợi dụng sự lệ thuộc nhằm cản trở đại diện của cơ quan, tổ chức, cá nhân đến phiên tòa, phiên họp theo triệu tập của Tòa án thì tùy theo tính chất, mức độ vi phạm mà bị xử phạt vi...",23
+case_6663,PARTIAL_A_WIN,17,Bộ luật Dân sự năm 2015,463,Điều 53233,"Hợp đồng vay tài sản là sự thỏa thuận giữa các bên, theo đó bên cho vay giao tài sản cho bên vay; khi đến hạn trả, bên vay phải hoàn trả cho bên cho vay tài sản cùng loại theo đúng số lượng, chất lượng và chỉ phải trả lã...",23
+case_6663,PARTIAL_A_WIN,18,Bộ luật Dân sự năm 2015,466,Điều 53236,"1. Bên vay tài sản là tiền thì phải trả đủ tiền khi đến hạn; nếu tài sản là vật thì phải trả vật cùng loại đúng số lượng, chất lượng, trừ trường hợp có thỏa thuận khác.
+
+2. Trường hợp bên vay không thể trả vật thì có thể...",23
+case_6663,PARTIAL_A_WIN,19,Bộ luật Dân sự năm 2015,468,Điều 53238,"1. Lãi suất vay do các bên thỏa thuận.Trường hợp các bên có thỏa thuận về lãi suất thì lãi suất theo thỏa thuận không được vượt quá 20%/năm của khoản tiền vay, trừ trường hợp luật khác có liên quan quy định khác. Căn cứ...",23
+case_6663,PARTIAL_A_WIN,20,Bộ luật Dân sự năm 2015,688,Điều 53458,"1. Đối với giao dịch dân sự được xác lập trước ngày Bộ luật này có hiệu lực thì việc áp dụng pháp luật được quy định như sau:
+a) Giao dịch dân sự chưa được thực hiện mà có nội dung, hình thức khác với quy định của Bộ luậ...",23
+case_6663,PARTIAL_A_WIN,21,Luật các tổ chức tín dụng,91,Điều 57053,"1. Phù hợp với quy hoạch chi tiết xây dựng đã được cơ quan nhà nước có thẩm quyền phê duyệt. Đối với công trình xây dựng ở khu vực, tuyến phố trong đô thị đã ổn định nhưng chưa có quy hoạch chi tiết xây dựng thì phải phù...",23
+case_6663,PARTIAL_A_WIN,22,Luật các tổ chức tín dụng,95,Điều 57057,"1. Hồ sơ đề nghị cấp giấy phép xây dựng mới đối với nhà ở riêng lẻ gồm:
+a) Đơn đề nghị cấp giấy phép xây dựng;
+b) Bản sao một trong những giấy tờ chứng minh quyền sử dụng đất theo quy định của pháp luật về đất đai;
+c) Bả...",23
+case_6663,PARTIAL_A_WIN,23,"Nghị quyết 326/2016/UBTVQH14 ngày 30/12/2016 của Ủy ban thường vụ Quốc hội nước Cộng hòa xã hội chủ nghĩa Việt Nam quy định về mức thu, miễn, giảm, nộp, quản lý và sử dụng án phí và lệ phí Tòa án",26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",23
+case_8732,PARTIAL_A_WIN,1,Bộ luật dân sự năm 2005,471,Điều 53241,"1. Họ, hụi, biêu, phường (sau đây gọi chung là họ) là hình thức giao dịch về tài sản theo tập quán trên cơ sở thỏa thuận của một nhóm người tập hợp nhau lại cùng định ra số người, thời gian, số tiền hoặc tài sản khác, th...",8
+case_8732,PARTIAL_A_WIN,2,Bộ luật dân sự năm 2005,473,Điều 53243,"1. Giá thuê do các bên thỏa thuận hoặc do người thứ ba xác định theo yêu cầu của các bên, trừ trường hợp luật có quy định khác.
+
+2. Trường hợp không có thỏa thuận hoặc thỏa thuận không rõ ràng thì giá thuê được xác định...",8
+case_8732,PARTIAL_A_WIN,3,Bộ luật dân sự năm 2005,474,Điều 53244,"1. Thời hạn thuê do các bên thỏa thuận; nếu không có thỏa thuận thì được xác định theo mục đích thuê.
+
+2. Trường hợp các bên không thỏa thuận về thời hạn thuê và thời hạn thuê không thể xác định được theo mục đích thuê t...",8
+case_8732,PARTIAL_A_WIN,4,Bộ luật dân sự năm 2005,476,Điều 53246,"1. Bên cho thuê phải giao tài sản cho bên thuê đúng số lượng, chất lượng, chủng loại, tình trạng, thời điểm, địa điểm đã thỏa thuận và cung cấp thông tin cần thiết về việc sử dụng tài sản đó.
+
+2. Trường hợp bên cho thuê...",8
+case_8732,PARTIAL_A_WIN,5,Bộ luật dân sự năm 2005,477,Điều 53247,"1. Bên cho thuê phải bảo đảm tài sản thuê trong tình trạng như đã thỏa thuận, phù hợp với mục đích thuê trong suốt thời gian cho thuê; phải sửa chữa những hư hỏng, khuyết tật của tài sản thuê, trừ hư hỏng nhỏ mà theo tập...",8
+case_8732,PARTIAL_A_WIN,6,Bộ luật dân sự năm 2005,478,Điều 53248,"1. Bên cho thuê phải bảo đảm quyền sử dụng tài sản ổn định cho bên thuê.
+
+2. Trường hợp có tranh chấp về quyền sở hữu đối với tài sản thuê mà bên thuê không được sử dụng tài sản ổn định thì bên thuê có quyền đơn phương c...",8
+case_8732,PARTIAL_A_WIN,7,Bộ luật dân sự năm 2015,357,Điều 14662,"1. Người yêu cầu Tòa án xem xét, thẩm định tại chỗ phải nộp tiền tạm ứng chi phí xem xét, thẩm định tại chỗ theo yêu cầu của Tòa án.
+
+2. Trường hợp Tòa án xét thấy cần thiết và quyết định xem xét, thẩm định tại chỗ thì n...",8
+case_8732,PARTIAL_A_WIN,8,Bộ luật dân sự năm 2015,468,Điều 53238,"1. Lãi suất vay do các bên thỏa thuận.Trường hợp các bên có thỏa thuận về lãi suất thì lãi suất theo thỏa thuận không được vượt quá 20%/năm của khoản tiền vay, trừ trường hợp luật khác có liên quan quy định khác. Căn cứ...",8
+case_4861,PARTIAL_B_WIN,1,Bộ luật Tố tụng Dân sự,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",14
+case_4861,PARTIAL_B_WIN,2,Bộ luật Tố tụng Dân sự,37,Điều 56999,"1. Điều chỉnh tổng thể quy hoạch xây dựng được quy định như sau:
+a) Điều chỉnh tổng thể quy hoạch xây dựng được tiến hành khi tính chất, chức năng, quy mô của vùng, của khu vực lập quy hoạch thay đổi hoặc nội dung dự kiế...",14
+case_4861,PARTIAL_B_WIN,3,Bộ luật Tố tụng Dân sự,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,14
+case_4861,PARTIAL_B_WIN,4,Bộ luật Dân sự,649,Điều 53419,"Thừa kế theo pháp luật là thừa kế theo hàng thừa kế, điều kiện và trình tự thừa kế do pháp luật quy định.",14
+case_4861,PARTIAL_B_WIN,5,Bộ luật Dân sự,650,Điều 53420,"1. Thừa kế theo pháp luật được áp dụng trong trường hợp sau đây:
+a) Không có di chúc;
+b) Di chúc không hợp pháp;
+c) Những người thừa kế theo di chúc chết trước hoặc chết cùng thời điểm với người lập di chúc; cơ quan, tổ...",14
+case_4861,PARTIAL_B_WIN,6,Bộ luật Dân sự,651,Điều 53421,"1. Những người thừa kế theo pháp luật được quy định theo thứ tự sau đây:
+a) Hàng thừa kế thứ nhất gồm: vợ, chồng, cha đẻ, mẹ đẻ, cha nuôi, mẹ nuôi, con đẻ, con nuôi của người chết;
+b) Hàng thừa kế thứ hai gồm: ông nội, b...",14
+case_4861,PARTIAL_B_WIN,7,Bộ luật Dân sự,658,Điều 53428,"Các nghĩa vụ tài sản và các khoản chi phí liên quan đến thừa kế được thanh toán theo thứ tự sau đây:
+
+1. Chi phí hợp lý theo tập quán cho việc mai táng.
+
+2. Tiền cấp dưỡng còn thiếu.
+
+3. Chi phí cho việc bảo quản di sản....",14
+case_4861,PARTIAL_B_WIN,8,Bộ luật Dân sự,660,Điều 53430,"1. Khi phân chia di sản, nếu có người thừa kế cùng hàng đã thành thai nhưng chưa sinh ra thì phải dành lại một phần di sản bằng phần mà người thừa kế khác được hưởng để nếu người thừa kế đó còn sống khi sinh ra được hưởn...",14
+case_4861,PARTIAL_B_WIN,9,Luật Hôn nhân và Gia đình,33,Điều 56995,1. Bộ Xây dựng quyết định thành lập Hội đồng thẩm định nhiệm vụ và đồ án quy hoạch xây dựng thuộc thẩm quyền phê duyệt của Thủ tướng Chính phủ và đồ án quy hoạch xây dựng do Bộ Xây dựng tổ chức lập. Bộ Xây dựng là cơ qua...,14
+case_4861,PARTIAL_B_WIN,10,Luật Hôn nhân và Gia đình,59,Điều 57021,"Thời gian thẩm định dự án được tính từ ngày cơ quan, tổ chức thẩm định nhận đủ hồ sơ hợp lệ, cụ thể như sau:
+
+1. Thời gian thẩm định dự án không quá 90 ngày đối với dự án quan trọng quốc gia;
+
+2. Thời gian thẩm định dự á...",14
+case_4861,PARTIAL_B_WIN,11,Luật đất đai 2013,5,Điều 56967,"1. Công trình xây dựng được phân theo loại và cấp công trình.
+
+2. Loại công trình được xác định theo công năng sử dụng gồm công trình dân dụng, công trình công nghiệp, công trình giao thông, công trình nông nghiệp và phá...",14
+case_4861,PARTIAL_B_WIN,12,Luật đất đai 2013,100,Điều 57062,"1. Giấy phép xây dựng được cấp lại trong trường hợp bị rách, nát hoặc bị mất.
+
+2. Hồ sơ đề nghị cấp lại giấy phép xây dựng gồm:
+a) Đơn đề nghị cấp lại giấy phép xây dựng;
+b) Bản chính giấy phép xây dựng đã được cấp đối v...",14
+case_4861,PARTIAL_B_WIN,13,"Nghị quyết số 326/2016/UBTVQH14 ngày 30-12-2016 của Ủy ban Thường vụ Quốc hội về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí Tòa án",12,Điều 56974,"1. Quyết định đầu tư xây dựng không đúng với quy định của Luật này.
+
+2. Khởi công xây dựng công trình khi chưa đủ điều kiện khởi công theo quy định của Luật này.
+
+3. Xây dựng công trình trong khu vực cấm xây dựng; xây dự...",14
+case_4861,PARTIAL_B_WIN,14,"Nghị quyết số 326/2016/UBTVQH14 ngày 30-12-2016 của Ủy ban Thường vụ Quốc hội về mức thu, miễn, giảm, thu, nộp, quản lý và sử dụng án phí và lệ phí Tòa án",27,Điều 56989,"1. Nhiệm vụ quy hoạch phân khu xây dựng khu chức năng đặc thù gồm:
+a) Yêu cầu về diện tích sử dụng đất, quy mô, phạm vi quy hoạch của phân khu, hệ thống công trình hạ tầng kỹ thuật, hạ tầng xã hội trong khu vực quy hoạch...",14
+case_3241,PARTIAL_A_WIN,1,Bộ luật Tố tụng dân sự,30,Điều 56992,"1. Nhiệm vụ quy hoạch chung xây dựng xã gồm mục tiêu, phạm vi ranh giới xã; tính chất, chức năng của xã; xác định yếu tố tác động đến phát triển kinh tế - xã hội của xã; dự báo quy mô dân số, lao động; quy mô đất đai, ch...",18
+case_3241,PARTIAL_A_WIN,2,Bộ luật Tố tụng dân sự,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",18
+case_3241,PARTIAL_A_WIN,3,Bộ luật Tố tụng dân sự,39,Điều 57001,"1. Cơ quan tổ chức lập quy hoạch xây dựng lập báo cáo nội dung và kế hoạch điều chỉnh cục bộ quy hoạch xây dựng, tổ chức xin ý kiến cộng đồng dân cư trong khu vực điều chỉnh quy hoạch và khu vực xung quanh có ảnh hưởng t...",18
+case_3241,PARTIAL_A_WIN,4,Bộ luật Tố tụng dân sự,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,18
+case_3241,PARTIAL_A_WIN,5,Bộ luật Tố tụng dân sự,227,Điều 14532,"1. Đương sự được quyền giao nộp bổ sung tài liệu, chứng cứ trong giai đoạn chuẩn bị xét xử phúc thẩm trong những trường hợp sau đây:
+a) Những tài liệu, chứng cứ mà Tòa án cấp sơ thẩm đã yêu cầu giao nộp nhưng đương sự kh...",18
+case_3241,PARTIAL_A_WIN,6,Bộ luật Tố tụng dân sự,266,Điều 14571,"1. Ủy ban Thẩm phán Tòa án nhân dân cấp cao giám đốc thẩm bản án, quyết định đã có hiệu lực pháp luật của Tòa án cấp tỉnh, Tòa án cấp huyện trong phạm vi thẩm quyền theo lãnh thổ bị kháng nghị như sau:a) Ủy ban Thẩm phán...",18
+case_3241,PARTIAL_A_WIN,7,Bộ luật Dân sự năm 2015,40,Điều 57002,"1. Trong thời hạn 30 ngày kể từ ngày được phê duyệt, đồ án quy hoạch xây dựng phải được công bố công khai.
+
+2. Nội dung công bố công khai quy hoạch xây dựng gồm nội dung cơ bản của đồ án quy hoạch xây dựng và quy định qu...",18
+case_3241,PARTIAL_A_WIN,8,Bộ luật Dân sự năm 2015,295,Điều 14600,1. Viện trưởng Viện kiểm sát nhân dân tối cao phải tham dự phiên họp xem xét lại quyết định của Hội đồng Thẩm phán Tòa án nhân dân tối cao theo quy định tại khoản 4 Điều 287 của Luật này và phát biểu quan điểm về việc có...,18
+case_3241,PARTIAL_A_WIN,9,Bộ luật Dân sự năm 2015,298,Điều 14603,"1. Chương này quy định thủ tục giải quyết vụ án hành chính có yếu tố nước ngoài. Trường hợp trong Chương này không có quy định thì được áp dụng các quy định khác có liên quan của Luật này để giải quyết.
+
+2. Vụ án hành ch...",18
+case_3241,PARTIAL_A_WIN,10,Bộ luật Dân sự năm 2015,299,Điều 14604,"1. Người nước ngoài, cơ quan, tổ chức nước ngoài, chi nhánh, văn phòng đại diện của cơ quan, tổ chức nước ngoài, tổ chức quốc tế, cơ quan đại diện của tổ chức quốc tế tại Việt Nam có quyền khởi kiện đến Tòa án Việt Nam đ...",18
+case_3241,PARTIAL_A_WIN,11,Bộ luật Dân sự năm 2015,301,Điều 14606,"1. Năng lực pháp luật tố tụng hành chính của cơ quan, tổ chức nước ngoài được xác định theo pháp luật của nước nơi cơ quan, tổ chức đó được thành lập.Năng lực pháp luật tố tụng hành chính của chi nhánh, văn phòng đại diệ...",18
+case_3241,PARTIAL_A_WIN,12,Bộ luật Dân sự năm 2015,302,Điều 14607,"Đương sự là người nước ngoài, cơ quan, tổ chức nước ngoài, chi nhánh, văn phòng đại diện của cơ quan, tổ chức nước ngoài, tổ chức quốc tế, cơ quan đại diện của tổ chức quốc tế tại Việt Nam tham gia tố tụng tại Tòa án Việ...",18
+case_3241,PARTIAL_A_WIN,13,Bộ luật Dân sự năm 2015,317,Điều 14622,"Người có hành vi xúc phạm uy tín của Tòa án, danh dự, nhân phẩm của những người tiến hành tố tụng hoặc những người khác thực hiện nhiệm vụ theo yêu cầu của Tòa án thì tùy theo tính chất, mức độ vi phạm mà bị xử phạt vi p...",18
+case_3241,PARTIAL_A_WIN,14,Bộ luật Dân sự năm 2015,319,Điều 14624,"1. Người làm chứng, người phiên dịch, người giám định đã được Tòa án triệu tập hợp lệ nhưng cố ý không đến Tòa án hoặc không có mặt tại phiên tòa, phiên họp mà không có lý do chính đáng và nếu sự vắng mặt của họ gây trở...",18
+case_3241,PARTIAL_A_WIN,15,Bộ luật Dân sự năm 2015,320,Điều 14625,"Người nào bằng ảnh hưởng của mình có hành vi tác động dưới bất kỳ hình thức nào đối với Thẩm phán, thành viên Hội đồng xét xử nhằm làm cho việc giải quyết vụ án không khách quan, không đúng pháp luật thì tùy theo tính ch...",18
+case_3241,PARTIAL_A_WIN,16,Bộ luật Dân sự năm 2015,463,Điều 53233,"Hợp đồng vay tài sản là sự thỏa thuận giữa các bên, theo đó bên cho vay giao tài sản cho bên vay; khi đến hạn trả, bên vay phải hoàn trả cho bên cho vay tài sản cùng loại theo đúng số lượng, chất lượng và chỉ phải trả lã...",18
+case_3241,PARTIAL_A_WIN,17,Bộ luật Dân sự năm 2015,466,Điều 53236,"1. Bên vay tài sản là tiền thì phải trả đủ tiền khi đến hạn; nếu tài sản là vật thì phải trả vật cùng loại đúng số lượng, chất lượng, trừ trường hợp có thỏa thuận khác.
+
+2. Trường hợp bên vay không thể trả vật thì có thể...",18
+case_3241,PARTIAL_A_WIN,18,Bộ luật Dân sự năm 2015,468,Điều 53238,"1. Lãi suất vay do các bên thỏa thuận.Trường hợp các bên có thỏa thuận về lãi suất thì lãi suất theo thỏa thuận không được vượt quá 20%/năm của khoản tiền vay, trừ trường hợp luật khác có liên quan quy định khác. Căn cứ...",18
+case_1087,PARTIAL_A_WIN,1,Bộ luật dân sự năm 2005,298,Điều 14603,"1. Chương này quy định thủ tục giải quyết vụ án hành chính có yếu tố nước ngoài. Trường hợp trong Chương này không có quy định thì được áp dụng các quy định khác có liên quan của Luật này để giải quyết.
+
+2. Vụ án hành ch...",10
+case_1087,PARTIAL_A_WIN,2,Bộ luật dân sự năm 2005,604,Điều 53374,"Chủ sở hữu, người chiếm hữu, người được giao quản lý phải bồi thường thiệt hại do cây cối gây ra.",10
+case_1087,PARTIAL_A_WIN,3,Bộ luật dân sự năm 2005,605,Điều 53375,"Chủ sở hữu, người chiếm hữu, người được giao quản lý, sử dụng nhà cửa, công trình xây dựng khác phải bồi thường thiệt hại do nhà cửa, công trình xây dựng khác đó gây thiệt hại cho người khác.Khi người thi công có lỗi tro...",10
+case_1087,PARTIAL_A_WIN,4,Bộ luật dân sự năm 2005,606,Điều 53376,"1. Cá nhân, pháp nhân xâm phạm thi thể phải bồi thường thiệt hại.
+
+2. Thiệt hại do xâm phạm thi thể gồm chi phí hợp lý để hạn chế, khắc phục thiệt hại.
+
+3. Người chịu trách nhiệm bồi thường khi thi thể bị xâm phạm phải b...",10
+case_1087,PARTIAL_A_WIN,5,Bộ luật dân sự năm 2005,608,Điều 53378,"Cá nhân, pháp nhân sản xuất, kinh doanh hàng hóa, dịch vụ không bảo đảm chất lượng hàng hóa, dịch vụ mà gây thiệt hại cho người tiêu dùng thì phải bồi thường.",10
+case_1087,PARTIAL_A_WIN,6,Bộ luật dân sự năm 2015,357,Điều 14662,"1. Người yêu cầu Tòa án xem xét, thẩm định tại chỗ phải nộp tiền tạm ứng chi phí xem xét, thẩm định tại chỗ theo yêu cầu của Tòa án.
+
+2. Trường hợp Tòa án xét thấy cần thiết và quyết định xem xét, thẩm định tại chỗ thì n...",10
+case_1087,PARTIAL_A_WIN,7,Bộ luật dân sự năm 2015,468,Điều 53238,"1. Lãi suất vay do các bên thỏa thuận.Trường hợp các bên có thỏa thuận về lãi suất thì lãi suất theo thỏa thuận không được vượt quá 20%/năm của khoản tiền vay, trừ trường hợp luật khác có liên quan quy định khác. Căn cứ...",10
+case_1087,PARTIAL_A_WIN,8,Bộ luật tố tụng dân sự năm 2015,157,Điều 57119,"1. Có đủ năng lực hoạt động thi công xây dựng công trình tương ứng với loại, cấp công trình xây dựng.
+
+2. Chỉ huy trưởng công trường có năng lực hành nghề thi công xây dựng công trình và chứng chỉ hành nghề phù hợp.
+
+3....",10
+case_1087,PARTIAL_A_WIN,9,Bộ luật tố tụng dân sự năm 2015,164,Điều 57126,"1. Ủy ban nhân dân cấp tỉnh có trách nhiệm sau:
+a) Thực hiện quản lý nhà nước về hoạt động đầu tư xây dựng trên địa bàn theo phân cấp của Chính phủ; ban hành văn bản theo thẩm quyền; chỉ đạo tổ chức thực hiện các quy hoạ...",10
+case_1087,PARTIAL_A_WIN,10,"Pháp lệnh số 10/2009/UBTVQH12 ngày 27/02/2009 quy định về án phí, lệ phí Tòa án",27,Điều 56989,"1. Nhiệm vụ quy hoạch phân khu xây dựng khu chức năng đặc thù gồm:
+a) Yêu cầu về diện tích sử dụng đất, quy mô, phạm vi quy hoạch của phân khu, hệ thống công trình hạ tầng kỹ thuật, hạ tầng xã hội trong khu vực quy hoạch...",10
+case_551,PARTIAL_A_WIN,1,Bộ luật dân sự 2015,116,Điều 57078,"Trong quá trình thi công xây dựng công trình, nhà thầu thi công xây dựng có trách nhiệm:
+
+1. Lập và thực hiện các biện pháp bảo vệ môi trường trong quá trình thi công xây dựng bao gồm môi trường không khí, môi trường nướ...",9
+case_551,PARTIAL_A_WIN,2,Luật đất đai 2013,166,Điều 57128,"1. Dự án đầu tư xây dựng đã được phê duyệt trước ngày Luật này có hiệu lực thì không phải phê duyệt lại, các hoạt động tiếp theo chưa được thực hiện thì thực hiện theo quy định của Luật này.
+
+2. Ban quản lý dự án đầu tư...",9
+case_551,PARTIAL_A_WIN,3,Luật đất đai 2003,50,Điều 57012,"1. Trình tự đầu tư xây dựng có 03 giai đoạn gồm chuẩn bị dự án, thực hiện dự án và kết thúc xây dựng đưa công trình của dự án vào khai thác sử dụng, trừ trường hợp xây dựng nhà ở riêng lẻ.
+
+2. Dự án quan trọng quốc gia,...",9
+case_551,PARTIAL_A_WIN,4,Nghị định 181/2004/NĐ-CP ngày 29/10/2004,48,Điều 57010,"1. Ủy ban nhân dân cấp tỉnh có trách nhiệm chỉ đạo xây dựng chương trình, kế hoạch thực hiện quy hoạch xây dựng phát triển đô thị, nông thôn, khu chức năng đặc thù thuộc địa bàn mình quản lý theo quy hoạch xây dựng đã đư...",9
+case_551,PARTIAL_A_WIN,5,"Luật khiếu nại, tố cáo năm 1998",2,Điều 56964,"Luật này áp dụng đối với cơ quan, tổ chức, cá nhân trong nước; tổ chức, cá nhân nước ngoài hoạt động đầu tư xây dựng trên lãnh thổ Việt Nam.Trường hợp điều ước quốc tế mà Cộng hòa xã hội chủ nghĩa Việt Nam là thành viên...",9
+case_551,PARTIAL_A_WIN,6,Luật sửa đổi bổ sung một số điều của Luật khiếu nại tố cáo năm 2006,1,Điều 56963,"Luật này quy định về quyền, nghĩa vụ, trách nhiệm của cơ quan, tổ chức, cá nhân và quản lý nhà nước trong hoạt động đầu tư xây dựng.",9
+case_551,PARTIAL_A_WIN,7,Luật khiếu nại,2,Điều 56964,"Luật này áp dụng đối với cơ quan, tổ chức, cá nhân trong nước; tổ chức, cá nhân nước ngoài hoạt động đầu tư xây dựng trên lãnh thổ Việt Nam.Trường hợp điều ước quốc tế mà Cộng hòa xã hội chủ nghĩa Việt Nam là thành viên...",9
+case_551,PARTIAL_A_WIN,8,Luật tố tụng hành chính,193,Điều 14498,"1. Hội đồng xét xử xem xét tính hợp pháp của quyết định hành chính, hành vi hành chính, quyết định kỷ luật buộc thôi việc, quyết định giải quyết khiếu nại về quyết định xử lý vụ việc cạnh tranh, danh sách cử tri bị khởi...",9
+case_551,PARTIAL_A_WIN,9,Bộ luật tố tụng dân sự,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,9
+case_5160,PARTIAL_A_WIN,1,Bộ luật Tố tụng dân sự,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",15
+case_5160,PARTIAL_A_WIN,2,Bộ luật Tố tụng dân sự,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",15
+case_5160,PARTIAL_A_WIN,3,Bộ luật Tố tụng dân sự,266,Điều 14571,"1. Ủy ban Thẩm phán Tòa án nhân dân cấp cao giám đốc thẩm bản án, quyết định đã có hiệu lực pháp luật của Tòa án cấp tỉnh, Tòa án cấp huyện trong phạm vi thẩm quyền theo lãnh thổ bị kháng nghị như sau:a) Ủy ban Thẩm phán...",15
+case_5160,PARTIAL_A_WIN,4,Bộ luật Dân sự 2015,221,Điều 14526,"Trừ vụ án xét xử phúc thẩm theo thủ tục rút gọn hoặc vụ án có yếu tố nước ngoài, thời hạn chuẩn bị xét xử phúc thẩm được quy định như sau:
+
+1. Trong thời hạn 60 ngày kể từ ngày thụ lý vụ án, Thẩm phán được phân công làm...",15
+case_5160,PARTIAL_A_WIN,5,Bộ luật Dân sự 2015,223,Điều 14528,"1. Phiên tòa chỉ được tiến hành khi có đủ thành viên Hội đồng xét xử và Thư ký phiên tòa.
+
+2. Trường hợp có Thẩm phán vắng mặt hoặc không thể tiếp tục tham gia xét xử vụ án nhưng có Thẩm phán dự khuyết tham gia phiên tòa...",15
+case_5160,PARTIAL_A_WIN,6,Bộ luật Dân sự 2015,500,Điều 53270,"Hợp đồng về quyền sử dụng đất là sự thỏa thuận giữa các bên, theo đó người sử dụng đất chuyển đổi, chuyển nhượng, cho thuê, cho thuê lại, tặng cho, thế chấp, góp vốn quyền sử dụng đất hoặc thực hiện quyền khác theo quy đ...",15
+case_5160,PARTIAL_A_WIN,7,Bộ luật Dân sự 2015,503,Điều 53273,Việc chuyển quyền sử dụng đất có hiệu lực kể từ thời điểm đăng ký theo quy định của Luật đất đai.,15
+case_5160,PARTIAL_A_WIN,8,Bộ luật Dân sự 2015,612,Điều 53382,"Di sản bao gồm tài sản riêng của người chết, phần tài sản của người chết trong tài sản chung với người khác.",15
+case_5160,PARTIAL_A_WIN,9,Bộ luật Dân sự 2015,615,Điều 53385,"1. Những người hưởng thừa kế có trách nhiệm thực hiện nghĩa vụ tài sản trong phạm vi di sản do người chết để lại, trừ trường hợp có thỏa thuận khác.
+
+2. Trường hợp di sản chưa được chia thì nghĩa vụ tài sản do người chết...",15
+case_5160,PARTIAL_A_WIN,10,Bộ luật Dân sự 2015,623,Điều 53393,"1. Thời hiệu để người thừa kế yêu cầu chia di sản là 30 năm đối với bất động sản, 10 năm đối với động sản, kể từ thời điểm mở thừa kế. Hết thời hạn này thì di sản thuộc về người thừa kế đang quản lý di sản đó. Trường hợp...",15
+case_5160,PARTIAL_A_WIN,11,Bộ luật Dân sự 2015,649,Điều 53419,"Thừa kế theo pháp luật là thừa kế theo hàng thừa kế, điều kiện và trình tự thừa kế do pháp luật quy định.",15
+case_5160,PARTIAL_A_WIN,12,Bộ luật Dân sự 2015,650,Điều 53420,"1. Thừa kế theo pháp luật được áp dụng trong trường hợp sau đây:
+a) Không có di chúc;
+b) Di chúc không hợp pháp;
+c) Những người thừa kế theo di chúc chết trước hoặc chết cùng thời điểm với người lập di chúc; cơ quan, tổ...",15
+case_5160,PARTIAL_A_WIN,13,Bộ luật Dân sự 2015,651,Điều 53421,"1. Những người thừa kế theo pháp luật được quy định theo thứ tự sau đây:
+a) Hàng thừa kế thứ nhất gồm: vợ, chồng, cha đẻ, mẹ đẻ, cha nuôi, mẹ nuôi, con đẻ, con nuôi của người chết;
+b) Hàng thừa kế thứ hai gồm: ông nội, b...",15
+case_5160,PARTIAL_A_WIN,14,Bộ luật Dân sự 2015,658,Điều 53428,"Các nghĩa vụ tài sản và các khoản chi phí liên quan đến thừa kế được thanh toán theo thứ tự sau đây:
+
+1. Chi phí hợp lý theo tập quán cho việc mai táng.
+
+2. Tiền cấp dưỡng còn thiếu.
+
+3. Chi phí cho việc bảo quản di sản....",15
+case_5160,PARTIAL_A_WIN,15,Luật Đất đai năm 2013,95,Điều 57057,"1. Hồ sơ đề nghị cấp giấy phép xây dựng mới đối với nhà ở riêng lẻ gồm:
+a) Đơn đề nghị cấp giấy phép xây dựng;
+b) Bản sao một trong những giấy tờ chứng minh quyền sử dụng đất theo quy định của pháp luật về đất đai;
+c) Bả...",15
+case_8147,PARTIAL_A_WIN,1,Bộ luật tố tụng dân sự,26,Điều 56988,"1. Nhiệm vụ quy hoạch chung xây dựng khu chức năng đặc thù gồm:
+a) Luận cứ, cơ sở hình thành, xác định phạm vi ranh giới khu chức năng đặc thù;
+b) Xác định tính chất, dự báo quy mô dân số của khu chức năng đặc thù, yêu c...",17
+case_8147,PARTIAL_A_WIN,2,Bộ luật tố tụng dân sự,35,Điều 56997,"1. Quy hoạch xây dựng vùng được điều chỉnh khi có một trong các trường hợp sau:
+a) Có điều chỉnh quy hoạch tổng thể phát triển kinh tế - xã hội của vùng, quy hoạch phát triển ngành của vùng; quy định về bảo vệ tài nguyên...",17
+case_8147,PARTIAL_A_WIN,3,Bộ luật tố tụng dân sự,39,Điều 57001,"1. Cơ quan tổ chức lập quy hoạch xây dựng lập báo cáo nội dung và kế hoạch điều chỉnh cục bộ quy hoạch xây dựng, tổ chức xin ý kiến cộng đồng dân cư trong khu vực điều chỉnh quy hoạch và khu vực xung quanh có ảnh hưởng t...",17
+case_8147,PARTIAL_A_WIN,4,Bộ luật tố tụng dân sự,147,Điều 57109,1. Bên nhận thầu có trách nhiệm quyết toán hợp đồng xây dựng với bên giao thầu phù hợp với loại hợp đồng và hình thức giá hợp đồng áp dụng. Nội dung quyết toán hợp đồng xây dựng phải phù hợp với thỏa thuận trong hợp đồng...,17
+case_8147,PARTIAL_A_WIN,5,Bộ luật tố tụng dân sự,157,Điều 57119,"1. Có đủ năng lực hoạt động thi công xây dựng công trình tương ứng với loại, cấp công trình xây dựng.
+
+2. Chỉ huy trưởng công trường có năng lực hành nghề thi công xây dựng công trình và chứng chỉ hành nghề phù hợp.
+
+3....",17
+case_8147,PARTIAL_A_WIN,6,Bộ luật tố tụng dân sự,165,Điều 57127,"1. Thanh tra xây dựng thuộc Bộ Xây dựng, Sở Xây dựng thực hiện chức năng thanh tra hành chính và thanh tra chuyên ngành về xây dựng đối với tổ chức, cá nhân tham gia hoạt động đầu tư xây dựng.
+
+2. Bộ Xây dựng chịu trách...",17
+case_8147,PARTIAL_A_WIN,7,Bộ luật tố tụng dân sự,228,Điều 14533,"1. Tòa án cấp phúc thẩm ra quyết định tạm đình chỉ xét xử phúc thẩm vụ án, hậu quả của việc tạm đình chỉ xét xử phúc thẩm vụ án và tiếp tục xét xử phúc thẩm vụ án được thực hiện theo quy định tại Điều 141 và Điều 142 của...",17
+case_8147,PARTIAL_A_WIN,8,Bộ luật tố tụng dân sự,273,Điều 14578,"Hội đồng xét xử giám đốc thẩm ra quyết định hủy bản án, quyết định đã có hiệu lực pháp luật bị kháng nghị và giữ nguyên bản án, quyết định của Tòa án cấp dưới xét xử đúng pháp luật, nhưng đã bị bản án, quyết định đã có h...",17
+case_8147,PARTIAL_A_WIN,9,Bộ luật tố tụng dân sự,280,Điều 14585,"Tái thẩm là xét lại bản án, quyết định đã có hiệu lực pháp luật nhưng bị kháng nghị vì có những tình tiết mới được phát hiện có thể làm thay đổi cơ bản nội dung của bản án, quyết định mà Tòa án, đương sự không biết được...",17
+case_8147,PARTIAL_A_WIN,10,Bộ luật Dân sự năm 2015,102,Điều 57064,"1. Quy trình cấp giấy phép xây dựng và điều chỉnh giấy phép xây dựng được quy định như sau:
+a) Chủ đầu tư nộp 02 bộ hồ sơ đề nghị cấp giấy phép xây dựng, điều chỉnh giấy phép xây dựng cho cơ quan có thẩm quyền cấp giấy p...",17
+case_8147,PARTIAL_A_WIN,11,Bộ luật Dân sự năm 2015,212,Điều 14517,"1. Quyết định kháng nghị của Viện kiểm sát phải bằng văn bản và có các nội dung chính sau đây:
+a) Ngày, tháng, năm ra quyết định kháng nghị và số của quyết định kháng nghị;
+b) Tên của Viện kiểm sát ra quyết định kháng ng...",17
+case_8147,PARTIAL_A_WIN,12,Bộ luật Dân sự năm 2015,649,Điều 53419,"Thừa kế theo pháp luật là thừa kế theo hàng thừa kế, điều kiện và trình tự thừa kế do pháp luật quy định.",17
+case_8147,PARTIAL_A_WIN,13,Bộ luật Dân sự năm 2015,650,Điều 53420,"1. Thừa kế theo pháp luật được áp dụng trong trường hợp sau đây:
+a) Không có di chúc;
+b) Di chúc không hợp pháp;
+c) Những người thừa kế theo di chúc chết trước hoặc chết cùng thời điểm với người lập di chúc; cơ quan, tổ...",17
+case_8147,PARTIAL_A_WIN,14,Bộ luật Dân sự năm 2015,651,Điều 53421,"1. Những người thừa kế theo pháp luật được quy định theo thứ tự sau đây:
+a) Hàng thừa kế thứ nhất gồm: vợ, chồng, cha đẻ, mẹ đẻ, cha nuôi, mẹ nuôi, con đẻ, con nuôi của người chết;
+b) Hàng thừa kế thứ hai gồm: ông nội, b...",17
+case_8147,PARTIAL_A_WIN,15,Bộ luật Dân sự năm 2015,660,Điều 53430,"1. Khi phân chia di sản, nếu có người thừa kế cùng hàng đã thành thai nhưng chưa sinh ra thì phải dành lại một phần di sản bằng phần mà người thừa kế khác được hưởng để nếu người thừa kế đó còn sống khi sinh ra được hưởn...",17
+case_8147,PARTIAL_A_WIN,16,Luật đất đai năm 2013,167,Điều 57129,"1. Luật này có hiệu lực thi hành từ ngày 01 tháng 01 năm 2015.2. Luật xây dựng số 16/2003/QH11 và Điều 1 của Luật sửa đổi, bổ sung một số điều của các luật liên quan đến đầu tư xây dựng cơ bản số 38/2009/QH12 hết liệu lự...",17
+case_8147,PARTIAL_A_WIN,17,Luật đất đai năm 2013,179,Điều 14484,"1. Trường hợp có nhiều người bị kiện thì phải hỏi riêng từng người một.
+
+2. Chỉ hỏi người bị kiện về vấn đề mà người bị kiện, người bảo vệ quyền và lợi ích hợp pháp của người bị kiện trình bày chưa rõ, có mâu thuẫn với n...",17

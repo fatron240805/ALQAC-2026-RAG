@@ -6,6 +6,7 @@ import logging
 import sys
 import time
 import os
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -48,9 +49,11 @@ from orchestration.rate_limiter import RateLimiter
 from orchestration.submission_tracker import SubmissionGuardrailError, SubmissionTracker
 from retrieval.deprecated_filter import DeprecatedFilter
 from retrieval.citation_usefulness import HeuristicCitationUsefulnessFilter
+from retrieval.graph_retriever import GraphRetrieverConfig, LegalGraphRetriever
 from retrieval.indexing import HybridIndexer
 from retrieval.reranker import LexicalOverlapReranker
 from retrieval.router import DocumentRouter
+from graph_construct import Neo4jGraphStore, build_graph_records, write_graph_artifacts
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
 logger = logging.getLogger("run_pipeline")
@@ -74,7 +77,10 @@ def build_index(config: PipelineConfig) -> HybridIndexer:
     deprecated_filter = DeprecatedFilter()
     docs = stream_active_indexer_docs(config.chunks_path, deprecated_filter)
 
-    indexer = HybridIndexer(model_name=config.embedding_model)
+    indexer = HybridIndexer(
+        model_name=config.embedding_model,
+        use_sentence_transformer=config.use_sentence_transformer,
+    )
     indexer.build_index(docs)
     indexer.save_index(config.index_path)
     logger.info("Indexed %d active chunks -> %s", len(indexer.doc_ids), config.index_path)
@@ -83,11 +89,119 @@ def build_index(config: PipelineConfig) -> HybridIndexer:
 
 def load_or_build_index(config: PipelineConfig, force_rebuild: bool = False) -> HybridIndexer:
     index_dir = Path(config.index_path)
-    required_files = ("documents.jsonl", "doc_ids.json", "bm25_model.pkl")
+    required_files = ("documents.jsonl", "doc_ids.json", "bm25_model.pkl", "index_meta.json")
     if not force_rebuild and all((index_dir / name).exists() for name in required_files):
+        try:
+            meta = json.loads((index_dir / "index_meta.json").read_text(encoding="utf-8"))
+        except Exception:
+            meta = {}
+        if isinstance(meta, dict):
+            if bool(meta.get("use_sentence_transformer")) != bool(config.use_sentence_transformer):
+                logger.info("Index semantic mode changed; rebuilding %s", index_dir)
+                return build_index(config)
+            if str(meta.get("model_name") or "") != str(config.embedding_model):
+                logger.info("Index embedding model changed; rebuilding %s", index_dir)
+                return build_index(config)
         logger.info("Loading existing index from %s", index_dir)
-        return HybridIndexer.load_index(index_dir, model_name=config.embedding_model)
+        return HybridIndexer.load_index(
+            index_dir,
+            model_name=config.embedding_model,
+            use_sentence_transformer=config.use_sentence_transformer,
+        )
     return build_index(config)
+
+
+def build_graph_retriever(
+    config: PipelineConfig,
+    indexer: HybridIndexer,
+    *,
+    dry_run: bool = False,
+    require_graph: bool = False,
+) -> LegalGraphRetriever | None:
+    if dry_run:
+        return None
+    if not config.use_graph_retrieval:
+        if require_graph:
+            raise RuntimeError("Graph retrieval is disabled in config but --require-graph was requested.")
+        return None
+
+    graph_store: Neo4jGraphStore | None = None
+    try:
+        graph_store = Neo4jGraphStore()
+        graph_store.verify_connectivity()
+        graph_node_count = graph_store.count_legal_nodes()
+        if graph_node_count <= 0:
+            raise RuntimeError(
+                "Neo4j LegalNode graph is empty. Run "
+                "`python -m orchestration.run_pipeline build-graph --import-neo4j --clear-graph` first."
+            )
+    except Exception as exc:
+        if graph_store is not None:
+            graph_store.close()
+        if require_graph:
+            raise RuntimeError(f"Neo4j graph retrieval required but unavailable: {exc}") from exc
+        logger.warning("Neo4j graph retrieval unavailable, falling back to flat retrieval: %s", exc)
+        return None
+
+    logger.info("Using Neo4j graph retrieval with %d LegalNode nodes", graph_node_count)
+    graph_config = GraphRetrieverConfig(
+        seed_top_k=config.top_k_before_rerank,
+        chain_top_k=config.top_k_after_rerank,
+        expansion_depth_fast=config.graph_expansion_depth_fast,
+        expansion_depth_deep=config.graph_expansion_depth_deep,
+        bm25_weight=config.graph_bm25_weight,
+        dense_weight=config.graph_dense_weight,
+        graph_weight=config.graph_weight,
+        exact_citation_weight=config.graph_exact_citation_weight,
+        legal_issue_weight=config.graph_legal_issue_weight,
+        freshness_weight=config.graph_freshness_weight,
+        hybrid_alpha=config.hybrid_alpha,
+    )
+    return LegalGraphRetriever(indexer, graph_store=graph_store, config=graph_config)
+
+
+def build_graph(
+    config: PipelineConfig,
+    *,
+    import_to_neo4j: bool = False,
+    clear_first: bool = False,
+    batch_size: int | None = None,
+) -> dict[str, Any]:
+    logger.info("Building graph from %s", config.chunks_path)
+    node_rows, edge_rows, stats = build_graph_records(config.chunks_path)
+    write_graph_artifacts(config.graph_path, node_rows, edge_rows, stats)
+    logger.info(
+        "Built graph artifacts -> %s (nodes=%d, edges=%d)",
+        config.graph_path,
+        len(node_rows),
+        len(edge_rows),
+    )
+
+    if import_to_neo4j:
+        store = Neo4jGraphStore()
+        effective_batch_size = batch_size or config.neo4j_import_batch_size
+        import_stats = store.import_graph(
+            node_rows,
+            edge_rows,
+            clear_first=clear_first,
+            batch_size=effective_batch_size,
+        )
+        store.close()
+        stats = {
+            **stats,
+            **import_stats,
+            "neo4j_imported": True,
+            "import_batch_size": effective_batch_size,
+        }
+        logger.info(
+            "Imported graph into Neo4j (%d nodes, %d edges)",
+            import_stats.get("nodes_upserted", 0),
+            import_stats.get("edges_upserted", 0),
+        )
+    else:
+        stats["neo4j_imported"] = False
+
+    return stats
 
 
 def process_case(
@@ -150,6 +264,73 @@ def process_case(
         "verifier_status": verified.get("verifier_status"),
         "law_evidence": law_evidence_out,
         "case_evidence": case_evidence_out,
+        "graph_path": [],
+        "api_calls": api_calls_for_case,
+    }
+
+
+def process_case_graph(
+    case: dict[str, Any],
+    *,
+    indexer: HybridIndexer,
+    graph_retriever: LegalGraphRetriever,
+    reranker: Reranker,
+    citation_filter: CitationUsefulnessFilter,
+    case_retrieval_client: CaseRetrievalClient,
+    reasoning_agent: ReasoningAgent,
+    verifier: Verifier,
+    config: PipelineConfig,
+) -> dict[str, Any]:
+    case_id = case["case_id"]
+    case_query = case["case_query"]
+
+    law_candidates = graph_retriever.retrieve(case_query)
+    law_reranked = reranker.rerank(case_query, law_candidates, top_k=config.top_k_after_rerank)
+    law_evidence = citation_filter.filter(case_query, law_reranked)
+
+    calls_before_case = case_retrieval_client.call_count
+    case_evidence_hits = case_retrieval_client.retrieve_multi(
+        queries=[case_query][: config.max_case_retrieval_calls_per_case],
+        case_id=case_id,
+    )
+    api_calls_for_case = case_retrieval_client.call_count - calls_before_case
+
+    answer = reasoning_agent.answer(case_id, case_query, law_evidence, case_evidence_hits)
+    verified = verifier.verify(answer, law_evidence)
+
+    law_evidence_out: list[dict[str, Any]] = []
+    graph_path_out: list[str] = []
+    seen_law_evidence: set[tuple[str, str]] = set()
+    for e in law_evidence:
+        metadata = e.get("metadata") if isinstance(e.get("metadata"), dict) else {}
+        law_id = metadata.get("law_id")
+        aid = metadata.get("aid")
+        if law_id is None or aid is None:
+            continue
+        key = (str(law_id), str(aid))
+        if key in seen_law_evidence:
+            continue
+        seen_law_evidence.add(key)
+        law_evidence_out.append({"law_id": law_id, "aid": aid})
+        graph_path = e.get("graph_path") or metadata.get("graph_path") or []
+        if isinstance(graph_path, list):
+            for node_id in graph_path:
+                node_text = str(node_id).strip()
+                if node_text and node_text not in graph_path_out:
+                    graph_path_out.append(node_text)
+
+    case_evidence_out = [hit.chunk_id for hit in case_evidence_hits if hit.chunk_id]
+
+    return {
+        "case_id": case_id,
+        "prediction": verified.get("label"),
+        "confidence": verified.get("confidence"),
+        "justification": verified.get("justification"),
+        "parser_status": verified.get("parser_status"),
+        "verifier_status": verified.get("verifier_status"),
+        "law_evidence": law_evidence_out,
+        "case_evidence": case_evidence_out,
+        "graph_path": graph_path_out,
         "api_calls": api_calls_for_case,
     }
 
@@ -162,6 +343,7 @@ def run_pipeline(
     force_rebuild_index: bool = False,
     case_id_filter: set[str] | None = None,
     resume: bool = False,
+    require_graph: bool = False,
 ) -> Path:
     indexer = load_or_build_index(config, force_rebuild=force_rebuild_index)
 
@@ -175,6 +357,17 @@ def run_pipeline(
     reranker = LexicalOverlapReranker()
     citation_filter = HeuristicCitationUsefulnessFilter(max_results=config.top_k_after_rerank)
     verifier = StatutoryConsistencyVerifier()
+    graph_retriever = build_graph_retriever(
+        config,
+        indexer,
+        dry_run=dry_run,
+        require_graph=require_graph,
+    )
+    process_case_impl = (
+        partial(process_case_graph, graph_retriever=graph_retriever)
+        if graph_retriever is not None
+        else process_case
+    )
 
     if dry_run:
         case_retrieval_client = _DryRunCaseRetrievalClient()
@@ -207,7 +400,7 @@ def run_pipeline(
                 continue
 
             try:
-                pred = process_case(
+                pred = process_case_impl(
                     case,
                     indexer=indexer,
                     reranker=reranker,
@@ -497,6 +690,7 @@ def check_runtime(
     *,
     ping_llm: bool = False,
     ping_case_api: bool = False,
+    ping_neo4j: bool = False,
 ) -> dict[str, Any]:
     """Check whether the environment is ready for non-dry-run inference."""
     llm_provider = os.environ.get("ALQAC_LLM_PROVIDER", "ollama")
@@ -504,22 +698,33 @@ def check_runtime(
     llm_model = os.environ.get("ALQAC_LLM_MODEL_NAME")
     team_token = os.environ.get("ALQAC_TEAM_TOKEN")
     case_api_url = os.environ.get("ALQAC_API_URL") or os.environ.get("ALQAC_RETRIEVAL_API_BASE_URL")
+    neo4j_uri = os.environ.get(config.neo4j_uri_env)
+    neo4j_username = os.environ.get(config.neo4j_username_env)
+    neo4j_password = os.environ.get(config.neo4j_password_env)
+    neo4j_database = os.environ.get(config.neo4j_database_env)
     report: dict[str, Any] = {
         "paths": {
             "chunks_path": config.chunks_path.exists(),
             "public_test_path": config.public_test_path.exists(),
             "prompt_path": config.prompt_path.exists(),
             "index_path": Path(config.index_path).exists(),
+            "graph_path": Path(config.graph_path).exists(),
         },
         "env": {
             "ALQAC_LLM_PROVIDER": _is_real_env_value(llm_provider),
             "ALQAC_LLM_BASE_URL": _is_real_env_value(llm_base_url),
             "ALQAC_LLM_MODEL_NAME": _is_real_env_value(llm_model),
+            "NEO4J_URI": _is_real_env_value(neo4j_uri),
+            "NEO4J_USERNAME": _is_real_env_value(neo4j_username),
+            "NEO4J_PASSWORD": _is_real_env_value(neo4j_password),
+            # Aura can select the instance's default database when this is blank.
+            "NEO4J_DATABASE": not neo4j_database or _is_real_env_value(neo4j_database),
             "ALQAC_TEAM_TOKEN": _is_real_env_value(team_token),
             "ALQAC_API_URL_or_RETRIEVAL_BASE": _is_real_env_value(case_api_url),
         },
         "llm_ping": "skipped",
         "case_api_ping": "skipped",
+        "neo4j_ping": "skipped",
     }
 
     if ping_llm:
@@ -558,7 +763,28 @@ def check_runtime(
         except Exception as exc:
             report["case_api_ping"] = {"ok": False, "error": str(exc)}
 
+    if ping_neo4j:
+        store: Neo4jGraphStore | None = None
+        try:
+            store = Neo4jGraphStore()
+            store.verify_connectivity()
+            report["neo4j_ping"] = {
+                "ok": True,
+                "backend": "aura" if store.config.is_aura else "self_managed",
+                "database": store.config.database or "default",
+                "legal_node_count": store.count_legal_nodes(),
+            }
+        except Exception as exc:
+            report["neo4j_ping"] = {"ok": False, "error": str(exc)}
+        finally:
+            if store is not None:
+                store.close()
+
     report["ready_for_real_run"] = all(report["paths"].values()) and all(report["env"].values())
+    report["ready_for_graph_benchmark"] = (
+        all(report["paths"][key] for key in ("chunks_path", "public_test_path", "index_path", "graph_path"))
+        and all(report["env"][key] for key in ("NEO4J_URI", "NEO4J_USERNAME", "NEO4J_PASSWORD", "NEO4J_DATABASE"))
+    )
     if ping_llm:
         report["ready_for_real_run"] = report["ready_for_real_run"] and bool(
             isinstance(report["llm_ping"], dict) and report["llm_ping"].get("ok")
@@ -566,6 +792,10 @@ def check_runtime(
     if ping_case_api:
         report["ready_for_real_run"] = report["ready_for_real_run"] and bool(
             isinstance(report["case_api_ping"], dict) and report["case_api_ping"].get("ok")
+        )
+    if ping_neo4j:
+        report["ready_for_graph_benchmark"] = report["ready_for_graph_benchmark"] and bool(
+            isinstance(report["neo4j_ping"], dict) and report["neo4j_ping"].get("ok")
         )
     return report
 
@@ -579,12 +809,22 @@ def main() -> None:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser("build-index", help="Build/rebuild the hybrid BM25+dense index")
+    build_graph_parser = subparsers.add_parser("build-graph", help="Build graph artifacts and optionally import Neo4j")
+    build_graph_parser.add_argument("--import-neo4j", action="store_true", help="Import the graph into Neo4j")
+    build_graph_parser.add_argument("--clear-graph", action="store_true", help="Clear existing LegalNode graph before import")
+    build_graph_parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=None,
+        help="Neo4j import batch size. Default: config value (200, suitable for Aura Free).",
+    )
 
     run_parser = subparsers.add_parser("run", help="Run the full pipeline over the public test set")
     run_parser.add_argument("--dry-run", action="store_true", help="Use stub LLM, no real inference")
     run_parser.add_argument("--limit", type=int, default=None, help="Only process the first N cases")
     run_parser.add_argument("--rebuild-index", action="store_true")
     run_parser.add_argument("--resume", action="store_true", help="Skip case_ids already present in run output/debug log")
+    run_parser.add_argument("--require-graph", action="store_true", help="Fail instead of falling back when Neo4j graph retrieval is unavailable")
     run_parser.add_argument(
         "--case-ids-file",
         type=Path,
@@ -608,6 +848,12 @@ def main() -> None:
     check_parser = subparsers.add_parser("check-runtime", help="Check env/path readiness for real inference")
     check_parser.add_argument("--ping-llm", action="store_true", help="Send a tiny JSON prompt to the configured LLM")
     check_parser.add_argument("--ping-case-api", action="store_true", help="Call the official case retrieval API once")
+    check_parser.add_argument("--ping-neo4j", action="store_true", help="Verify Neo4j/Aura connectivity and count LegalNode records")
+    check_parser.add_argument(
+        "--graph-only",
+        action="store_true",
+        help="Validate only Neo4j graph-benchmark prerequisites; do not require the LLM or case API.",
+    )
 
     validate_parser = subparsers.add_parser("validate-output", help="Validate internal prediction JSON")
     validate_parser.add_argument("--pred", type=Path, default=None)
@@ -618,6 +864,17 @@ def main() -> None:
 
     if args.command == "build-index":
         build_index(config)
+    elif args.command == "build-graph":
+        try:
+            build_graph(
+                config,
+                import_to_neo4j=args.import_neo4j,
+                clear_first=args.clear_graph,
+                batch_size=args.batch_size,
+            )
+        except Exception as exc:
+            logger.error(str(exc))
+            raise SystemExit(1) from exc
     elif args.command == "run":
         case_id_filter = load_case_id_filter(args.case_ids_file) if args.case_ids_file else None
         if case_id_filter is not None:
@@ -629,6 +886,7 @@ def main() -> None:
             force_rebuild_index=args.rebuild_index,
             case_id_filter=case_id_filter,
             resume=args.resume,
+            require_graph=args.require_graph,
         )
     elif args.command == "evaluate":
         pred_path = args.pred or (config.experiments_dir / f"run_{config.run_tag}.json")
@@ -659,9 +917,11 @@ def main() -> None:
             config,
             ping_llm=args.ping_llm,
             ping_case_api=args.ping_case_api,
+            ping_neo4j=args.ping_neo4j,
         )
         print(json.dumps(report, ensure_ascii=False, indent=2))
-        if not report["ready_for_real_run"]:
+        ready_key = "ready_for_graph_benchmark" if args.graph_only else "ready_for_real_run"
+        if not report[ready_key]:
             raise SystemExit(1)
     elif args.command == "validate-output":
         pred_path = args.pred or (config.experiments_dir / f"run_{config.run_tag}.json")

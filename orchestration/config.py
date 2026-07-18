@@ -21,16 +21,33 @@ class PipelineConfig:
     # --- Data paths -----------------------------------------------------
     chunks_path: Path = PROJECT_ROOT / "data" / "chunks.jsonl"
     index_path: Path = PROJECT_ROOT / "data" / "index"
+    graph_path: Path = PROJECT_ROOT / "data" / "graph"
     public_test_path: Path = PROJECT_ROOT / "data" / "ALQAC2026_public_test.json"
     prompt_path: Path = PROJECT_ROOT / "reasoning" / "prompts" / "prompt_v0.md"
     gold_path: Path = PROJECT_ROOT / "data" / "local_validation_gold.json"
 
     # --- Retrieval (Plan.md defaults) ------------------------------------
-    embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
+    embedding_model: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     chunk_size: str = "350-600 tokens (pre-chunked upstream by Hưng)"
-    top_k_before_rerank: int = 50
-    top_k_after_rerank: int = 5
-    hybrid_alpha: float = 0.45  # score = alpha*BM25 + (1-alpha)*dense
+    top_k_before_rerank: int = 80
+    top_k_after_rerank: int = 8
+    use_sentence_transformer: bool = True
+    hybrid_alpha: float = 0.50
+    use_graph_retrieval: bool = True
+    graph_expansion_depth_fast: int = 1
+    graph_expansion_depth_deep: int = 2
+    graph_bm25_weight: float = 0.25
+    graph_dense_weight: float = 0.25
+    graph_weight: float = 0.20
+    graph_exact_citation_weight: float = 0.15
+    graph_legal_issue_weight: float = 0.10
+    graph_freshness_weight: float = 0.05
+    graph_backend: str = "neo4j"
+    neo4j_uri_env: str = "NEO4J_URI"
+    neo4j_username_env: str = "NEO4J_USERNAME"
+    neo4j_password_env: str = "NEO4J_PASSWORD"
+    neo4j_database_env: str = "NEO4J_DATABASE"
+    neo4j_import_batch_size: int = 200
 
     # --- Reasoning --------------------------------------------------------
     llm_model: str = "TBD"  # e.g. Qwen2.5-7B-Instruct / Mistral-7B-Instruct-v0.3
@@ -53,7 +70,7 @@ class PipelineConfig:
 
     # --- Experiment tracking ----------------------------------------------
     experiments_dir: Path = PROJECT_ROOT / "experiments"
-    run_tag: str = "v0_baseline"
+    run_tag: str = "graphrag"
 
     extra: dict[str, Any] = field(default_factory=dict)
 
@@ -66,6 +83,7 @@ class PipelineConfig:
         for key in (
             "chunks_path",
             "index_path",
+            "graph_path",
             "public_test_path",
             "prompt_path",
             "gold_path",
@@ -94,4 +112,6 @@ class PipelineConfig:
             "reranker": "passthrough (stub)",
             "prompt_version": self.prompt_version,
             "hybrid_alpha": self.hybrid_alpha,
+            "graph_retrieval": self.use_graph_retrieval,
+            "graph_backend": self.graph_backend,
         }

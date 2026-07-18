@@ -1,0 +1,91 @@
+{
+  "Retrieval_Benchmark": {
+    "retriever": "graph",
+    "score_scope": "neo4j_traversal_only",
+    "gold_source": "C:\\Users\\Admin\\Documents\\Work\\ALQAC\\alqac-2026-rag\\data\\ALQAC2026_public_test.json",
+    "cases_evaluated": 50,
+    "top_k": [
+      1,
+      3,
+      5,
+      8,
+      10
+    ],
+    "seed_top_k": 80,
+    "alpha": 0.5,
+    "backend": "neo4j",
+    "legal_node_count": 9739,
+    "expansion_depth_fast": 1,
+    "expansion_depth_deep": 2
+  },
+  "Graph_Execution": {
+    "cases_with_neo4j_expansion": 50,
+    "cases_without_neo4j_expansion": 0,
+    "returned_graph_candidates": 499,
+    "returned_flat_fallback_candidates": 0
+  },
+  "Gold_Coverage": {
+    "raw_gold_items": 677,
+    "mapped_gold_items": 529,
+    "unmapped_gold_items": 148,
+    "mapping_rate": 0.7814,
+    "cases_with_mapped_gold": 50
+  },
+  "Metrics": {
+    "@1": {
+      "Case_Hit_Accuracy": 0.06,
+      "Exact_Set_Accuracy": 0.0,
+      "Macro_Precision": 0.06,
+      "Macro_Recall": 0.0041,
+      "Macro_F1": 0.0077,
+      "Micro_Precision": 0.06,
+      "Micro_Recall": 0.0057,
+      "Micro_F1": 0.0104,
+      "MRR": 0.06
+    },
+    "@3": {
+      "Case_Hit_Accuracy": 0.12,
+      "Exact_Set_Accuracy": 0.0,
+      "Macro_Precision": 0.04,
+      "Macro_Recall": 0.0079,
+      "Macro_F1": 0.013,
+      "Micro_Precision": 0.04,
+      "Micro_Recall": 0.0113,
+      "Micro_F1": 0.0177,
+      "MRR": 0.0867
+    },
+    "@5": {
+      "Case_Hit_Accuracy": 0.18,
+      "Exact_Set_Accuracy": 0.0,
+      "Macro_Precision": 0.048,
+      "Macro_Recall": 0.0198,
+      "Macro_F1": 0.0265,
+      "Micro_Precision": 0.048,
+      "Micro_Recall": 0.0227,
+      "Micro_F1": 0.0308,
+      "MRR": 0.1007
+    },
+    "@8": {
+      "Case_Hit_Accuracy": 0.3,
+      "Exact_Set_Accuracy": 0.0,
+      "Macro_Precision": 0.0537,
+      "Macro_Recall": 0.033,
+      "Macro_F1": 0.0394,
+      "Micro_Precision": 0.0536,
+      "Micro_Recall": 0.0397,
+      "Micro_F1": 0.0456,
+      "MRR": 0.119
+    },
+    "@10": {
+      "Case_Hit_Accuracy": 0.36,
+      "Exact_Set_Accuracy": 0.0,
+      "Macro_Precision": 0.0567,
+      "Macro_Recall": 0.0383,
+      "Macro_F1": 0.0442,
+      "Micro_Precision": 0.0566,
+      "Micro_Recall": 0.0473,
+      "Micro_F1": 0.0515,
+      "MRR": 0.1254
+    }
+  }
+}
