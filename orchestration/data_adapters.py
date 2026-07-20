@@ -37,6 +37,9 @@ def chunk_to_indexer_doc(chunk: dict[str, Any]) -> dict[str, Any]:
         "source_type",
         "unit_type",
         "unit_path",
+        "ontology_concepts",
+        "rule_signals",
+        "article_references",
         "deprecated",
     )
     return {

@@ -24,6 +24,8 @@ class GraphRetrieverConfig:
     legal_issue_weight: float = 0.10
     freshness_weight: float = 0.05
     hybrid_alpha: float = 0.50
+    community_top_k: int = 1
+    community_member_top_k: int = 20
 
 
 class LegalGraphRetriever:
@@ -183,7 +185,62 @@ class LegalGraphRetriever:
                 expanded.append(candidate)
 
         expanded.sort(key=lambda item: float(item.get("fused_score", 0.0)), reverse=True)
-        return expanded
+        return self._community_guided_candidates(expanded)
+
+    def _community_guided_candidates(self, candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        """Apply LegalGraphRAG-style community expansion to ontology paths.
+
+        LegalGraphRAG selects the query-aligned ontology community first, then
+        retrieves the strongest members inside it.  This is deliberately done
+        before the cross-encoder, so the cross-encoder still compares direct
+        semantic/citation evidence against community-expanded evidence.
+        """
+        if not candidates:
+            return []
+
+        direct_candidates: list[dict[str, Any]] = []
+        by_community: dict[str, list[dict[str, Any]]] = {}
+        for candidate in candidates:
+            metadata = candidate.get("metadata") if isinstance(candidate.get("metadata"), dict) else {}
+            graph_path = candidate.get("graph_path") or metadata.get("graph_path") or []
+            communities = [
+                str(node_id)
+                for node_id in graph_path
+                if str(node_id).startswith("ontology:")
+            ]
+            if not communities:
+                direct_candidates.append(candidate)
+                continue
+            metadata = dict(metadata)
+            metadata["ontology_communities"] = communities
+            candidate["metadata"] = metadata
+            for community_id in communities:
+                by_community.setdefault(community_id, []).append(candidate)
+
+        # A community is represented by its strongest query-aligned member.
+        ranked_communities = sorted(
+            by_community.items(),
+            key=lambda item: max(float(candidate.get("fused_score", 0.0)) for candidate in item[1]),
+            reverse=True,
+        )[: max(0, self.config.community_top_k)]
+
+        selected: list[dict[str, Any]] = list(direct_candidates)
+        seen = {str(candidate.get("doc_id") or "") for candidate in selected}
+        for community_id, members in ranked_communities:
+            members.sort(key=lambda candidate: float(candidate.get("fused_score", 0.0)), reverse=True)
+            for candidate in members[: max(0, self.config.community_member_top_k)]:
+                doc_id = str(candidate.get("doc_id") or "")
+                if not doc_id or doc_id in seen:
+                    continue
+                item = dict(candidate)
+                metadata = dict(item.get("metadata") or {})
+                metadata["selected_ontology_community"] = community_id
+                item["metadata"] = metadata
+                selected.append(item)
+                seen.add(doc_id)
+
+        selected.sort(key=lambda item: float(item.get("fused_score", 0.0)), reverse=True)
+        return selected
 
     def _row_to_candidate(
         self,

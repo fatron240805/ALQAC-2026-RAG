@@ -166,6 +166,8 @@ def build_graph_retriever(
         exact_citation_weight=config.graph_exact_citation_weight,
         legal_issue_weight=config.graph_legal_issue_weight,
         freshness_weight=config.graph_freshness_weight,
+        community_top_k=config.graph_community_top_k,
+        community_member_top_k=config.graph_community_member_top_k,
         hybrid_alpha=config.hybrid_alpha,
     )
     graph_reranker = LexicalOverlapReranker(

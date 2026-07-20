@@ -3,6 +3,7 @@
   "article_number_source_counts": {
     "aid": 3352
   },
+  "article_reference_count": 8183,
   "avg_article_tokens": 218.12,
   "avg_chunk_tokens": 125.71,
   "chunk_count": 6474,
@@ -14,16 +15,37 @@
     "point": 2155
   },
   "chunking_policy": "multi_granular_pattern_based: article-level by default; clause/point fallback for oversized dense articles; sentence fallback only for oversized legal units",
-  "cleaned_at": "2026-07-16T10:42:07.523292+00:00",
+  "cleaned_at": "2026-07-20T04:50:41.817428+00:00",
   "cleaning_notes": "deprecated=True is a candidate signal for human audit, not a conclusive determination; inline clause/point splitting skips cross-references (e.g. 'tại khoản 2.').",
   "deprecated_article_count": 23,
   "deprecated_document_count": 14,
   "document_count": 18,
   "duplicate_law_ids": [],
   "empty_article_count": 0,
+  "ontology_concept_counts": {
+    "ontology:issue:civil_procedure": 1096,
+    "ontology:issue:construction_contract": 672,
+    "ontology:issue:contract_dispute": 667,
+    "ontology:issue:court_fee": 253,
+    "ontology:issue:credit_contract": 442,
+    "ontology:issue:enforcement": 330,
+    "ontology:issue:inheritance": 145,
+    "ontology:issue:land_dispute": 419,
+    "ontology:issue:marriage_family": 505,
+    "ontology:issue:tort_damage": 252,
+    "ontology:liability:animal_damage": 3717
+  },
   "overlap_tokens": 100,
   "raw_path": "data/raw/ALQAC/corpus_law_pub.json",
-  "schema_version": 4,
+  "rule_signal_counts": {
+    "condition": 4497,
+    "entitlement": 856,
+    "exception": 501,
+    "obligation": 2126,
+    "procedure": 1896,
+    "prohibition": 407
+  },
+  "schema_version": 5,
   "target_tokens": 600,
   "written": {
     "articles": 3352,

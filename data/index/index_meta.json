@@ -3,8 +3,8 @@
   "model_name": "BAAI/bge-m3",
   "use_bge_m3": true,
   "use_sentence_transformer": false,
-  "retrieval_backend": "bm25",
-  "device": "cpu",
+  "retrieval_backend": "bge_m3",
+  "device": "cuda:0",
   "batch_size": 12,
   "max_length": 1024
 }

@@ -1,0 +1,13 @@
+# Core pipeline
+numpy>=1.26,<3
+requests>=2.31,<3
+python-dotenv>=1.0,<2
+
+# Graph persistence
+neo4j>=5.24,<7
+
+# Sparse and dense retrieval
+rank-bm25>=0.2.2,<1
+torch>=2.5
+sentence-transformers>=5.0,<6
+FlagEmbedding>=1.4.0,<2

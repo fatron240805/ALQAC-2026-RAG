@@ -172,11 +172,22 @@ class HybridIndexer:
 
         metadata = document.get("metadata") if isinstance(document.get("metadata"), dict) else {}
         if isinstance(metadata, dict):
-            for key in ("law_id", "aid", "unit_path", "article_label", "article_number", "point_label", "clause_number"):
+            for key in (
+                "law_id",
+                "aid",
+                "unit_path",
+                "article_label",
+                "article_number",
+                "point_label",
+                "clause_number",
+                "ontology_concepts",
+                "rule_signals",
+                "article_references",
+            ):
                 value = metadata.get(key)
                 if value is None:
                     continue
-                text = str(value).strip()
+                text = " ".join(str(item) for item in value) if isinstance(value, list) else str(value).strip()
                 if text:
                     pieces.append(text)
 

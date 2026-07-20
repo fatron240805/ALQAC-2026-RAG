@@ -54,6 +54,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterable, Iterator
 
+from legal_features import extract_legal_features
 
 RAW_CORPUS_PATH = Path("data/raw/ALQAC/corpus_law_pub.json")
 DOCS_OUTPUT_PATH = Path("data/cleaned/corpus.jsonl")
@@ -62,7 +63,7 @@ CHUNKS_OUTPUT_PATH = Path("data/chunks.jsonl")
 AUDIT_OUTPUT_PATH = Path("data/cleaned/cleaning_audit.json")
 
 SOURCE_TYPE = "statute"
-SCHEMA_VERSION = 4
+SCHEMA_VERSION = 5
 
 
 CONTROL_CHARS_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
@@ -167,6 +168,9 @@ class ChunkRecord:
     token_count_estimate: int
     content_sha256: str
     text: str
+    ontology_concepts: list[str]
+    rule_signals: list[str]
+    article_references: list[str]
 
 
 @dataclass(frozen=True)
@@ -734,6 +738,7 @@ def chunk_article(
         if not text:
             continue
         unit_path = build_unit_path(article, unit)
+        features = extract_legal_features(f"{unit_path}\n{text}")
         chunks.append(
             ChunkRecord(
                 chunk_id=stable_id(article.article_id, index, unit_path, text, prefix="chunk"),
@@ -756,6 +761,9 @@ def chunk_article(
                 token_count_estimate=estimate_tokens(text),
                 content_sha256=sha256_text(text),
                 text=text,
+                ontology_concepts=features["ontology_concepts"],
+                rule_signals=features["rule_signals"],
+                article_references=features["article_references"],
             )
         )
     return chunks
@@ -810,6 +818,9 @@ def build_clean_corpus(
     article_number_source_counts = Counter(
         article.article_number_source for article in articles
     )
+    concept_counts = Counter(concept for chunk in chunks for concept in chunk.ontology_concepts)
+    rule_signal_counts = Counter(signal for chunk in chunks for signal in chunk.rule_signals)
+    citation_reference_count = sum(len(chunk.article_references) for chunk in chunks)
 
     audit = {
         "raw_path": raw_path.as_posix(),
@@ -823,6 +834,9 @@ def build_clean_corpus(
         "empty_article_count": sum(1 for article in articles if not article.article_text),
         "chunk_unit_counts": dict(sorted(chunk_unit_counts.items())),
         "article_number_source_counts": dict(sorted(article_number_source_counts.items())),
+        "ontology_concept_counts": dict(sorted(concept_counts.items())),
+        "rule_signal_counts": dict(sorted(rule_signal_counts.items())),
+        "article_reference_count": citation_reference_count,
         "target_tokens": target_tokens,
         "overlap_tokens": overlap_tokens,
         "avg_article_tokens": round(

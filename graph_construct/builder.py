@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable
 
+from legal_features import extract_legal_features
 from retrieval.deprecated_filter import DeprecatedFilter
 
 
@@ -246,6 +247,15 @@ def chunk_to_graph_records(chunk: dict[str, Any]) -> tuple[list[GraphNode], list
     unit_type = str(chunk.get("unit_type") or "chunk").strip() or "chunk"
     chunk_node_id = f"chunk:{chunk_id}"
     unit_path = str(chunk.get("unit_path") or "")
+    extracted_features = extract_legal_features(
+        f"{unit_path}\n{text}",
+        concept_aliases=CONCEPT_ALIASES,
+    )
+    ontology_concepts = list(chunk.get("ontology_concepts") or extracted_features["ontology_concepts"])
+    rule_signals = list(chunk.get("rule_signals") or extracted_features["rule_signals"])
+    article_references = list(chunk.get("article_references") or extracted_features["article_references"])
+    clause_number = str(chunk.get("clause_number") or "").strip() or None
+    container_node_id = article_node_id
 
     nodes = [
         GraphNode(
@@ -255,6 +265,8 @@ def chunk_to_graph_records(chunk: dict[str, Any]) -> tuple[list[GraphNode], list
                 "layer": "rule",
                 "node_type": "law",
                 "law_id": law_id,
+                "doc_id": chunk.get("doc_id"),
+                "source_type": chunk.get("source_type"),
                 "text": law_id,
             },
         ),
@@ -270,6 +282,8 @@ def chunk_to_graph_records(chunk: dict[str, Any]) -> tuple[list[GraphNode], list
                 "article_number": article_number,
                 "article_index": chunk.get("article_index"),
                 "article_label": chunk.get("article_label"),
+                "ontology_concepts": ontology_concepts,
+                "rule_signals": rule_signals,
                 "text": unit_path or f"{law_id} Dieu {article_number}",
                 "source_chunk_id": chunk_id if unit_type == "article" else None,
             },
@@ -292,6 +306,9 @@ def chunk_to_graph_records(chunk: dict[str, Any]) -> tuple[list[GraphNode], list
                 "unit_path": unit_path,
                 "clause_number": chunk.get("clause_number"),
                 "point_label": chunk.get("point_label"),
+                "ontology_concepts": ontology_concepts,
+                "rule_signals": rule_signals,
+                "article_references": article_references,
                 "text": text,
             },
         ),
@@ -304,15 +321,46 @@ def chunk_to_graph_records(chunk: dict[str, Any]) -> tuple[list[GraphNode], list
             edge_type="CONTAINS",
             properties=(("weight", 1.0), ("evidence", "same law_id"),),
         ),
-        GraphEdge(
-            src=article_node_id,
-            dst=chunk_node_id,
-            edge_type="CONTAINS",
-            properties=(("weight", 1.0), ("evidence", "source chunk belongs to article"),),
-        ),
     ]
 
-    for concept_id in matched_concepts(f"{unit_path}\n{text}"):
+    if clause_number:
+        clause_node_id = f"rule:{law_id}:{article_part}:clause:{safe_node_part(clause_number)}"
+        container_node_id = clause_node_id
+        nodes.append(
+            GraphNode(
+                node_id=clause_node_id,
+                labels={"LegalNode", "Clause"},
+                properties={
+                    "layer": "rule",
+                    "node_type": "clause",
+                    "law_id": law_id,
+                    "aid": aid,
+                    "article_number": article_number,
+                    "clause_number": clause_number,
+                    "source_chunk_id": chunk_id if unit_type.startswith("clause") else None,
+                    "text": f"{law_id} Dieu {article_number} khoan {clause_number}",
+                },
+            )
+        )
+        edges.append(
+            GraphEdge(
+                src=article_node_id,
+                dst=clause_node_id,
+                edge_type="CONTAINS",
+                properties=(("weight", 1.0), ("evidence", "clause belongs to article")),
+            )
+        )
+
+    edges.append(
+        GraphEdge(
+            src=container_node_id,
+            dst=chunk_node_id,
+            edge_type="CONTAINS",
+            properties=(("weight", 1.0), ("evidence", "source chunk belongs to legal unit")),
+        )
+    )
+
+    for concept_id in ontology_concepts:
         edges.append(
             GraphEdge(
                 src=concept_id,
@@ -330,7 +378,30 @@ def chunk_to_graph_records(chunk: dict[str, Any]) -> tuple[list[GraphNode], list
             )
         )
 
-    for referenced_aid in ARTICLE_REF_RE.findall(text):
+    for rule_signal in rule_signals:
+        signal_node_id = f"ontology:rule_signal:{safe_node_part(rule_signal)}"
+        nodes.append(
+            GraphNode(
+                node_id=signal_node_id,
+                labels={"LegalNode", "RuleSignal"},
+                properties={
+                    "layer": "ontology",
+                    "node_type": "rule_signal",
+                    "text": rule_signal,
+                    "normalized_alias": rule_signal,
+                },
+            )
+        )
+        edges.append(
+            GraphEdge(
+                src=signal_node_id,
+                dst=article_node_id,
+                edge_type="GOVERNED_BY",
+                properties=(("weight", 0.7), ("evidence", "rule signal extracted from source text")),
+            )
+        )
+
+    for referenced_aid in article_references:
         if str(referenced_aid) == str(article_number):
             continue
         edges.append(

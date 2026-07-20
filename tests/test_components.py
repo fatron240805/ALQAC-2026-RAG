@@ -114,11 +114,13 @@ class CleaningTests(unittest.TestCase):
 
             _, articles, chunks, audit = build_clean_corpus(raw_path, target_tokens=1)
 
-        self.assertEqual(audit["schema_version"], 4)
+        self.assertEqual(audit["schema_version"], 5)
         self.assertEqual(articles[0].article_number, "12")
         self.assertEqual(articles[0].article_number_source, "aid")
         self.assertTrue(any(chunk.unit_type.startswith("point") for chunk in chunks))
         self.assertIn("điểm a", {chunk.unit_path for chunk in chunks if chunk.point_label == "a"}.pop())
+        self.assertTrue(any("obligation" in chunk.rule_signals for chunk in chunks))
+        self.assertTrue(any("ontology:issue:tort_damage" in chunk.ontology_concepts for chunk in chunks))
 
 
 class DeprecatedFilterTests(unittest.TestCase):
@@ -183,6 +185,23 @@ class RetrievalComponentTests(unittest.TestCase):
         results = indexer.search("Điều 584 bồi thường thiệt hại do súc vật gây ra", top_k=1)
         self.assertEqual(results[0]["doc_id"], "dog")
         self.assertGreater(results[0]["fused_score"], 0)
+
+    def test_hybrid_indexer_semantic_text_includes_preprocessed_legal_features(self) -> None:
+        indexer = HybridIndexer(embedding_dim=32)
+        text = indexer._semantic_text(
+            {
+                "content": "Chu so huu phai boi thuong.",
+                "metadata": {
+                    "ontology_concepts": ["ontology:issue:tort_damage"],
+                    "rule_signals": ["obligation"],
+                    "article_references": ["585"],
+                },
+            }
+        )
+
+        self.assertIn("ontology:issue:tort_damage", text)
+        self.assertIn("obligation", text)
+        self.assertIn("585", text)
 
     def test_save_and_load_index_roundtrip(self) -> None:
         with workspace_tempdir() as tmp:
@@ -293,6 +312,47 @@ class RetrievalComponentTests(unittest.TestCase):
         self.assertEqual(article["properties"]["article_number"], "584")
         self.assertEqual(article["properties"]["article_index"], 584)
 
+    def test_build_graph_records_preserves_clause_hierarchy_and_preprocessed_features(self) -> None:
+        with workspace_tempdir() as tmp:
+            chunks_path = Path(tmp) / "chunks.jsonl"
+            chunks_path.write_text(
+                json.dumps(
+                    {
+                        "chunk_id": "point_a",
+                        "law_id": "91/2015/QH13",
+                        "aid": 584,
+                        "article_index": 584,
+                        "clause_number": "1",
+                        "point_label": "a",
+                        "unit_type": "point",
+                        "unit_path": "91/2015/QH13 Dieu 584 khoan 1 diem a",
+                        "text": "Chu so huu phai boi thuong thiet hai theo Dieu 585.",
+                        "ontology_concepts": ["ontology:issue:tort_damage"],
+                        "rule_signals": ["obligation"],
+                        "article_references": ["585"],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            nodes, edges, _ = build_graph_records(chunks_path)
+
+        node_ids = {node["node_id"] for node in nodes}
+        edge_pairs = {(edge["src"], edge["dst"], edge["edge_type"]) for edge in edges}
+        self.assertIn("rule:91/2015/QH13:584:clause:1", node_ids)
+        self.assertIn("ontology:rule_signal:obligation", node_ids)
+        self.assertIn(
+            ("rule:91/2015/QH13:584", "rule:91/2015/QH13:584:clause:1", "CONTAINS"),
+            edge_pairs,
+        )
+        self.assertIn(
+            ("rule:91/2015/QH13:584:clause:1", "chunk:point_a", "CONTAINS"),
+            edge_pairs,
+        )
+        self.assertIn(
+            ("rule:91/2015/QH13:584", "rule:91/2015/QH13:585", "CITES"),
+            edge_pairs,
+        )
+
     def test_legal_graph_retriever_returns_graph_backed_law_nodes(self) -> None:
         class FakeGraphStore:
             def seed_nodes_for_chunk(self, chunk_id: str) -> list[str]:
@@ -362,6 +422,49 @@ class RetrievalComponentTests(unittest.TestCase):
         self.assertEqual(len(merged), 2)
         self.assertIn("seed_chunk", [item["doc_id"] for item in merged])
         self.assertIn("rule:91/2015/QH13:585", [item["doc_id"] for item in merged])
+
+    def test_graph_retriever_selects_query_aligned_ontology_community(self) -> None:
+        retriever = LegalGraphRetriever(
+            HybridIndexer(embedding_dim=32),
+            config=GraphRetrieverConfig(community_top_k=1, community_member_top_k=2),
+        )
+        candidates = [
+            {
+                "doc_id": "direct",
+                "fused_score": 0.5,
+                "metadata": {},
+                "graph_path": ["chunk:seed", "rule:91/2015/QH13:584"],
+            },
+            {
+                "doc_id": "community_a_best",
+                "fused_score": 0.9,
+                "metadata": {},
+                "graph_path": ["chunk:seed", "ontology:issue:tort_damage", "rule:91/2015/QH13:585"],
+            },
+            {
+                "doc_id": "community_a_second",
+                "fused_score": 0.8,
+                "metadata": {},
+                "graph_path": ["chunk:seed", "ontology:issue:tort_damage", "rule:91/2015/QH13:586"],
+            },
+            {
+                "doc_id": "community_b",
+                "fused_score": 0.7,
+                "metadata": {},
+                "graph_path": ["chunk:seed", "ontology:issue:contract_dispute", "rule:91/2015/QH13:587"],
+            },
+        ]
+
+        selected = retriever._community_guided_candidates(candidates)
+
+        self.assertEqual(
+            [item["doc_id"] for item in selected],
+            ["community_a_best", "community_a_second", "direct"],
+        )
+        self.assertEqual(
+            selected[0]["metadata"]["selected_ontology_community"],
+            "ontology:issue:tort_damage",
+        )
 
     def test_build_graph_retriever_can_require_graph(self) -> None:
         indexer = HybridIndexer(embedding_dim=32).build_index(
