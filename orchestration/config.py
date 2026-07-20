@@ -48,6 +48,7 @@ class PipelineConfig:
     graph_freshness_weight: float = 0.05
     graph_community_top_k: int = 1
     graph_community_member_top_k: int = 20
+    graph_candidate_ratio: float = 0.25
     graph_backend: str = "neo4j"
     neo4j_uri_env: str = "NEO4J_URI"
     neo4j_username_env: str = "NEO4J_USERNAME"

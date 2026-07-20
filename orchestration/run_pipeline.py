@@ -168,6 +168,7 @@ def build_graph_retriever(
         freshness_weight=config.graph_freshness_weight,
         community_top_k=config.graph_community_top_k,
         community_member_top_k=config.graph_community_member_top_k,
+        graph_candidate_ratio=config.graph_candidate_ratio,
         hybrid_alpha=config.hybrid_alpha,
     )
     graph_reranker = LexicalOverlapReranker(

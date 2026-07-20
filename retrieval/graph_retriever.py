@@ -26,6 +26,7 @@ class GraphRetrieverConfig:
     hybrid_alpha: float = 0.50
     community_top_k: int = 1
     community_member_top_k: int = 20
+    graph_candidate_ratio: float = 0.25
 
 
 class LegalGraphRetriever:
@@ -48,6 +49,7 @@ class LegalGraphRetriever:
         self.router = DocumentRouter(self.analyzer)
         self.reranker = reranker or LexicalOverlapReranker()
         self.citation_filter = citation_filter or HeuristicCitationUsefulnessFilter(max_results=self.config.chain_top_k)
+        self.last_retrieval_stats: dict[str, Any] = {}
 
     def retrieve(self, query: str) -> list[dict[str, Any]]:
         analysis = self.analyzer.analyze(query)
@@ -58,21 +60,92 @@ class LegalGraphRetriever:
         )
         routed = self.router.apply(query, seed_candidates)
         seeded = self.reranker.rerank(query, routed, top_k=self.config.seed_top_k)
+        self.last_retrieval_stats = {
+            "seed_count": len(seeded),
+            "graph_expansion_used": False,
+            "graph_candidates_before_rerank": 0,
+            "merged_candidate_count": len(seeded),
+            "final_graph_candidate_count": 0,
+        }
 
         if self.graph_store is None:
-            return self.citation_filter.filter(query, seeded[: self.config.chain_top_k])
+            final = self.citation_filter.filter(query, seeded[: self.config.chain_top_k])
+            self.last_retrieval_stats["final_graph_candidate_count"] = sum(
+                1 for candidate in final if self._is_graph_backed(candidate)
+            )
+            return final
 
         chain_candidates = self._expand_with_graph(query, analysis, seeded)
+        self.last_retrieval_stats.update(
+            {
+                "graph_expansion_used": bool(chain_candidates),
+                "graph_candidates_before_rerank": len(chain_candidates),
+            }
+        )
         if not chain_candidates:
-            return self.citation_filter.filter(query, seeded[: self.config.chain_top_k])
+            final = self.citation_filter.filter(query, seeded[: self.config.chain_top_k])
+            self.last_retrieval_stats["final_graph_candidate_count"] = sum(
+                1 for candidate in final if self._is_graph_backed(candidate)
+            )
+            return final
 
         # Expansion improves recall for related provisions, but it must not turn
         # into a hard gate.  A useful seed can be outside a sparse/incomplete
         # graph neighbourhood, so let the final reranker compare both sources.
         candidate_pool = self._merge_seed_and_graph_candidates(seeded, chain_candidates)
+        self.last_retrieval_stats["merged_candidate_count"] = len(candidate_pool)
         rerank_limit = min(len(candidate_pool), max(self.config.seed_top_k, self.config.chain_top_k * 10))
         reranked = self.reranker.rerank(query, candidate_pool, top_k=rerank_limit)
-        return self.citation_filter.filter(query, reranked[: self.config.chain_top_k])
+        selected = self._select_graph_aware_candidates(reranked, self.config.chain_top_k)
+        final = self.citation_filter.filter(query, selected, preserve_graph_paths=True)
+        self.last_retrieval_stats["final_graph_candidate_count"] = sum(
+            1 for candidate in final if self._is_graph_backed(candidate)
+        )
+        return final
+
+    @staticmethod
+    def _is_graph_backed(candidate: dict[str, Any]) -> bool:
+        metadata = candidate.get("metadata") if isinstance(candidate.get("metadata"), dict) else {}
+        graph_path = candidate.get("graph_path") or metadata.get("graph_path")
+        return isinstance(graph_path, list) and len(graph_path) >= 2
+
+    def _select_graph_aware_candidates(
+        self,
+        reranked: list[dict[str, Any]],
+        top_k: int,
+    ) -> list[dict[str, Any]]:
+        """Reserve output capacity for traversal evidence after cross-encoder rerank.
+
+        A pure score cut can hide every graph candidate behind the larger seed
+        pool. Interleaving the two ranked streams keeps graph evidence visible
+        while preserving score order inside each stream.
+        """
+        if top_k <= 0:
+            return []
+        ranked = list(reranked)
+        graph_candidates = [candidate for candidate in ranked if self._is_graph_backed(candidate)]
+        if not graph_candidates:
+            return ranked[:top_k]
+        flat_candidates = [candidate for candidate in ranked if not self._is_graph_backed(candidate)]
+        ratio = max(0.0, min(1.0, float(self.config.graph_candidate_ratio)))
+        graph_quota = min(len(graph_candidates), max(1, math.ceil(top_k * ratio)))
+        flat_quota = max(0, top_k - graph_quota)
+        selected_graph = graph_candidates[:graph_quota]
+        selected_flat = flat_candidates[:flat_quota]
+
+        selected: list[dict[str, Any]] = []
+        graph_index = 0
+        flat_index = 0
+        while len(selected) < top_k and (graph_index < len(selected_graph) or flat_index < len(selected_flat)):
+            if graph_index < len(selected_graph):
+                selected.append(selected_graph[graph_index])
+                graph_index += 1
+            if len(selected) >= top_k:
+                break
+            if flat_index < len(selected_flat):
+                selected.append(selected_flat[flat_index])
+                flat_index += 1
+        return selected[:top_k]
 
     @staticmethod
     def _candidate_identity(candidate: dict[str, Any]) -> str:

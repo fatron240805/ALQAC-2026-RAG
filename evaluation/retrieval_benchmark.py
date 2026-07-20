@@ -28,12 +28,33 @@ DEFAULT_CHUNKS_PATH = PROJECT_ROOT / "data" / "chunks.jsonl"
 DEFAULT_INDEX_PATH = PROJECT_ROOT / "data" / "index"
 DEFAULT_REPORT_PATH = PROJECT_ROOT / "experiments" / "retrieval_graph_benchmark_report.json"
 DEFAULT_CASES_PATH = PROJECT_ROOT / "experiments" / "retrieval_graph_benchmark_cases.csv"
-DEFAULT_TOP_K = (1, 3, 5, 8, 10, 20)
+DEFAULT_TOP_K = (1, 3, 5, 8, 10, 30)
 
 
 LAW_CODE_RE = re.compile(r"^\d+/\d{4}/[A-Z0-9ÄĐ-]+$", re.IGNORECASE)
 LAW_CODE_IN_TEXT_RE = re.compile(r"\b(\d{1,3}/\d{4}/[^\s,;:.()]+(?:-[^\s,;:.()]+)*)", re.IGNORECASE)
 ARTICLE_RE = re.compile(r"\bdieu\s+([0-9]+[a-z]?)\b", re.IGNORECASE)
+
+# The public gold uses the issuing-body suffix inconsistently for this
+# resolution. This is a code alias, not a successor-law/article mapping.
+LAW_CODE_ALIASES = {
+    "326/2016/QH14": "326/2016/UBTVQH14",
+}
+
+# These instruments are referenced by the gold set but are not present in the
+# current corpus. Keeping them explicit prevents accidental same-number joins
+# with a newer law whose article numbering has a different meaning.
+LEGACY_LAW_CODES = frozenset(
+    {
+        "33/2005/QH11",
+        "44-L/CTN",
+        "13/2003/QH11",
+        "3-LCT/HDNN8",
+        "24/2004/QH11",
+        "10/2009/UBTVQH12",
+    }
+)
+LEGACY_LAW_CODE_PREFIXES = ("181/2004/",)
 
 
 @dataclass(frozen=True)
@@ -48,7 +69,7 @@ class GoldProvision:
     def key(self) -> str | None:
         if not self.law_code or not self.article_number:
             return None
-        return provision_key(self.law_code, self.article_number)
+        return provision_key(normalize_law_code(self.law_code), self.article_number)
 
 
 def strip_accents(value: Any) -> str:
@@ -88,7 +109,8 @@ def normalize_law_code(value: Any) -> str:
     code = str(value or "").strip()
     code = code.replace("Ä", "Đ").replace("Ä‘", "đ")
     code = code.strip(".,;:()[]{}")
-    return code.upper()
+    code = code.upper()
+    return LAW_CODE_ALIASES.get(code, code)
 
 
 def extract_law_code(value: Any) -> str | None:
@@ -243,7 +265,12 @@ class ProvisionNormalizer:
             return "missing_law_code"
         if not item.article_number:
             return "missing_article_number"
-        if item.law_code not in self.available_law_codes:
+        law_code = normalize_law_code(item.law_code)
+        if law_code not in self.available_law_codes:
+            if law_code in LEGACY_LAW_CODES or any(
+                law_code.startswith(prefix) for prefix in LEGACY_LAW_CODE_PREFIXES
+            ):
+                return "legacy_law_not_in_index"
             return "law_not_in_index"
         if item.key not in self.available_keys:
             return "article_not_in_index"
@@ -345,7 +372,13 @@ def dedupe_gold(items: Iterable[GoldProvision]) -> list[GoldProvision]:
     seen: set[tuple[str | None, str, str]] = set()
     deduped: list[GoldProvision] = []
     for item in items:
-        identity = (item.law_code, item.law_title, item.article_number)
+        # Titles vary between rows (for example with/without "số"), while a
+        # canonical law code and article identify the same gold provision.
+        identity = (
+            item.law_code,
+            item.article_number,
+            "" if item.law_code and item.article_number else item.law_title,
+        )
         if identity in seen:
             continue
         seen.add(identity)
@@ -445,8 +478,14 @@ def build_retriever(
         graph_store = retriever.graph_store
         if graph_store is None:
             raise RuntimeError("Graph retriever was requested without a Neo4j graph store.")
+        def retrieve(query: str) -> list[dict[str, Any]]:
+            results = retriever.retrieve(query)
+            retrieve.last_trace = dict(retriever.last_retrieval_stats)
+            return results
+
+        retrieve.last_trace = {}
         return (
-            retriever.retrieve,
+            retrieve,
             {
                 "backend": "neo4j",
                 "legal_node_count": graph_store.count_legal_nodes(),
@@ -509,6 +548,8 @@ def run_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             unmapped_gold_items += max(0, len(gold_items) - len(gold_keys))
             candidates = retrieve(query)
             graph_candidates = [candidate for candidate in candidates if is_graph_candidate(candidate)]
+            retrieval_trace = getattr(retrieve, "last_trace", {})
+            graph_expansion_used = bool(retrieval_trace.get("graph_expansion_used", bool(graph_candidates)))
             end_to_end_predicted_keys = unique_ranked_keys(candidates, normalizer)
             graph_predicted_keys = unique_ranked_keys(graph_candidates, normalizer)
             predicted_keys = (
@@ -525,7 +566,10 @@ def run_benchmark(args: argparse.Namespace) -> dict[str, Any]:
                 "returned_candidate_count": len(candidates),
                 "graph_candidate_count": len(graph_candidates),
                 "flat_fallback_candidate_count": len(candidates) - len(graph_candidates),
-                "graph_expansion_used": bool(graph_candidates),
+                "graph_expansion_used": graph_expansion_used,
+                "graph_candidates_before_rerank": int(retrieval_trace.get("graph_candidates_before_rerank", len(graph_candidates))),
+                "merged_candidate_count": int(retrieval_trace.get("merged_candidate_count", len(candidates))),
+                "final_graph_candidate_count": int(retrieval_trace.get("final_graph_candidate_count", len(graph_candidates))),
                 "selected_score_scope": requested_scope,
                 "retrieved_count": len(predicted_keys),
                 "gold_keys": sorted(gold_keys),
@@ -567,6 +611,7 @@ def run_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "cases_with_neo4j_expansion": sum(1 for row in case_rows if row["graph_expansion_used"]),
             "cases_without_neo4j_expansion": sum(1 for row in case_rows if not row["graph_expansion_used"]),
             "returned_graph_candidates": sum(row["graph_candidate_count"] for row in case_rows),
+            "expanded_graph_candidates_before_rerank": sum(row["graph_candidates_before_rerank"] for row in case_rows),
             "returned_flat_fallback_candidates": sum(row["flat_fallback_candidate_count"] for row in case_rows),
         },
         "Gold_Coverage": {
@@ -604,6 +649,9 @@ def write_case_csv(path: Path, case_rows: list[dict[str, Any]], top_ks: list[int
         "unmapped_gold_count",
         "returned_candidate_count",
         "graph_candidate_count",
+        "graph_candidates_before_rerank",
+        "merged_candidate_count",
+        "final_graph_candidate_count",
         "flat_fallback_candidate_count",
         "graph_expansion_used",
         "selected_score_scope",
@@ -642,6 +690,14 @@ def parse_top_k(value: str) -> list[int]:
 
 
 def main() -> int:
+    # Windows PowerShell may expose a cp1252 stdout while the report contains
+    # Vietnamese law titles. Keep report generation from failing at final print.
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8")
+        except (AttributeError, ValueError):
+            pass
+
     parser = argparse.ArgumentParser(description="Evaluate Neo4j legal-graph retrieval against public-test law labels")
     parser.add_argument("--public-test", type=Path, default=DEFAULT_PUBLIC_TEST_PATH)
     parser.add_argument("--gold", type=Path, default=None, help="Optional JSON/CSV gold. Default: public_test.related_law_provisions")

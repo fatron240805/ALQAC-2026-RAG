@@ -19,20 +19,21 @@
     "expansion_depth_deep": 2
   },
   "Graph_Execution": {
-    "cases_with_neo4j_expansion": 34,
-    "cases_without_neo4j_expansion": 16,
-    "returned_graph_candidates": 56,
-    "returned_flat_fallback_candidates": 1444
+    "cases_with_neo4j_expansion": 50,
+    "cases_without_neo4j_expansion": 0,
+    "returned_graph_candidates": 399,
+    "expanded_graph_candidates_before_rerank": 1682,
+    "returned_flat_fallback_candidates": 1101
   },
   "Gold_Coverage": {
-    "raw_gold_items": 677,
-    "mapped_gold_items": 527,
-    "unmapped_gold_items": 150,
-    "mapping_rate": 0.7784,
+    "raw_gold_items": 676,
+    "mapped_gold_items": 529,
+    "unmapped_gold_items": 147,
+    "mapping_rate": 0.7825,
     "cases_with_mapped_gold": 50,
     "mapping_status_counts": {
-      "law_not_in_index": 149,
-      "mapped": 528
+      "legacy_law_not_in_index": 147,
+      "mapped": 529
     },
     "available_law_codes_in_index": [
       "02/2011/QH13",
@@ -74,8 +75,8 @@
       "Macro_Recall": 0.0198,
       "Macro_F1": 0.0319,
       "Micro_Precision": 0.0933,
-      "Micro_Recall": 0.0266,
-      "Micro_F1": 0.0414,
+      "Micro_Recall": 0.0265,
+      "Micro_F1": 0.0412,
       "MRR": 0.1167
     },
     "@5": {
@@ -85,8 +86,8 @@
       "Macro_Recall": 0.0285,
       "Macro_F1": 0.0416,
       "Micro_Precision": 0.084,
-      "Micro_Recall": 0.0398,
-      "Micro_F1": 0.0541,
+      "Micro_Recall": 0.0397,
+      "Micro_F1": 0.0539,
       "MRR": 0.1267
     },
     "@8": {
@@ -96,20 +97,20 @@
       "Macro_Recall": 0.0364,
       "Macro_F1": 0.0462,
       "Micro_Precision": 0.0675,
-      "Micro_Recall": 0.0512,
-      "Micro_F1": 0.0583,
+      "Micro_Recall": 0.051,
+      "Micro_F1": 0.0581,
       "MRR": 0.1358
     },
     "@30": {
-      "Case_Hit_Accuracy": 0.62,
+      "Case_Hit_Accuracy": 0.52,
       "Exact_Set_Accuracy": 0.0,
-      "Macro_Precision": 0.0514,
-      "Macro_Recall": 0.1247,
-      "Macro_F1": 0.0686,
-      "Micro_Precision": 0.0519,
-      "Micro_Recall": 0.1423,
-      "Micro_F1": 0.0761,
-      "MRR": 0.1518
+      "Macro_Precision": 0.0548,
+      "Macro_Recall": 0.1022,
+      "Macro_F1": 0.0669,
+      "Micro_Precision": 0.0551,
+      "Micro_Recall": 0.1172,
+      "Micro_F1": 0.0749,
+      "MRR": 0.148
     }
   },
   "Scope_Metrics": {
@@ -132,8 +133,8 @@
         "Macro_Recall": 0.0198,
         "Macro_F1": 0.0319,
         "Micro_Precision": 0.0933,
-        "Micro_Recall": 0.0266,
-        "Micro_F1": 0.0414,
+        "Micro_Recall": 0.0265,
+        "Micro_F1": 0.0412,
         "MRR": 0.1167
       },
       "@5": {
@@ -143,8 +144,8 @@
         "Macro_Recall": 0.0285,
         "Macro_F1": 0.0416,
         "Micro_Precision": 0.084,
-        "Micro_Recall": 0.0398,
-        "Micro_F1": 0.0541,
+        "Micro_Recall": 0.0397,
+        "Micro_F1": 0.0539,
         "MRR": 0.1267
       },
       "@8": {
@@ -154,77 +155,77 @@
         "Macro_Recall": 0.0364,
         "Macro_F1": 0.0462,
         "Micro_Precision": 0.0675,
-        "Micro_Recall": 0.0512,
-        "Micro_F1": 0.0583,
+        "Micro_Recall": 0.051,
+        "Micro_F1": 0.0581,
         "MRR": 0.1358
       },
       "@30": {
-        "Case_Hit_Accuracy": 0.62,
+        "Case_Hit_Accuracy": 0.52,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0514,
-        "Macro_Recall": 0.1247,
-        "Macro_F1": 0.0686,
-        "Micro_Precision": 0.0519,
-        "Micro_Recall": 0.1423,
-        "Micro_F1": 0.0761,
-        "MRR": 0.1518
+        "Macro_Precision": 0.0548,
+        "Macro_Recall": 0.1022,
+        "Macro_F1": 0.0669,
+        "Micro_Precision": 0.0551,
+        "Micro_Recall": 0.1172,
+        "Micro_F1": 0.0749,
+        "MRR": 0.148
       }
     },
     "neo4j_traversal_only": {
       "@1": {
-        "Case_Hit_Accuracy": 0.04,
+        "Case_Hit_Accuracy": 0.12,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.04,
-        "Macro_Recall": 0.002,
-        "Macro_F1": 0.0037,
-        "Micro_Precision": 0.0588,
-        "Micro_Recall": 0.0038,
-        "Micro_F1": 0.0071,
-        "MRR": 0.04
+        "Macro_Precision": 0.12,
+        "Macro_Recall": 0.0069,
+        "Macro_F1": 0.013,
+        "Micro_Precision": 0.12,
+        "Micro_Recall": 0.0113,
+        "Micro_F1": 0.0207,
+        "MRR": 0.12
       },
       "@3": {
-        "Case_Hit_Accuracy": 0.04,
+        "Case_Hit_Accuracy": 0.24,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0133,
-        "Macro_Recall": 0.002,
-        "Macro_F1": 0.0034,
-        "Micro_Precision": 0.0377,
-        "Micro_Recall": 0.0038,
-        "Micro_F1": 0.0069,
-        "MRR": 0.04
+        "Macro_Precision": 0.1,
+        "Macro_Recall": 0.0213,
+        "Macro_F1": 0.0342,
+        "Micro_Precision": 0.1,
+        "Micro_Recall": 0.0284,
+        "Micro_F1": 0.0442,
+        "MRR": 0.1667
       },
       "@5": {
-        "Case_Hit_Accuracy": 0.04,
+        "Case_Hit_Accuracy": 0.28,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0133,
-        "Macro_Recall": 0.002,
-        "Macro_F1": 0.0034,
-        "Micro_Precision": 0.0364,
-        "Micro_Recall": 0.0038,
-        "Micro_F1": 0.0069,
-        "MRR": 0.04
+        "Macro_Precision": 0.076,
+        "Macro_Recall": 0.0261,
+        "Macro_F1": 0.0378,
+        "Micro_Precision": 0.076,
+        "Micro_Recall": 0.0359,
+        "Micro_F1": 0.0488,
+        "MRR": 0.1757
       },
       "@8": {
-        "Case_Hit_Accuracy": 0.04,
+        "Case_Hit_Accuracy": 0.36,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0133,
-        "Macro_Recall": 0.002,
-        "Macro_F1": 0.0034,
-        "Micro_Precision": 0.0364,
-        "Micro_Recall": 0.0038,
-        "Micro_F1": 0.0069,
-        "MRR": 0.04
+        "Macro_Precision": 0.0761,
+        "Macro_Recall": 0.0415,
+        "Macro_F1": 0.052,
+        "Micro_Precision": 0.0767,
+        "Micro_Recall": 0.0567,
+        "Micro_F1": 0.0652,
+        "MRR": 0.1877
       },
       "@30": {
-        "Case_Hit_Accuracy": 0.04,
+        "Case_Hit_Accuracy": 0.36,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0133,
-        "Macro_Recall": 0.002,
-        "Macro_F1": 0.0034,
-        "Micro_Precision": 0.0364,
-        "Micro_Recall": 0.0038,
-        "Micro_F1": 0.0069,
-        "MRR": 0.04
+        "Macro_Precision": 0.0761,
+        "Macro_Recall": 0.0415,
+        "Macro_F1": 0.052,
+        "Micro_Precision": 0.0767,
+        "Micro_Recall": 0.0567,
+        "Micro_F1": 0.0652,
+        "MRR": 0.1877
       }
     }
   }

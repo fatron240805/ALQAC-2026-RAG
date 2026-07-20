@@ -429,6 +429,30 @@ class RetrievalComponentTests(unittest.TestCase):
         self.assertIn("seed_chunk", [item["doc_id"] for item in merged])
         self.assertIn("rule:91/2015/QH13:585", [item["doc_id"] for item in merged])
 
+    def test_graph_retriever_reserves_graph_candidate_quota(self) -> None:
+        retriever = LegalGraphRetriever(
+            HybridIndexer(embedding_dim=32),
+            config=GraphRetrieverConfig(graph_candidate_ratio=0.5),
+        )
+        flat = [
+            {"doc_id": f"flat_{index}", "rerank_score": 1.0 - index * 0.01, "metadata": {}}
+            for index in range(6)
+        ]
+        graph = [
+            {
+                "doc_id": f"graph_{index}",
+                "rerank_score": 0.4 - index * 0.01,
+                "metadata": {},
+                "graph_path": ["chunk:seed", f"rule:law:{index}"],
+            }
+            for index in range(6)
+        ]
+
+        selected = retriever._select_graph_aware_candidates(flat + graph, 6)
+
+        self.assertEqual(len(selected), 6)
+        self.assertEqual(sum(1 for item in selected if retriever._is_graph_backed(item)), 3)
+
     def test_graph_retriever_selects_query_aligned_ontology_community(self) -> None:
         retriever = LegalGraphRetriever(
             HybridIndexer(embedding_dim=32),
@@ -790,7 +814,38 @@ class EvaluationTests(unittest.TestCase):
             source="test",
         )
         self.assertIsNone(normalizer.gold_key(legacy))
-        self.assertEqual(normalizer.gold_mapping_status(legacy), "law_not_in_index")
+        self.assertEqual(normalizer.gold_mapping_status(legacy), "legacy_law_not_in_index")
+
+    def test_retrieval_benchmark_maps_resolution_code_alias(self) -> None:
+        with workspace_tempdir() as tmp:
+            chunks_path = Path(tmp) / "chunks.jsonl"
+            chunks_path.write_text(
+                json.dumps(
+                    {
+                        "chunk_id": "chunk_fee",
+                        "law_id": "326/2016/UBTVQH14",
+                        "aid": 1001,
+                        "article_number": "1001",
+                        "article_index": 26,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            normalizer = ProvisionNormalizer(chunks_path)
+
+        self.assertEqual(
+            canonical_law_code("Nghị quyết số 326/2016/QH14"),
+            "326/2016/UBTVQH14",
+        )
+        gold = GoldProvision(
+            case_id="case_fee",
+            law_title="Nghị quyết số 326/2016/QH14",
+            article_number="26",
+            law_code="326/2016/QH14",
+            source="test",
+        )
+        self.assertEqual(normalizer.gold_key(gold), "326/2016/UBTVQH14:26")
+        self.assertEqual(normalizer.gold_mapping_status(gold), "mapped")
 
     def test_graph_benchmark_scores_only_neo4j_traversal_candidates(self) -> None:
         with workspace_tempdir() as tmp:

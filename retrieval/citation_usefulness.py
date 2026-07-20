@@ -61,7 +61,13 @@ class HeuristicCitationUsefulnessFilter:
             reason=reason,
         )
 
-    def filter(self, query: str, candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def filter(
+        self,
+        query: str,
+        candidates: list[dict[str, Any]],
+        *,
+        preserve_graph_paths: bool = False,
+    ) -> list[dict[str, Any]]:
         judged: list[dict[str, Any]] = []
         for candidate in candidates:
             item = dict(candidate)
@@ -72,7 +78,12 @@ class HeuristicCitationUsefulnessFilter:
                 "score": round(judgment.score, 6),
                 "reason": judgment.reason,
             }
-            if judgment.judgment in {"useful", "uncertain"}:
+            graph_path = item.get("graph_path")
+            is_graph_backed = isinstance(graph_path, list) and len(graph_path) >= 2
+            if judgment.judgment in {"useful", "uncertain"} or (preserve_graph_paths and is_graph_backed):
+                if preserve_graph_paths and is_graph_backed and judgment.judgment == "not_useful":
+                    item["citation_judgment"]["judgment"] = "uncertain"
+                    item["citation_judgment"]["reason"] = "graph traversal evidence retained for diversity"
                 judged.append(item)
 
         # This component is a usefulness gate.  Do not let its lightweight
