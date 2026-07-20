@@ -64,8 +64,74 @@ class LegalGraphRetriever:
         if not chain_candidates:
             return self.citation_filter.filter(query, seeded[: self.config.chain_top_k])
 
-        graph_reranked = self.reranker.rerank(query, chain_candidates, top_k=max(self.config.chain_top_k, 20))
-        return self.citation_filter.filter(query, graph_reranked[: self.config.chain_top_k])
+        # Expansion improves recall for related provisions, but it must not turn
+        # into a hard gate.  A useful seed can be outside a sparse/incomplete
+        # graph neighbourhood, so let the final reranker compare both sources.
+        candidate_pool = self._merge_seed_and_graph_candidates(seeded, chain_candidates)
+        rerank_limit = min(len(candidate_pool), max(self.config.seed_top_k, self.config.chain_top_k * 10))
+        reranked = self.reranker.rerank(query, candidate_pool, top_k=rerank_limit)
+        return self.citation_filter.filter(query, reranked[: self.config.chain_top_k])
+
+    @staticmethod
+    def _candidate_identity(candidate: dict[str, Any]) -> str:
+        metadata = candidate.get("metadata") if isinstance(candidate.get("metadata"), dict) else {}
+        law_id = str(metadata.get("law_id") or "").strip()
+        article_number = str(
+            metadata.get("article_number")
+            or metadata.get("article_index")
+            or metadata.get("aid")
+            or ""
+        ).strip()
+        if law_id and article_number:
+            return f"{law_id}:{article_number.lower()}"
+        return str(candidate.get("doc_id") or "").strip()
+
+    def _merge_seed_and_graph_candidates(
+        self,
+        seeded: list[dict[str, Any]],
+        chain_candidates: list[dict[str, Any]],
+    ) -> list[dict[str, Any]]:
+        """Fuse duplicate provisions while preserving the richer seed passage."""
+        merged: dict[str, dict[str, Any]] = {}
+        for source, candidates in (("seed", seeded), ("graph", chain_candidates)):
+            for candidate in candidates:
+                item = dict(candidate)
+                metadata = dict(item.get("metadata") or {})
+                item["metadata"] = metadata
+                item["retrieval_origin"] = source
+                metadata["retrieval_origin"] = source
+                key = self._candidate_identity(item)
+                if not key:
+                    continue
+
+                existing = merged.get(key)
+                if existing is None:
+                    merged[key] = item
+                    continue
+
+                existing_score = float(existing.get("fused_score", 0.0))
+                candidate_score = float(item.get("fused_score", 0.0))
+                primary, supporting = (existing, item) if existing_score >= candidate_score else (item, existing)
+                primary_metadata = dict(primary.get("metadata") or {})
+                supporting_metadata = supporting.get("metadata") if isinstance(supporting.get("metadata"), dict) else {}
+                graph_path = primary.get("graph_path") or supporting.get("graph_path") or supporting_metadata.get("graph_path")
+                if graph_path:
+                    primary["graph_path"] = graph_path
+                    primary_metadata["graph_path"] = graph_path
+                primary_metadata["retrieval_origin"] = "seed+graph"
+                primary_metadata["seed_score"] = max(
+                    float(primary_metadata.get("seed_score", 0.0)),
+                    float(supporting_metadata.get("seed_score", 0.0)),
+                )
+                primary["metadata"] = primary_metadata
+                primary["retrieval_origin"] = "seed+graph"
+                # The second retrieval path is corroboration, not a score that
+                # can overwhelm semantic relevance before cross-encoder rerank.
+                primary["fused_score"] = max(existing_score, candidate_score) + 0.08 * min(existing_score, candidate_score)
+                primary["routed_score"] = primary["fused_score"]
+                merged[key] = primary
+
+        return sorted(merged.values(), key=lambda item: float(item.get("fused_score", 0.0)), reverse=True)
 
     def _expand_with_graph(
         self,

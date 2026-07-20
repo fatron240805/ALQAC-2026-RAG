@@ -372,7 +372,8 @@ def is_graph_candidate(candidate: dict[str, Any]) -> bool:
     return isinstance(graph_path, list) and len(graph_path) >= 2
 
 
-def per_case_metrics(gold_keys: set[str], predicted_keys: list[str], k: int) -> dict[str, float]:
+def per_case_metrics(gold_keys: set[str] | list[str], predicted_keys: list[str], k: int) -> dict[str, float]:
+    gold_keys = set(gold_keys)
     top = predicted_keys[:k]
     top_set = set(top)
     hits = gold_keys & top_set
@@ -394,17 +395,23 @@ def per_case_metrics(gold_keys: set[str], predicted_keys: list[str], k: int) -> 
     }
 
 
-def summarize_metrics(case_rows: list[dict[str, Any]], top_ks: list[int]) -> dict[str, Any]:
+def summarize_metrics(
+    case_rows: list[dict[str, Any]],
+    top_ks: list[int],
+    *,
+    predicted_field: str = "predicted_keys",
+) -> dict[str, Any]:
     summary: dict[str, Any] = {}
     for k in top_ks:
         suffix = f"@{k}"
         rows = [row for row in case_rows if row["mapped_gold_count"] > 0]
         denom = max(1, len(rows))
         total_gold = sum(row["mapped_gold_count"] for row in rows)
-        total_pred = sum(min(k, len(row["predicted_keys"])) for row in rows)
         total_correct = 0
         for row in rows:
-            total_correct += len(set(row["predicted_keys"][:k]) & set(row["gold_keys"]))
+            predicted_keys = row.get(predicted_field, [])
+            total_correct += len(set(predicted_keys[:k]) & set(row["gold_keys"]))
+        total_pred = sum(min(k, len(row.get(predicted_field, []))) for row in rows)
         micro_precision = total_correct / total_pred if total_pred else 0.0
         micro_recall = total_correct / total_gold if total_gold else 0.0
         micro_f1 = (
@@ -413,15 +420,15 @@ def summarize_metrics(case_rows: list[dict[str, Any]], top_ks: list[int]) -> dic
             else 0.0
         )
         summary[suffix] = {
-            "Case_Hit_Accuracy": round(sum(row[f"hit{suffix}"] for row in rows) / denom, 4),
-            "Exact_Set_Accuracy": round(sum(row[f"full_recall{suffix}"] for row in rows) / denom, 4),
-            "Macro_Precision": round(sum(row[f"precision{suffix}"] for row in rows) / denom, 4),
-            "Macro_Recall": round(sum(row[f"recall{suffix}"] for row in rows) / denom, 4),
-            "Macro_F1": round(sum(row[f"f1{suffix}"] for row in rows) / denom, 4),
+            "Case_Hit_Accuracy": round(sum(per_case_metrics(row["gold_keys"], row.get(predicted_field, []), k)["hit"] for row in rows) / denom, 4),
+            "Exact_Set_Accuracy": round(sum(per_case_metrics(row["gold_keys"], row.get(predicted_field, []), k)["full_recall"] for row in rows) / denom, 4),
+            "Macro_Precision": round(sum(per_case_metrics(row["gold_keys"], row.get(predicted_field, []), k)["precision"] for row in rows) / denom, 4),
+            "Macro_Recall": round(sum(per_case_metrics(row["gold_keys"], row.get(predicted_field, []), k)["recall"] for row in rows) / denom, 4),
+            "Macro_F1": round(sum(per_case_metrics(row["gold_keys"], row.get(predicted_field, []), k)["f1"] for row in rows) / denom, 4),
             "Micro_Precision": round(micro_precision, 4),
             "Micro_Recall": round(micro_recall, 4),
             "Micro_F1": round(micro_f1, 4),
-            "MRR": round(sum(row[f"mrr{suffix}"] for row in rows) / denom, 4),
+            "MRR": round(sum(per_case_metrics(row["gold_keys"], row.get(predicted_field, []), k)["mrr"] for row in rows) / denom, 4),
         }
     return summary
 
@@ -477,6 +484,9 @@ def run_benchmark(args: argparse.Namespace) -> dict[str, Any]:
         hybrid_alpha=args.alpha,
     )
     retrieve, retriever_metadata, close_retriever = build_retriever(args, config)
+    requested_scope = getattr(args, "score_scope", "end_to_end")
+    if args.include_flat_fallback:
+        requested_scope = "end_to_end"
 
     case_rows: list[dict[str, Any]] = []
     raw_gold_items = 0
@@ -499,12 +509,13 @@ def run_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             unmapped_gold_items += max(0, len(gold_items) - len(gold_keys))
             candidates = retrieve(query)
             graph_candidates = [candidate for candidate in candidates if is_graph_candidate(candidate)]
-            score_candidates = (
-                candidates
-                if args.retriever != "graph" or args.include_flat_fallback
-                else graph_candidates
+            end_to_end_predicted_keys = unique_ranked_keys(candidates, normalizer)
+            graph_predicted_keys = unique_ranked_keys(graph_candidates, normalizer)
+            predicted_keys = (
+                graph_predicted_keys
+                if args.retriever == "graph" and requested_scope == "graph_traversal_only"
+                else end_to_end_predicted_keys
             )
-            predicted_keys = unique_ranked_keys(score_candidates, normalizer)
 
             row: dict[str, Any] = {
                 "case_id": case_id,
@@ -515,9 +526,12 @@ def run_benchmark(args: argparse.Namespace) -> dict[str, Any]:
                 "graph_candidate_count": len(graph_candidates),
                 "flat_fallback_candidate_count": len(candidates) - len(graph_candidates),
                 "graph_expansion_used": bool(graph_candidates),
+                "selected_score_scope": requested_scope,
                 "retrieved_count": len(predicted_keys),
                 "gold_keys": sorted(gold_keys),
                 "predicted_keys": predicted_keys,
+                "end_to_end_predicted_keys": end_to_end_predicted_keys,
+                "graph_traversal_predicted_keys": graph_predicted_keys,
                 "matched_keys": sorted(gold_keys & set(predicted_keys)),
                 "missing_keys": sorted(gold_keys - set(predicted_keys)),
                 "unmapped_gold_provisions": [
@@ -539,7 +553,7 @@ def run_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "retriever": args.retriever,
             "score_scope": (
                 "neo4j_traversal_only"
-                if args.retriever == "graph" and not args.include_flat_fallback
+                if args.retriever == "graph" and requested_scope == "graph_traversal_only"
                 else "full_retrieval_pipeline"
             ),
             "gold_source": gold_source,
@@ -565,6 +579,14 @@ def run_benchmark(args: argparse.Namespace) -> dict[str, Any]:
             "available_law_codes_in_index": sorted(normalizer.available_law_codes),
         },
         "Metrics": summarize_metrics(case_rows, top_ks),
+        "Scope_Metrics": {
+            "end_to_end": summarize_metrics(case_rows, top_ks, predicted_field="end_to_end_predicted_keys"),
+            "neo4j_traversal_only": summarize_metrics(
+                case_rows,
+                top_ks,
+                predicted_field="graph_traversal_predicted_keys",
+            ) if args.retriever == "graph" else None,
+        },
         "Case_Rows": case_rows,
     }
     return report
@@ -584,10 +606,13 @@ def write_case_csv(path: Path, case_rows: list[dict[str, Any]], top_ks: list[int
         "graph_candidate_count",
         "flat_fallback_candidate_count",
         "graph_expansion_used",
+        "selected_score_scope",
         "retrieved_count",
         *metric_fields,
         "gold_keys",
         "predicted_keys",
+        "end_to_end_predicted_keys",
+        "graph_traversal_predicted_keys",
         "matched_keys",
         "missing_keys",
         "unmapped_gold_provisions",
@@ -629,7 +654,13 @@ def main() -> int:
     parser.add_argument(
         "--include-flat-fallback",
         action="store_true",
-        help="For graph retrieval, score seed-only fallback candidates too. Default scores Neo4j traversal candidates only.",
+        help="Deprecated compatibility flag. End-to-end scoring is now the default.",
+    )
+    parser.add_argument(
+        "--score-scope",
+        choices=("end_to_end", "graph_traversal_only"),
+        default="end_to_end",
+        help="Primary metric scope. The report always includes both scopes for graph retrieval.",
     )
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--rebuild-index", action="store_true")

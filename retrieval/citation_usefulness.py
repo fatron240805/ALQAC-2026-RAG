@@ -75,8 +75,13 @@ class HeuristicCitationUsefulnessFilter:
             if judgment.judgment in {"useful", "uncertain"}:
                 judged.append(item)
 
+        # This component is a usefulness gate.  Do not let its lightweight
+        # lexical score undo the ordering produced by the cross-encoder.
         judged.sort(
-            key=lambda item: item["citation_judgment"]["score"],
+            key=lambda item: (
+                float(item.get("rerank_score", item.get("routed_score", item.get("fused_score", 0.0)))),
+                item["citation_judgment"]["score"],
+            ),
             reverse=True,
         )
         return judged[: self.max_results]

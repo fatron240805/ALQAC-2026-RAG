@@ -168,7 +168,13 @@ def build_graph_retriever(
         freshness_weight=config.graph_freshness_weight,
         hybrid_alpha=config.hybrid_alpha,
     )
-    return LegalGraphRetriever(indexer, graph_store=graph_store, config=graph_config)
+    graph_reranker = LexicalOverlapReranker(
+        use_gpu_reranker=config.use_gpu_reranker,
+        reranker_model_name=config.reranker_model_name,
+        device=config.reranker_device,
+        batch_size=config.reranker_batch_size,
+    )
+    return LegalGraphRetriever(indexer, graph_store=graph_store, config=graph_config, reranker=graph_reranker)
 
 
 def build_graph(

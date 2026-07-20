@@ -337,6 +337,32 @@ class RetrievalComponentTests(unittest.TestCase):
         self.assertEqual(results[0]["metadata"]["aid"], 584)
         self.assertIn("rule:91/2015/QH13:584", results[0]["graph_path"])
 
+    def test_graph_retriever_keeps_seed_candidates_when_graph_expands(self) -> None:
+        retriever = LegalGraphRetriever(HybridIndexer(embedding_dim=32))
+        seed = {
+            "doc_id": "seed_chunk",
+            "content": "seed evidence",
+            "fused_score": 0.8,
+            "metadata": {"law_id": "91/2015/QH13", "article_index": 584},
+        }
+        graph = {
+            "doc_id": "rule:91/2015/QH13:585",
+            "content": "neighbour evidence",
+            "fused_score": 0.6,
+            "metadata": {
+                "law_id": "91/2015/QH13",
+                "article_number": 585,
+                "graph_path": ["chunk:seed_chunk", "rule:91/2015/QH13:585"],
+            },
+            "graph_path": ["chunk:seed_chunk", "rule:91/2015/QH13:585"],
+        }
+
+        merged = retriever._merge_seed_and_graph_candidates([seed], [graph])
+
+        self.assertEqual(len(merged), 2)
+        self.assertIn("seed_chunk", [item["doc_id"] for item in merged])
+        self.assertIn("rule:91/2015/QH13:585", [item["doc_id"] for item in merged])
+
     def test_build_graph_retriever_can_require_graph(self) -> None:
         indexer = HybridIndexer(embedding_dim=32).build_index(
             [{"doc_id": "c1", "content": "bá»“i thÆ°á»ng thiá»‡t háº¡i", "metadata": {}}]
@@ -696,6 +722,7 @@ class EvaluationTests(unittest.TestCase):
                 seed_top_k=5,
                 alpha=0.5,
                 include_flat_fallback=False,
+                score_scope="graph_traversal_only",
                 limit=None,
                 rebuild_index=False,
             )
@@ -719,6 +746,24 @@ class EvaluationTests(unittest.TestCase):
         self.assertEqual(report["Graph_Execution"]["cases_with_neo4j_expansion"], 1)
         self.assertEqual(report["Metrics"]["@1"]["Case_Hit_Accuracy"], 1.0)
         self.assertEqual(report["Case_Rows"][0]["flat_fallback_candidate_count"], 1)
+
+    def test_graph_benchmark_reports_end_to_end_and_traversal_metrics(self) -> None:
+        with workspace_tempdir() as tmp:
+            root = Path(tmp)
+            public_path = root / "public.json"
+            chunks_path = root / "chunks.jsonl"
+            public_path.write_text(
+                json.dumps([{"case_id": "case_1", "case_query": "boi thuong", "related_law_provisions": "Bo luat Dan su nam 2015 | Dieu 584"}]),
+                encoding="utf-8",
+            )
+            chunks_path.write_text(json.dumps({"chunk_id": "seed_chunk", "law_id": "91/2015/QH13", "article_index": 584}), encoding="utf-8")
+            args = argparse.Namespace(public_test=public_path, gold=None, chunks=chunks_path, index=root / "index", retriever="graph", top_k=[1], seed_top_k=5, alpha=0.5, include_flat_fallback=False, score_scope="end_to_end", limit=None, rebuild_index=False)
+            with patch("evaluation.retrieval_benchmark.build_retriever", return_value=(lambda _: [{"metadata": {"chunk_id": "seed_chunk"}}], {"backend": "neo4j"}, lambda: None)):
+                report = run_benchmark(args)
+
+        self.assertEqual(report["Retrieval_Benchmark"]["score_scope"], "full_retrieval_pipeline")
+        self.assertEqual(report["Scope_Metrics"]["end_to_end"]["@1"]["Case_Hit_Accuracy"], 1.0)
+        self.assertEqual(report["Scope_Metrics"]["neo4j_traversal_only"]["@1"]["Case_Hit_Accuracy"], 0.0)
 
 
 class PipelineDryRunTests(unittest.TestCase):
