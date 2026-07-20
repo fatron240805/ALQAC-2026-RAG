@@ -56,6 +56,8 @@ class EvidenceChain:
             chunk_id = str(value or "").strip()
             if chunk_id and chunk_id not in source_chunks:
                 source_chunks.append(chunk_id)
+        if not source_chunks and not graph_path and doc_id:
+            source_chunks.append(doc_id)
 
         provenance_keys = (
             "retrieval_origin",
