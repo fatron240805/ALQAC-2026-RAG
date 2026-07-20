@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+import logging
+from logging.handlers import RotatingFileHandler
 import os
 from dataclasses import dataclass
 from pathlib import Path
@@ -17,6 +20,76 @@ ALLOWED_RELATION_TYPES = (
     "MATCHES_FACT_PATTERN",
 )
 ALLOWED_URI_SCHEMES = {"neo4j", "neo4j+s", "neo4j+ssc", "bolt", "bolt+s", "bolt+ssc"}
+NEO4J_LOGGER_NAME = "neo4j_graph_store"
+DEFAULT_NEO4J_ERROR_LOG = Path("logs") / "neo4j_errors.log"
+
+
+def _redacted_uri(uri: str | None) -> str:
+    """Return a connection endpoint without user info or credentials."""
+    try:
+        parsed = urlparse(str(uri or ""))
+        if not parsed.scheme:
+            return "<unset>"
+        host = parsed.hostname or "<unknown-host>"
+        if ":" in host and not host.startswith("["):
+            host = f"[{host}]"
+        port = f":{parsed.port}" if parsed.port else ""
+        return f"{parsed.scheme}://{host}{port}{parsed.path or ''}"
+    except (TypeError, ValueError):
+        return "<invalid-uri>"
+
+
+def _configure_error_logger() -> logging.Logger:
+    logger = logging.getLogger(NEO4J_LOGGER_NAME)
+    logger.setLevel(logging.ERROR)
+    logger.propagate = True
+
+    configured_path = os.environ.get("NEO4J_ERROR_LOG_PATH", "").strip()
+    log_path = Path(configured_path) if configured_path else DEFAULT_NEO4J_ERROR_LOG
+    log_path = log_path.resolve()
+    for handler in logger.handlers:
+        if getattr(handler, "neo4j_log_path", None) == str(log_path):
+            return logger
+
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    handler = RotatingFileHandler(
+        log_path,
+        maxBytes=5 * 1024 * 1024,
+        backupCount=3,
+        encoding="utf-8",
+        delay=True,
+    )
+    handler.setLevel(logging.ERROR)
+    handler.setFormatter(logging.Formatter("%(asctime)s | %(levelname)s | %(message)s"))
+    handler.neo4j_log_path = str(log_path)  # type: ignore[attr-defined]
+    logger.addHandler(handler)
+    return logger
+
+
+def _log_neo4j_error(
+    config: Any,
+    operation: str,
+    exc: BaseException,
+    **context: Any,
+) -> None:
+    raw_uri = str(getattr(config, "uri", "") or "")
+    error_text = str(exc)
+    if raw_uri:
+        error_text = error_text.replace(raw_uri, _redacted_uri(raw_uri))
+    payload = {
+        "component": "neo4j",
+        "operation": operation,
+        "uri": _redacted_uri(getattr(config, "uri", None)),
+        "database": getattr(config, "database", None),
+        "error_type": type(exc).__name__,
+        "error": error_text,
+        "context": context,
+    }
+    _configure_error_logger().error(
+        "neo4j_error %s",
+        json.dumps(payload, ensure_ascii=False, default=str),
+        exc_info=True,
+    )
 
 
 def _configured_env_value(value: str | None) -> bool:
@@ -55,6 +128,7 @@ class Neo4jConfig:
 
     @classmethod
     def from_env(cls) -> "Neo4jConfig":
+        _configure_error_logger()
         uri = os.environ.get("NEO4J_URI")
         username = os.environ.get("NEO4J_USERNAME")
         password = os.environ.get("NEO4J_PASSWORD")
@@ -65,12 +139,16 @@ class Neo4jConfig:
             if not _configured_env_value(value)
         ]
         if missing:
-            raise RuntimeError(f"Missing or placeholder Neo4j env vars: {', '.join(missing)}")
+            error = RuntimeError(f"Missing or placeholder Neo4j env vars: {', '.join(missing)}")
+            _log_neo4j_error(None, "config.from_env", error, missing=missing)
+            raise error
 
         scheme = urlparse(str(uri)).scheme
         if scheme not in ALLOWED_URI_SCHEMES:
             allowed = ", ".join(sorted(ALLOWED_URI_SCHEMES))
-            raise RuntimeError(f"Unsupported NEO4J_URI scheme '{scheme}'. Use one of: {allowed}.")
+            error = RuntimeError(f"Unsupported NEO4J_URI scheme '{scheme}'. Use one of: {allowed}.")
+            _log_neo4j_error(None, "config.from_env", error, uri=_redacted_uri(uri))
+            raise error
         return cls(
             uri=str(uri),
             username=str(username),
@@ -85,50 +163,72 @@ class Neo4jConfig:
 
 class Neo4jGraphStore:
     def __init__(self, config: Neo4jConfig | None = None) -> None:
+        _configure_error_logger()
         self.config = config or Neo4jConfig.from_env()
         self._available_relation_types: tuple[str, ...] | None = None
         try:
             from neo4j import GraphDatabase  # type: ignore
         except ImportError as exc:  # pragma: no cover - optional dependency
+            _log_neo4j_error(self.config, "driver.import", exc)
             raise RuntimeError(
                 "neo4j package is not installed. Install it to use the Neo4j graph backend."
             ) from exc
-        self._driver = GraphDatabase.driver(
-            self.config.uri,
-            auth=(self.config.username, self.config.password),
-            max_connection_pool_size=self.config.max_connection_pool_size,
-            connection_acquisition_timeout=self.config.connection_acquisition_timeout,
-            telemetry_disabled=True,
-        )
+        try:
+            self._driver = GraphDatabase.driver(
+                self.config.uri,
+                auth=(self.config.username, self.config.password),
+                max_connection_pool_size=self.config.max_connection_pool_size,
+                connection_acquisition_timeout=self.config.connection_acquisition_timeout,
+                telemetry_disabled=True,
+            )
+        except Exception as exc:
+            _log_neo4j_error(self.config, "driver.create", exc)
+            raise
 
     def close(self) -> None:
-        if self._driver is not None:
-            self._driver.close()
+        try:
+            if self._driver is not None:
+                self._driver.close()
+        except Exception as exc:
+            _log_neo4j_error(self.config, "driver.close", exc)
+            raise
 
     def verify_connectivity(self) -> None:
-        self._driver.verify_connectivity()
+        try:
+            self._driver.verify_connectivity()
+        except Exception as exc:
+            _log_neo4j_error(self.config, "verify_connectivity", exc)
+            raise
 
     def count_legal_nodes(self) -> int:
-        with self._driver.session(database=self.config.database) as session:
-            record = session.run("MATCH (n:LegalNode) RETURN count(n) AS count").single()
-            if record is None:
-                return 0
-            return int(record["count"] or 0)
+        try:
+            with self._driver.session(database=self.config.database) as session:
+                record = session.run("MATCH (n:LegalNode) RETURN count(n) AS count").single()
+                if record is None:
+                    return 0
+                return int(record["count"] or 0)
+        except Exception as exc:
+            _log_neo4j_error(self.config, "count_legal_nodes", exc)
+            raise
 
     def available_relation_types(self) -> tuple[str, ...]:
         if self._available_relation_types is not None:
             return self._available_relation_types
 
-        with self._driver.session(database=self.config.database) as session:
-            result = session.run(
-                "CALL db.relationshipTypes() YIELD relationshipType "
-                "RETURN relationshipType ORDER BY relationshipType"
+        try:
+            with self._driver.session(database=self.config.database) as session:
+                result = session.run(
+                    "CALL db.relationshipTypes() YIELD relationshipType "
+                    "RETURN relationshipType ORDER BY relationshipType"
+                )
+                found = {str(record["relationshipType"]).upper() for record in result}
+            self._available_relation_types = tuple(
+                relation_type for relation_type in ALLOWED_RELATION_TYPES if relation_type in found
             )
-            found = {str(record["relationshipType"]).upper() for record in result}
-        self._available_relation_types = tuple(
-            relation_type for relation_type in ALLOWED_RELATION_TYPES if relation_type in found
-        )
-        return self._available_relation_types
+            return self._available_relation_types
+        except Exception as exc:
+            _log_neo4j_error(self.config, "available_relation_types", exc)
+            raise
 
     def ensure_schema(self) -> None:
         cypher_statements = [
@@ -139,13 +239,21 @@ class Neo4jGraphStore:
             "CREATE INDEX concept_alias IF NOT EXISTS FOR (n:Concept) ON (n.normalized_alias)",
             "CREATE INDEX sourcechunk_chunk_id IF NOT EXISTS FOR (n:SourceChunk) ON (n.chunk_id)",
         ]
-        with self._driver.session(database=self.config.database) as session:
-            for statement in cypher_statements:
-                session.run(statement)
+        try:
+            with self._driver.session(database=self.config.database) as session:
+                for statement in cypher_statements:
+                    session.run(statement)
+        except Exception as exc:
+            _log_neo4j_error(self.config, "ensure_schema", exc, statement_count=len(cypher_statements))
+            raise
 
     def clear(self) -> None:
-        with self._driver.session(database=self.config.database) as session:
-            session.run("MATCH (n:LegalNode) DETACH DELETE n")
+        try:
+            with self._driver.session(database=self.config.database) as session:
+                session.run("MATCH (n:LegalNode) DETACH DELETE n")
+        except Exception as exc:
+            _log_neo4j_error(self.config, "clear", exc)
+            raise
 
     def import_graph(
         self,
@@ -155,13 +263,25 @@ class Neo4jGraphStore:
         clear_first: bool = False,
         batch_size: int = 200,
     ) -> dict[str, Any]:
-        self.ensure_schema()
-        if clear_first:
-            self.clear()
+        try:
+            self.ensure_schema()
+            if clear_first:
+                self.clear()
 
-        node_count = self._upsert_nodes(node_rows, batch_size=batch_size)
-        edge_count = self._upsert_edges(edge_rows, batch_size=batch_size)
-        return {"nodes_upserted": node_count, "edges_upserted": edge_count}
+            node_count = self._upsert_nodes(node_rows, batch_size=batch_size)
+            edge_count = self._upsert_edges(edge_rows, batch_size=batch_size)
+            return {"nodes_upserted": node_count, "edges_upserted": edge_count}
+        except Exception as exc:
+            _log_neo4j_error(
+                self.config,
+                "import_graph",
+                exc,
+                node_count=len(node_rows),
+                edge_count=len(edge_rows),
+                clear_first=clear_first,
+                batch_size=batch_size,
+            )
+            raise
 
     def _upsert_nodes(self, node_rows: list[dict[str, Any]], *, batch_size: int) -> int:
         if not node_rows:
@@ -220,9 +340,13 @@ class Neo4jGraphStore:
             "RETURN n.node_id AS node_id "
             "ORDER BY CASE WHEN n.node_type = 'article' THEN 0 ELSE 1 END, n.node_id"
         )
-        with self._driver.session(database=self.config.database) as session:
-            result = session.run(query, chunk_id=chunk_id)
-            return [str(record["node_id"]) for record in result if record.get("node_id")]
+        try:
+            with self._driver.session(database=self.config.database) as session:
+                result = session.run(query, chunk_id=chunk_id)
+                return [str(record["node_id"]) for record in result if record.get("node_id")]
+        except Exception as exc:
+            _log_neo4j_error(self.config, "seed_nodes_for_chunk", exc, chunk_id=chunk_id)
+            raise
 
     def expand_from_seeds(
         self,
@@ -267,15 +391,27 @@ class Neo4jGraphStore:
             f"LIMIT $limit"
         )
         target_layers_list = list(target_layers) if target_layers is not None else None
-        with self._driver.session(database=self.config.database) as session:
-            result = session.run(
-                cypher,
-                seed_ids=seed_ids,
+        try:
+            with self._driver.session(database=self.config.database) as session:
+                result = session.run(
+                    cypher,
+                    seed_ids=seed_ids,
+                    target_layers=target_layers_list,
+                    limit=int(limit),
+                )
+                rows = [dict(record) for record in result]
+            return _dedupe_by_best_distance(rows)
+        except Exception as exc:
+            _log_neo4j_error(
+                self.config,
+                "expand_from_seeds",
+                exc,
+                seed_count=len(seed_ids),
+                depth=bounded_depth,
                 target_layers=target_layers_list,
-                limit=int(limit),
+                limit=limit,
             )
-            rows = [dict(record) for record in result]
-        return _dedupe_by_best_distance(rows)
+            raise
 
 
 def _dedupe_by_best_distance(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:

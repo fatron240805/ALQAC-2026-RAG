@@ -9,7 +9,7 @@
       3,
       5,
       8,
-      10
+      30
     ],
     "seed_top_k": 80,
     "alpha": 0.5,
@@ -19,10 +19,10 @@
     "expansion_depth_deep": 2
   },
   "Graph_Execution": {
-    "cases_with_neo4j_expansion": 12,
-    "cases_without_neo4j_expansion": 38,
-    "returned_graph_candidates": 13,
-    "returned_flat_fallback_candidates": 487
+    "cases_with_neo4j_expansion": 34,
+    "cases_without_neo4j_expansion": 16,
+    "returned_graph_candidates": 56,
+    "returned_flat_fallback_candidates": 1444
   },
   "Gold_Coverage": {
     "raw_gold_items": 677,
@@ -100,16 +100,16 @@
       "Micro_F1": 0.0583,
       "MRR": 0.1358
     },
-    "@10": {
-      "Case_Hit_Accuracy": 0.38,
+    "@30": {
+      "Case_Hit_Accuracy": 0.62,
       "Exact_Set_Accuracy": 0.0,
-      "Macro_Precision": 0.0669,
-      "Macro_Recall": 0.0436,
-      "Macro_F1": 0.0517,
-      "Micro_Precision": 0.0678,
-      "Micro_Recall": 0.0626,
-      "Micro_F1": 0.0651,
-      "MRR": 0.1381
+      "Macro_Precision": 0.0514,
+      "Macro_Recall": 0.1247,
+      "Macro_F1": 0.0686,
+      "Micro_Precision": 0.0519,
+      "Micro_Recall": 0.1423,
+      "Micro_F1": 0.0761,
+      "MRR": 0.1518
     }
   },
   "Scope_Metrics": {
@@ -158,73 +158,73 @@
         "Micro_F1": 0.0583,
         "MRR": 0.1358
       },
-      "@10": {
-        "Case_Hit_Accuracy": 0.38,
+      "@30": {
+        "Case_Hit_Accuracy": 0.62,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0669,
-        "Macro_Recall": 0.0436,
-        "Macro_F1": 0.0517,
-        "Micro_Precision": 0.0678,
-        "Micro_Recall": 0.0626,
-        "Micro_F1": 0.0651,
-        "MRR": 0.1381
+        "Macro_Precision": 0.0514,
+        "Macro_Recall": 0.1247,
+        "Macro_F1": 0.0686,
+        "Micro_Precision": 0.0519,
+        "Micro_Recall": 0.1423,
+        "Micro_F1": 0.0761,
+        "MRR": 0.1518
       }
     },
     "neo4j_traversal_only": {
       "@1": {
-        "Case_Hit_Accuracy": 0.0,
+        "Case_Hit_Accuracy": 0.04,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0,
-        "Macro_Recall": 0.0,
-        "Macro_F1": 0.0,
-        "Micro_Precision": 0.0,
-        "Micro_Recall": 0.0,
-        "Micro_F1": 0.0,
-        "MRR": 0.0
+        "Macro_Precision": 0.04,
+        "Macro_Recall": 0.002,
+        "Macro_F1": 0.0037,
+        "Micro_Precision": 0.0588,
+        "Micro_Recall": 0.0038,
+        "Micro_F1": 0.0071,
+        "MRR": 0.04
       },
       "@3": {
-        "Case_Hit_Accuracy": 0.0,
+        "Case_Hit_Accuracy": 0.04,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0,
-        "Macro_Recall": 0.0,
-        "Macro_F1": 0.0,
-        "Micro_Precision": 0.0,
-        "Micro_Recall": 0.0,
-        "Micro_F1": 0.0,
-        "MRR": 0.0
+        "Macro_Precision": 0.0133,
+        "Macro_Recall": 0.002,
+        "Macro_F1": 0.0034,
+        "Micro_Precision": 0.0377,
+        "Micro_Recall": 0.0038,
+        "Micro_F1": 0.0069,
+        "MRR": 0.04
       },
       "@5": {
-        "Case_Hit_Accuracy": 0.0,
+        "Case_Hit_Accuracy": 0.04,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0,
-        "Macro_Recall": 0.0,
-        "Macro_F1": 0.0,
-        "Micro_Precision": 0.0,
-        "Micro_Recall": 0.0,
-        "Micro_F1": 0.0,
-        "MRR": 0.0
+        "Macro_Precision": 0.0133,
+        "Macro_Recall": 0.002,
+        "Macro_F1": 0.0034,
+        "Micro_Precision": 0.0364,
+        "Micro_Recall": 0.0038,
+        "Micro_F1": 0.0069,
+        "MRR": 0.04
       },
       "@8": {
-        "Case_Hit_Accuracy": 0.0,
+        "Case_Hit_Accuracy": 0.04,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0,
-        "Macro_Recall": 0.0,
-        "Macro_F1": 0.0,
-        "Micro_Precision": 0.0,
-        "Micro_Recall": 0.0,
-        "Micro_F1": 0.0,
-        "MRR": 0.0
+        "Macro_Precision": 0.0133,
+        "Macro_Recall": 0.002,
+        "Macro_F1": 0.0034,
+        "Micro_Precision": 0.0364,
+        "Micro_Recall": 0.0038,
+        "Micro_F1": 0.0069,
+        "MRR": 0.04
       },
-      "@10": {
-        "Case_Hit_Accuracy": 0.0,
+      "@30": {
+        "Case_Hit_Accuracy": 0.04,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0,
-        "Macro_Recall": 0.0,
-        "Macro_F1": 0.0,
-        "Micro_Precision": 0.0,
-        "Micro_Recall": 0.0,
-        "Micro_F1": 0.0,
-        "MRR": 0.0
+        "Macro_Precision": 0.0133,
+        "Macro_Recall": 0.002,
+        "Macro_F1": 0.0034,
+        "Micro_Precision": 0.0364,
+        "Micro_Recall": 0.0038,
+        "Micro_F1": 0.0069,
+        "MRR": 0.04
       }
     }
   }

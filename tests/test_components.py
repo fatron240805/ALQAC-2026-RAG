@@ -20,7 +20,7 @@ from evaluation.retrieval_benchmark import (
     run_benchmark,
 )
 from graph_construct.builder import build_graph_records
-from graph_construct.neo4j_store import Neo4jConfig
+from graph_construct.neo4j_store import Neo4jConfig, _redacted_uri
 from orchestration.config import PipelineConfig
 from orchestration.data_adapters import chunk_to_indexer_doc, stream_active_indexer_docs
 from orchestration.interfaces import (
@@ -149,6 +149,12 @@ class DeprecatedFilterTests(unittest.TestCase):
 
 
 class RetrievalComponentTests(unittest.TestCase):
+    def test_neo4j_error_log_redacts_credentials_from_uri(self) -> None:
+        self.assertEqual(
+            _redacted_uri("neo4j+s://user:secret@abc123.databases.neo4j.io:7687"),
+            "neo4j+s://abc123.databases.neo4j.io:7687",
+        )
+
     def test_neo4j_config_accepts_aura_uri_and_small_pool(self) -> None:
         with patch.dict(
             "os.environ",

@@ -38,6 +38,7 @@ Thumbs.db
 
 # VS Code settings (optional)
 .vscode/
+logs/
 
 
 # Keep repository data tracked
