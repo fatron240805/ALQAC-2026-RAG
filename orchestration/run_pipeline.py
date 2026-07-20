@@ -53,6 +53,7 @@ from retrieval.graph_retriever import GraphRetrieverConfig, LegalGraphRetriever
 from retrieval.indexing import HybridIndexer
 from retrieval.reranker import ClusterReranker, LexicalOverlapReranker
 from retrieval.router import DocumentRouter
+from retrieval.service import RetrievalService, RetrievalServiceConfig
 from graph_construct import Neo4jGraphStore, build_graph_records, write_graph_artifacts
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
@@ -248,17 +249,21 @@ def process_case(
     reasoning_agent: ReasoningAgent,
     verifier: Verifier,
     config: PipelineConfig,
+    retrieval_service: RetrievalService | None = None,
 ) -> dict[str, Any]:
     case_id = case["case_id"]
     case_query = case["case_query"]
 
     # 1a. Tìm kiếm dữ liệu Luật pháp (Local Indexer - Không tính vào c_i)
-    law_candidates = indexer.search(
-        case_query, top_k=config.top_k_before_rerank, alpha=config.hybrid_alpha
-    )
-    law_routed = DocumentRouter().apply(case_query, law_candidates)
-    law_reranked = reranker.rerank(case_query, law_routed, top_k=config.top_k_after_rerank)
-    law_evidence = citation_filter.filter(case_query, law_reranked)
+    if retrieval_service is not None:
+        law_evidence = retrieval_service.retrieve(case_query).evidence
+    else:
+        law_candidates = indexer.search(
+            case_query, top_k=config.top_k_before_rerank, alpha=config.hybrid_alpha
+        )
+        law_routed = DocumentRouter().apply(case_query, law_candidates)
+        law_reranked = reranker.rerank(case_query, law_routed, top_k=config.top_k_after_rerank)
+        law_evidence = citation_filter.filter(case_query, law_reranked)
 
     # 1b. Tìm kiếm dữ liệu Vụ án (Gọi API Ban tổ chức - Tính vào c_i)
     calls_before_case = case_retrieval_client.call_count
@@ -314,13 +319,17 @@ def process_case_graph(
     reasoning_agent: ReasoningAgent,
     verifier: Verifier,
     config: PipelineConfig,
+    retrieval_service: RetrievalService | None = None,
 ) -> dict[str, Any]:
     case_id = case["case_id"]
     case_query = case["case_query"]
 
-    law_candidates = graph_retriever.retrieve(case_query)
-    law_reranked = reranker.rerank(case_query, law_candidates, top_k=config.top_k_after_rerank)
-    law_evidence = citation_filter.filter(case_query, law_reranked)
+    if retrieval_service is not None:
+        law_evidence = retrieval_service.retrieve(case_query).evidence
+    else:
+        law_candidates = graph_retriever.retrieve(case_query)
+        law_reranked = reranker.rerank(case_query, law_candidates, top_k=config.top_k_after_rerank)
+        law_evidence = citation_filter.filter(case_query, law_reranked)
 
     calls_before_case = case_retrieval_client.call_count
     case_evidence_hits = case_retrieval_client.retrieve_multi(
@@ -402,10 +411,25 @@ def run_pipeline(
         dry_run=dry_run,
         require_graph=require_graph,
     )
+    retrieval_service = RetrievalService(
+        indexer,
+        graph_retriever=graph_retriever,
+        reranker=reranker,
+        citation_filter=citation_filter,
+        config=RetrievalServiceConfig(
+            seed_top_k=config.top_k_before_rerank,
+            final_top_k=config.top_k_after_rerank,
+            hybrid_alpha=config.hybrid_alpha,
+        ),
+    )
     process_case_impl = (
-        partial(process_case_graph, graph_retriever=graph_retriever)
+        partial(
+            process_case_graph,
+            graph_retriever=graph_retriever,
+            retrieval_service=retrieval_service,
+        )
         if graph_retriever is not None
-        else process_case
+        else partial(process_case, retrieval_service=retrieval_service)
     )
 
     if dry_run:

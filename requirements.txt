@@ -1,3 +1,4 @@
+# Python 3.12.x là an toàn
 # Core pipeline
 numpy>=1.26,<3
 requests>=2.31,<3

@@ -43,6 +43,7 @@ from retrieval.graph_retriever import GraphRetrieverConfig, LegalGraphRetriever
 from retrieval.indexing import HybridIndexer
 from retrieval.reranker import ClusterReranker, LexicalOverlapReranker
 from retrieval.router import DocumentRouter, QueryAnalyzer
+from retrieval.service import RetrievalService, RetrievalServiceConfig
 
 
 class WorkspaceTempDir:
@@ -311,6 +312,51 @@ class RetrievalComponentTests(unittest.TestCase):
         )
 
         self.assertEqual([item["doc_id"] for item in filtered], ["graph_first", "flat_second"])
+
+    def test_retrieval_service_returns_reasoning_ready_evidence_contract(self) -> None:
+        candidate = {
+            "doc_id": "rule:91/2015/QH13:584",
+            "content": "The owner of an animal must compensate for damage caused by the animal.",
+            "metadata": {
+                "law_id": "91/2015/QH13",
+                "aid": 584,
+                "source_chunk_id": "chunk_584",
+                "graph_distance": 1,
+            },
+            "fused_score": 0.65,
+            "rerank_score": 0.82,
+            "graph_path": ["ontology:liability:animal_damage", "rule:91/2015/QH13:584"],
+        }
+
+        class FakeIndexer:
+            def search(self, query: str, top_k: int, alpha: float) -> list[dict[str, object]]:
+                return [candidate]
+
+        class FakeReranker:
+            def rerank(self, query: str, candidates: list[dict[str, object]], top_k: int) -> list[dict[str, object]]:
+                return candidates[:top_k]
+
+        class FakeCitationFilter:
+            def filter(self, query: str, candidates: list[dict[str, object]]) -> list[dict[str, object]]:
+                return candidates
+
+        service = RetrievalService(
+            FakeIndexer(),
+            reranker=FakeReranker(),
+            citation_filter=FakeCitationFilter(),
+            config=RetrievalServiceConfig(seed_top_k=4, final_top_k=1),
+        )
+
+        result = service.retrieve("animal damage", top_k=1)
+        payload = result.to_reasoning_payload(case_id="case_1")
+
+        self.assertEqual(result.trace.backend, "flat_hybrid")
+        self.assertEqual(result.trace.returned_count, 1)
+        self.assertEqual(result.law_evidence, [{"law_id": "91/2015/QH13", "aid": 584}])
+        self.assertEqual(result.evidence[0]["source_chunks"], ["chunk_584"])
+        self.assertEqual(result.evidence[0]["graph_path"], candidate["graph_path"])
+        self.assertEqual(payload["case_id"], "case_1")
+        self.assertEqual(len(payload["evidence_chains"]), 1)
 
     def test_build_graph_records_creates_rule_and_concept_nodes(self) -> None:
         with workspace_tempdir() as tmp:

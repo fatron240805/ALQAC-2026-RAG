@@ -257,7 +257,9 @@ class PromptTemplateReasoningAgent(ReasoningAgent):
             (
                 f"L{i + 1} ({e.get('doc_id', '?')}, "
                 f"{e['metadata'].get('law_id', '?')} - aid {e['metadata'].get('aid', '?')}, "
-                f"score={float(e.get('rerank_score', e.get('fused_score', 0.0))):.3f}): "
+                f"score={float(e.get('rerank_score', e.get('fused_score', 0.0))):.3f}, "
+                f"chain={e.get('chain_id', '?')}, "
+                f"path={' -> '.join(str(node) for node in e.get('graph_path', [])) or '?'}): "
                 f"{e['content'][:700]}"
             )
             for i, e in enumerate(law_evidence)
