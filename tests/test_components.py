@@ -41,7 +41,7 @@ from retrieval.cleaning import build_clean_corpus
 from retrieval.deprecated_filter import DeprecatedFilter
 from retrieval.graph_retriever import GraphRetrieverConfig, LegalGraphRetriever
 from retrieval.indexing import HybridIndexer
-from retrieval.reranker import LexicalOverlapReranker
+from retrieval.reranker import ClusterReranker, LexicalOverlapReranker
 from retrieval.router import DocumentRouter, QueryAnalyzer
 
 
@@ -261,6 +261,56 @@ class RetrievalComponentTests(unittest.TestCase):
 
         self.assertEqual(reranked[0]["doc_id"], "strong")
         self.assertGreater(reranked[0]["citation_alignment_score"], reranked[1]["citation_alignment_score"])
+
+    def test_cluster_reranker_ranks_community_before_fallback_law(self) -> None:
+        query = "fraud deception victim property"
+        candidates = [
+            {
+                "doc_id": "fraud_1",
+                "content": "Fraud by deception caused the victim to transfer property.",
+                "metadata": {
+                    "law_id": "law-fraud",
+                    "selected_ontology_community": "ontology:issue:fraud",
+                },
+                "fused_score": 0.45,
+            },
+            {
+                "doc_id": "contract_1",
+                "content": "A contract dispute concerns payment obligations.",
+                "metadata": {"law_id": "law-contract"},
+                "fused_score": 0.50,
+            },
+        ]
+
+        reranked = ClusterReranker(use_gpu_reranker=False).rerank(query, candidates, top_k=2)
+
+        self.assertEqual(reranked[0]["doc_id"], "fraud_1")
+        self.assertEqual(reranked[0]["rerank_method"], "community_cluster")
+        self.assertEqual(reranked[0]["metadata"]["cluster_id"], "community:ontology:issue:fraud")
+        self.assertIn("cluster_score", reranked[0]["metadata"])
+
+    def test_citation_filter_preserves_cluster_selection_order(self) -> None:
+        candidates = [
+            {
+                "doc_id": "graph_first",
+                "content": "Relevant legal evidence.",
+                "rerank_score": 0.20,
+                "graph_path": ["chunk:seed", "rule:law:1"],
+            },
+            {
+                "doc_id": "flat_second",
+                "content": "Relevant legal evidence.",
+                "rerank_score": 0.95,
+            },
+        ]
+
+        filtered = HeuristicCitationUsefulnessFilter(max_results=2).filter(
+            "legal evidence",
+            candidates,
+            preserve_graph_paths=True,
+        )
+
+        self.assertEqual([item["doc_id"] for item in filtered], ["graph_first", "flat_second"])
 
     def test_build_graph_records_creates_rule_and_concept_nodes(self) -> None:
         with workspace_tempdir() as tmp:

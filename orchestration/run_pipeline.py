@@ -51,7 +51,7 @@ from retrieval.deprecated_filter import DeprecatedFilter
 from retrieval.citation_usefulness import HeuristicCitationUsefulnessFilter
 from retrieval.graph_retriever import GraphRetrieverConfig, LegalGraphRetriever
 from retrieval.indexing import HybridIndexer
-from retrieval.reranker import LexicalOverlapReranker
+from retrieval.reranker import ClusterReranker, LexicalOverlapReranker
 from retrieval.router import DocumentRouter
 from graph_construct import Neo4jGraphStore, build_graph_records, write_graph_artifacts
 
@@ -171,12 +171,26 @@ def build_graph_retriever(
         graph_candidate_ratio=config.graph_candidate_ratio,
         hybrid_alpha=config.hybrid_alpha,
     )
-    graph_reranker = LexicalOverlapReranker(
-        use_gpu_reranker=config.use_gpu_reranker,
-        reranker_model_name=config.reranker_model_name,
-        device=config.reranker_device,
-        batch_size=config.reranker_batch_size,
-    )
+    reranker_kwargs = {
+        "use_gpu_reranker": config.use_gpu_reranker,
+        "reranker_model_name": config.reranker_model_name,
+        "device": config.reranker_device,
+        "batch_size": config.reranker_batch_size,
+    }
+    if config.graph_reranker_method.strip().lower() in {"cluster", "community_cluster", "community"}:
+        graph_reranker = ClusterReranker(
+            **reranker_kwargs,
+            cluster_top_k=config.graph_community_top_k,
+            cluster_member_top_k=config.graph_community_member_top_k,
+        )
+        logger.info(
+            "Using community-cluster reranker: top_communities=%d, members_per_cluster=%d",
+            config.graph_community_top_k,
+            config.graph_community_member_top_k,
+        )
+    else:
+        graph_reranker = LexicalOverlapReranker(**reranker_kwargs)
+        logger.info("Using per-candidate reranker: method=%s", config.graph_reranker_method)
     return LegalGraphRetriever(indexer, graph_store=graph_store, config=graph_config, reranker=graph_reranker)
 
 

@@ -14,6 +14,7 @@
     "seed_top_k": 80,
     "alpha": 0.5,
     "backend": "neo4j",
+    "reranker": "community_cluster",
     "legal_node_count": 10872,
     "expansion_depth_fast": 1,
     "expansion_depth_deep": 2
@@ -22,7 +23,7 @@
     "cases_with_neo4j_expansion": 50,
     "cases_without_neo4j_expansion": 0,
     "returned_graph_candidates": 399,
-    "expanded_graph_candidates_before_rerank": 1682,
+    "expanded_graph_candidates_before_rerank": 1668,
     "returned_flat_fallback_candidates": 1101
   },
   "Gold_Coverage": {
@@ -58,174 +59,174 @@
   },
   "Metrics": {
     "@1": {
-      "Case_Hit_Accuracy": 0.02,
+      "Case_Hit_Accuracy": 0.1,
       "Exact_Set_Accuracy": 0.0,
-      "Macro_Precision": 0.02,
-      "Macro_Recall": 0.0011,
-      "Macro_F1": 0.0021,
-      "Micro_Precision": 0.02,
-      "Micro_Recall": 0.0019,
-      "Micro_F1": 0.0035,
-      "MRR": 0.02
+      "Macro_Precision": 0.1,
+      "Macro_Recall": 0.0058,
+      "Macro_F1": 0.0109,
+      "Micro_Precision": 0.1,
+      "Micro_Recall": 0.0095,
+      "Micro_F1": 0.0173,
+      "MRR": 0.1
     },
     "@3": {
-      "Case_Hit_Accuracy": 0.26,
+      "Case_Hit_Accuracy": 0.18,
       "Exact_Set_Accuracy": 0.0,
-      "Macro_Precision": 0.0933,
-      "Macro_Recall": 0.0198,
-      "Macro_F1": 0.0319,
-      "Micro_Precision": 0.0933,
-      "Micro_Recall": 0.0265,
-      "Micro_F1": 0.0412,
-      "MRR": 0.1167
+      "Macro_Precision": 0.0733,
+      "Macro_Recall": 0.0136,
+      "Macro_F1": 0.0226,
+      "Micro_Precision": 0.0733,
+      "Micro_Recall": 0.0208,
+      "Micro_F1": 0.0324,
+      "MRR": 0.13
     },
     "@5": {
       "Case_Hit_Accuracy": 0.3,
       "Exact_Set_Accuracy": 0.0,
-      "Macro_Precision": 0.084,
-      "Macro_Recall": 0.0285,
-      "Macro_F1": 0.0416,
-      "Micro_Precision": 0.084,
-      "Micro_Recall": 0.0397,
-      "Micro_F1": 0.0539,
-      "MRR": 0.1267
+      "Macro_Precision": 0.076,
+      "Macro_Recall": 0.0263,
+      "Macro_F1": 0.0381,
+      "Micro_Precision": 0.076,
+      "Micro_Recall": 0.0359,
+      "Micro_F1": 0.0488,
+      "MRR": 0.158
     },
     "@8": {
-      "Case_Hit_Accuracy": 0.36,
+      "Case_Hit_Accuracy": 0.38,
       "Exact_Set_Accuracy": 0.0,
-      "Macro_Precision": 0.0675,
-      "Macro_Recall": 0.0364,
-      "Macro_F1": 0.0462,
-      "Micro_Precision": 0.0675,
-      "Micro_Recall": 0.051,
-      "Micro_F1": 0.0581,
-      "MRR": 0.1358
+      "Macro_Precision": 0.07,
+      "Macro_Recall": 0.0382,
+      "Macro_F1": 0.0483,
+      "Micro_Precision": 0.07,
+      "Micro_Recall": 0.0529,
+      "Micro_F1": 0.0603,
+      "MRR": 0.1695
     },
     "@30": {
       "Case_Hit_Accuracy": 0.52,
       "Exact_Set_Accuracy": 0.0,
-      "Macro_Precision": 0.0548,
-      "Macro_Recall": 0.1022,
-      "Macro_F1": 0.0669,
-      "Micro_Precision": 0.0551,
-      "Micro_Recall": 0.1172,
-      "Micro_F1": 0.0749,
-      "MRR": 0.148
+      "Macro_Precision": 0.0542,
+      "Macro_Recall": 0.101,
+      "Macro_F1": 0.0661,
+      "Micro_Precision": 0.0544,
+      "Micro_Recall": 0.1153,
+      "Micro_F1": 0.0739,
+      "MRR": 0.1792
     }
   },
   "Scope_Metrics": {
     "end_to_end": {
       "@1": {
-        "Case_Hit_Accuracy": 0.02,
+        "Case_Hit_Accuracy": 0.1,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.02,
-        "Macro_Recall": 0.0011,
-        "Macro_F1": 0.0021,
-        "Micro_Precision": 0.02,
-        "Micro_Recall": 0.0019,
-        "Micro_F1": 0.0035,
-        "MRR": 0.02
+        "Macro_Precision": 0.1,
+        "Macro_Recall": 0.0058,
+        "Macro_F1": 0.0109,
+        "Micro_Precision": 0.1,
+        "Micro_Recall": 0.0095,
+        "Micro_F1": 0.0173,
+        "MRR": 0.1
       },
       "@3": {
-        "Case_Hit_Accuracy": 0.26,
+        "Case_Hit_Accuracy": 0.18,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0933,
-        "Macro_Recall": 0.0198,
-        "Macro_F1": 0.0319,
-        "Micro_Precision": 0.0933,
-        "Micro_Recall": 0.0265,
-        "Micro_F1": 0.0412,
-        "MRR": 0.1167
+        "Macro_Precision": 0.0733,
+        "Macro_Recall": 0.0136,
+        "Macro_F1": 0.0226,
+        "Micro_Precision": 0.0733,
+        "Micro_Recall": 0.0208,
+        "Micro_F1": 0.0324,
+        "MRR": 0.13
       },
       "@5": {
         "Case_Hit_Accuracy": 0.3,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.084,
-        "Macro_Recall": 0.0285,
-        "Macro_F1": 0.0416,
-        "Micro_Precision": 0.084,
-        "Micro_Recall": 0.0397,
-        "Micro_F1": 0.0539,
-        "MRR": 0.1267
+        "Macro_Precision": 0.076,
+        "Macro_Recall": 0.0263,
+        "Macro_F1": 0.0381,
+        "Micro_Precision": 0.076,
+        "Micro_Recall": 0.0359,
+        "Micro_F1": 0.0488,
+        "MRR": 0.158
       },
       "@8": {
-        "Case_Hit_Accuracy": 0.36,
+        "Case_Hit_Accuracy": 0.38,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0675,
-        "Macro_Recall": 0.0364,
-        "Macro_F1": 0.0462,
-        "Micro_Precision": 0.0675,
-        "Micro_Recall": 0.051,
-        "Micro_F1": 0.0581,
-        "MRR": 0.1358
+        "Macro_Precision": 0.07,
+        "Macro_Recall": 0.0382,
+        "Macro_F1": 0.0483,
+        "Micro_Precision": 0.07,
+        "Micro_Recall": 0.0529,
+        "Micro_F1": 0.0603,
+        "MRR": 0.1695
       },
       "@30": {
         "Case_Hit_Accuracy": 0.52,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0548,
-        "Macro_Recall": 0.1022,
-        "Macro_F1": 0.0669,
-        "Micro_Precision": 0.0551,
-        "Micro_Recall": 0.1172,
-        "Micro_F1": 0.0749,
-        "MRR": 0.148
+        "Macro_Precision": 0.0542,
+        "Macro_Recall": 0.101,
+        "Macro_F1": 0.0661,
+        "Micro_Precision": 0.0544,
+        "Micro_Recall": 0.1153,
+        "Micro_F1": 0.0739,
+        "MRR": 0.1792
       }
     },
     "neo4j_traversal_only": {
       "@1": {
-        "Case_Hit_Accuracy": 0.12,
-        "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.12,
-        "Macro_Recall": 0.0069,
-        "Macro_F1": 0.013,
-        "Micro_Precision": 0.12,
-        "Micro_Recall": 0.0113,
-        "Micro_F1": 0.0207,
-        "MRR": 0.12
-      },
-      "@3": {
-        "Case_Hit_Accuracy": 0.24,
+        "Case_Hit_Accuracy": 0.1,
         "Exact_Set_Accuracy": 0.0,
         "Macro_Precision": 0.1,
-        "Macro_Recall": 0.0213,
-        "Macro_F1": 0.0342,
+        "Macro_Recall": 0.0058,
+        "Macro_F1": 0.0109,
         "Micro_Precision": 0.1,
-        "Micro_Recall": 0.0284,
-        "Micro_F1": 0.0442,
-        "MRR": 0.1667
+        "Micro_Recall": 0.0095,
+        "Micro_F1": 0.0173,
+        "MRR": 0.1
+      },
+      "@3": {
+        "Case_Hit_Accuracy": 0.22,
+        "Exact_Set_Accuracy": 0.0,
+        "Macro_Precision": 0.0933,
+        "Macro_Recall": 0.0202,
+        "Macro_F1": 0.0323,
+        "Micro_Precision": 0.0933,
+        "Micro_Recall": 0.0265,
+        "Micro_F1": 0.0412,
+        "MRR": 0.1467
       },
       "@5": {
-        "Case_Hit_Accuracy": 0.28,
+        "Case_Hit_Accuracy": 0.26,
         "Exact_Set_Accuracy": 0.0,
         "Macro_Precision": 0.076,
-        "Macro_Recall": 0.0261,
-        "Macro_F1": 0.0378,
-        "Micro_Precision": 0.076,
+        "Macro_Recall": 0.0259,
+        "Macro_F1": 0.0376,
+        "Micro_Precision": 0.0766,
         "Micro_Recall": 0.0359,
-        "Micro_F1": 0.0488,
-        "MRR": 0.1757
+        "Micro_F1": 0.0489,
+        "MRR": 0.1567
       },
       "@8": {
         "Case_Hit_Accuracy": 0.36,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0761,
-        "Macro_Recall": 0.0415,
-        "Macro_F1": 0.052,
-        "Micro_Precision": 0.0767,
-        "Micro_Recall": 0.0567,
-        "Micro_F1": 0.0652,
-        "MRR": 0.1877
+        "Macro_Precision": 0.0752,
+        "Macro_Recall": 0.0378,
+        "Macro_F1": 0.0484,
+        "Micro_Precision": 0.0756,
+        "Micro_Recall": 0.051,
+        "Micro_F1": 0.0609,
+        "MRR": 0.1715
       },
       "@30": {
         "Case_Hit_Accuracy": 0.36,
         "Exact_Set_Accuracy": 0.0,
-        "Macro_Precision": 0.0761,
-        "Macro_Recall": 0.0415,
-        "Macro_F1": 0.052,
-        "Micro_Precision": 0.0767,
-        "Micro_Recall": 0.0567,
-        "Micro_F1": 0.0652,
-        "MRR": 0.1877
+        "Macro_Precision": 0.0752,
+        "Macro_Recall": 0.0378,
+        "Macro_F1": 0.0484,
+        "Micro_Precision": 0.0756,
+        "Micro_Recall": 0.051,
+        "Micro_F1": 0.0609,
+        "MRR": 0.1715
       }
     }
   }

@@ -488,6 +488,7 @@ def build_retriever(
             retrieve,
             {
                 "backend": "neo4j",
+                "reranker": config.graph_reranker_method,
                 "legal_node_count": graph_store.count_legal_nodes(),
                 "expansion_depth_fast": retriever.config.expansion_depth_fast,
                 "expansion_depth_deep": retriever.config.expansion_depth_deep,

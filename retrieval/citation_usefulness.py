@@ -86,13 +86,7 @@ class HeuristicCitationUsefulnessFilter:
                     item["citation_judgment"]["reason"] = "graph traversal evidence retained for diversity"
                 judged.append(item)
 
-        # This component is a usefulness gate.  Do not let its lightweight
-        # lexical score undo the ordering produced by the cross-encoder.
-        judged.sort(
-            key=lambda item: (
-                float(item.get("rerank_score", item.get("routed_score", item.get("fused_score", 0.0)))),
-                item["citation_judgment"]["score"],
-            ),
-            reverse=True,
-        )
+        # This component is a usefulness gate, not a second reranker. Keep
+        # the caller's order so graph quota/interleaving and cluster ordering
+        # survive the citation check.
         return judged[: self.max_results]

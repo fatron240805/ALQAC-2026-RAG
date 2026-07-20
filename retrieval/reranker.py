@@ -238,3 +238,133 @@ class LexicalOverlapReranker:
             scored.append(item)
         scored.sort(key=lambda item: item["rerank_score"], reverse=True)
         return scored[:top_k]
+
+
+class ClusterReranker(LexicalOverlapReranker):
+    """Community-aware reranker for graph evidence.
+
+    LegalGraphRAG does not define a separate trainable ``ClusterReranker``
+    class. Its corresponding retrieval step scores the best ontology
+    community first and then retrieves the strongest cases inside it. This
+    adapter keeps the BGE cross-encoder score for each provision, aggregates
+    candidates into explicit ontology communities, and orders the final
+    evidence coarse-to-fine. Candidates without a graph community remain
+    singleton clusters so direct semantic retrieval is not over-grouped by
+    the statute they happen to cite.
+    """
+
+    def __init__(
+        self,
+        *args: Any,
+        cluster_top_k: int = 1,
+        cluster_member_top_k: int = 20,
+        **kwargs: Any,
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        self.cluster_top_k = max(1, int(cluster_top_k))
+        self.cluster_member_top_k = max(1, int(cluster_member_top_k))
+
+    @staticmethod
+    def _cluster_id(candidate: dict[str, Any]) -> str:
+        metadata = candidate.get("metadata") if isinstance(candidate.get("metadata"), dict) else {}
+        selected = str(metadata.get("selected_ontology_community") or "").strip()
+        if selected:
+            return f"community:{selected}"
+
+        communities = metadata.get("ontology_communities")
+        if isinstance(communities, (list, tuple)):
+            values = sorted({str(value).strip() for value in communities if str(value).strip()})
+            if values:
+                return f"community:{values[0]}"
+
+        graph_path = candidate.get("graph_path") or metadata.get("graph_path") or []
+        if isinstance(graph_path, (list, tuple)):
+            ontology_nodes = sorted(
+                {str(node).strip() for node in graph_path if str(node).strip().startswith("ontology:")}
+            )
+            if ontology_nodes:
+                return f"community:{ontology_nodes[0]}"
+
+        source_chunk_id = str(metadata.get("source_chunk_id") or metadata.get("chunk_id") or "").strip()
+        if source_chunk_id:
+            return f"source:{source_chunk_id}"
+        return f"document:{str(candidate.get('doc_id') or '').strip()}"
+
+    @staticmethod
+    def _cluster_summary(members: list[dict[str, Any]], max_members: int = 4) -> str:
+        parts: list[str] = []
+        seen: set[str] = set()
+        for member in members[:max_members]:
+            content = str(member.get("content") or "").strip()
+            if not content:
+                continue
+            # Keep the community representation within the reranker context.
+            content = content[:700]
+            if content in seen:
+                continue
+            seen.add(content)
+            parts.append(content)
+        return "\n".join(parts)
+
+    def rerank(self, query: str, candidates: list[dict[str, Any]], top_k: int) -> list[dict[str, Any]]:
+        if top_k <= 0:
+            return []
+        if not candidates:
+            return []
+
+        # Score provisions first. The cluster stage is deliberately a second
+        # pass so a highly relevant article is not lost inside its cluster.
+        member_scored = super().rerank(query, candidates, top_k=len(candidates))
+        grouped: dict[str, list[dict[str, Any]]] = {}
+        for member in member_scored:
+            grouped.setdefault(self._cluster_id(member), []).append(member)
+
+        clusters = list(grouped.items())
+        cluster_rows: list[tuple[str, list[dict[str, Any]], float]] = []
+        for cluster_id, members in clusters:
+            members.sort(key=lambda item: float(item.get("rerank_score", 0.0)), reverse=True)
+            top_scores = [float(item.get("rerank_score", 0.0)) for item in members[:3]]
+            max_member_score = top_scores[0] if top_scores else 0.0
+            mean_top_score = sum(top_scores) / max(1, len(top_scores))
+            is_community = cluster_id.startswith("community:")
+            if is_community:
+                summary_score = lexical_overlap_score(query, self._cluster_summary(members))
+                cluster_score = 0.65 * max_member_score + 0.25 * mean_top_score + 0.10 * summary_score
+            else:
+                # Rsem/Rchg candidates do not have a community representation;
+                # preserve their cross-encoder order instead of inventing one.
+                cluster_score = max_member_score
+            cluster_rows.append((cluster_id, members, cluster_score))
+        cluster_rows.sort(key=lambda row: row[2], reverse=True)
+
+        # Match the paper's coarse-to-fine behavior: expose the best community
+        # first, then use other clusters as recall-preserving fallbacks.
+        priority_count = min(self.cluster_top_k, len(cluster_rows))
+        ordered_clusters = cluster_rows[:priority_count] + cluster_rows[priority_count:]
+        ordered: list[dict[str, Any]] = []
+        overflow: list[dict[str, Any]] = []
+        for cluster_rank, (cluster_id, members, cluster_score) in enumerate(ordered_clusters, start=1):
+            for member_rank, member in enumerate(members, start=1):
+                item = dict(member)
+                metadata = dict(item.get("metadata") or {})
+                metadata.update(
+                    {
+                        "cluster_id": cluster_id,
+                        "cluster_rank": cluster_rank,
+                        "cluster_member_rank": member_rank,
+                        "cluster_score": float(cluster_score),
+                    }
+                )
+                item["metadata"] = metadata
+                item["cluster_id"] = cluster_id
+                item["cluster_rank"] = cluster_rank
+                item["cluster_member_rank"] = member_rank
+                item["cluster_score"] = float(cluster_score)
+                item["rerank_method"] = "community_cluster"
+                if member_rank <= self.cluster_member_top_k:
+                    ordered.append(item)
+                else:
+                    overflow.append(item)
+
+        ordered.extend(overflow)
+        return ordered[:top_k]
