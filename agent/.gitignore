@@ -1,0 +1,27 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# Local vector / graph artifacts
+data/vector/
+data/graph/graph/*.jsonl
+!data/graph/graph/.gitkeep
+data/legal_corpus/cleaned/*
+!data/legal_corpus/cleaned/.gitkeep
+data/legal_corpus/.gitkeep
+
+# Generated outputs
+artifacts/
+inputs/
+*.log
+.langfuse/
