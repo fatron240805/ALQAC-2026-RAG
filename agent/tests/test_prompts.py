@@ -1,9 +1,8 @@
 from app import prompts
 
 
-def test_prompt_version_and_source():
-    assert "table8" in prompts.PROMPT_VERSION
-    assert "2604.10470" in prompts.PAPER_SOURCE
+def test_prompt_version():
+    assert prompts.PROMPT_VERSION == "alqac-v3"
 
 
 def test_element_prompt_has_table8_fields():
@@ -26,15 +25,17 @@ def test_draft_is_label_not_prose_only():
     assert "B_WIN" in text
     assert "PARTIAL_A_WIN" in text
     assert "PARTIAL_B_WIN" in text
-    assert "KHÔNG ĐƯỢC tạo identifier" in text or "MUST NOT create" in text
+    assert "Không tự tạo" in text
+    assert "dự thảo tư vấn pháp lý" in text
 
 
 def test_manager_route_order():
     text = prompts.MANAGER_SYSTEM
-    assert "FormatCheckAgent" in text
-    assert "LawSearchAgent" in text
-    assert "Pass" in text
-    assert "rồi LawSearchAgent" in text or "FormatCheckAgent" in text
+    assert "format_check" in text
+    assert "law_search" in text
+    assert "pass" in text
+    assert "format_check` trước, rồi `law_search" in text
+    assert "hệ thống tư vấn pháp lý nhiều vai trò" in text
 
 
 def test_format_check_no_meaning_change():
@@ -42,16 +43,17 @@ def test_format_check_no_meaning_change():
 
 
 def test_law_search_authoritative():
-    assert "quy định pháp luật có thẩm quyền" in prompts.LAW_SEARCH_SYSTEM
-    assert "law_id" in prompts.LAW_SEARCH_SYSTEM
+    assert "quy định pháp luật" in prompts.LAW_SEARCH_SYSTEM
+    assert "có thẩm quyền" in prompts.LAW_SEARCH_SYSTEM
 
 
 def test_content_check_pass_fail_gate():
     text = prompts.CONTENT_CHECK_SYSTEM
     assert "pass" in text and "fail" in text
-    assert "không được thêm" in text.lower() or "KHÔNG" in text
+    assert "Không tự tạo" in text
+    assert "ý kiến pháp lý lưu loát, chuyên nghiệp" in text
 
 
-def test_all_prompts_have_provenance_rules():
-    for name, text in prompts.all_prompt_texts().items():
-        assert "QUY TẮC NGUỒN GỐC ALQAC" in text or "case_evidence" in text, name
+def test_evidence_prompts_have_provenance_rules():
+    for name in ("DRAFT_SYSTEM", "FORMAT_CHECK_SYSTEM", "CONTENT_CHECK_SYSTEM"):
+        assert "Ràng buộc bằng chứng" in prompts.all_prompt_texts()[name]

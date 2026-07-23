@@ -11,7 +11,7 @@ from typing import Any, Callable
 
 from app.agents import AgentRuntime
 from app.config import Settings
-from app.observability import Observability, redact
+from app.observability import Observability
 from app.schemas import (
     AlqacState,
     CaseDraft,
@@ -68,6 +68,12 @@ class CaseWorkflow:
             settings, ledger, obs=obs
         )
         self.law_tool = law_tool or LawGraphSearchTool(settings)
+        self._llm_calls = 0
+
+    def _check_budget(self) -> bool:
+        if self.settings.total_llm_budget <= 0:
+            return True
+        return self._llm_calls < self.settings.total_llm_budget
 
     def run_case(self, case: CaseInput) -> tuple[AlqacState, CaseResult]:
         state = AlqacState(
@@ -84,6 +90,7 @@ class CaseWorkflow:
                 state.element_graph = self.agents.extract_elements(
                     case.case_id, case.case_query
                 )
+                self._llm_calls += 1
                 state.route_history.append("extract_elements")
 
             # 2. Initial draft
@@ -98,11 +105,15 @@ class CaseWorkflow:
                     law_hits=state.law_hits,
                     public_context=state.public_context,
                 )
+                self._llm_calls += 1
                 state.route_history.append("create_initial_draft")
 
             # 3. Manager loop
             max_iter = self.settings.manager_max_iterations
             while state.iteration < max_iter:
+                if not self._check_budget():
+                    state.route_history.append("budget_exhausted")
+                    break
                 with self.obs.span(
                     "manager_route",
                     agent="manager",
@@ -118,6 +129,7 @@ class CaseWorkflow:
                         official_max=self.ledger.max_calls,
                     )
                     state.manager_decision = decision
+                    self._llm_calls += 1
                     state.route_history.append(
                         f"manager:{decision.decision}:{[a.value for a in decision.actions]}"
                     )
@@ -143,6 +155,7 @@ class CaseWorkflow:
                     law_allowlist=_law_allowlist_dicts(state.law_pairs),
                 )
                 state.content_result = content
+                self._llm_calls += 1
                 state.route_history.append(f"content_check:{content.decision}")
 
             state.official_calls_used = self.ledger.used
@@ -156,6 +169,7 @@ class CaseWorkflow:
                     content_passed=False,
                     official_allowlist=state.official_chunk_ids,
                     law_pairs=state.law_pairs,
+                    official_api_enabled=self.settings.official_api_enabled,
                     content_findings=content.findings,
                     obs=self.obs,
                 )
@@ -168,6 +182,7 @@ class CaseWorkflow:
                 content_passed=True,
                 official_allowlist=state.official_chunk_ids,
                 law_pairs=state.law_pairs,
+                official_api_enabled=self.settings.official_api_enabled,
                 content_findings=content.findings,
                 obs=self.obs,
             )
@@ -243,6 +258,7 @@ class CaseWorkflow:
                     law_allowlist=_law_allowlist_dicts(state.law_pairs),
                 )
                 state.format_suggestions = suggestions
+                self._llm_calls += 1
                 state.route_history.append("format_check")
 
             with self.obs.span(
@@ -255,6 +271,7 @@ class CaseWorkflow:
                     official_allowlist=state.official_chunk_ids,
                     law_allowlist=_law_allowlist_dicts(state.law_pairs),
                 )
+                self._llm_calls += 1
                 state.revision_history.append("format_revision")
                 state.route_history.append("apply_format_revision")
 
@@ -275,6 +292,7 @@ class CaseWorkflow:
                     official_allowlist=state.official_chunk_ids,
                     law_allowlist=_law_allowlist_dicts(state.law_pairs),
                 )
+                self._llm_calls += 1
                 state.revision_history.append("law_integration")
                 state.route_history.append("integrate_law_revision")
 
@@ -331,8 +349,12 @@ def run_batch(
 
     submission_path = None
     if write_submission:
-        rows = serialize_submission(results, settings.submission_output_path, write=True)
-        submission_path = str(settings.submission_output_path) if rows else None
+        rows = serialize_submission(
+            results, settings.submission_output_path, write=True, trace_id=obs.trace_id
+        )
+        submission_path = str(
+            settings.submission_output_path.parent / f"submission_{obs.trace_id}.json"
+        ) if rows else None
     else:
         serialize_submission(results, settings.submission_output_path, write=False)
 
@@ -347,6 +369,7 @@ def run_batch(
         "states": states,
         "official_calls_used": ledger.used,
         "official_calls_max": max_calls,
+        "llm_calls": wf._llm_calls,
         "openai_model": settings.openai_model,
         "trace_id": obs.trace_id,
         "submission_path": submission_path,
@@ -355,29 +378,27 @@ def run_batch(
 
 
 def redacted_debug_state(state: AlqacState) -> dict[str, Any]:
-    return redact(
-        {
-            "case_id": state.case_id,
-            "iteration": state.iteration,
-            "route_history": state.route_history,
-            "revision_history": state.revision_history,
-            "official_chunk_ids": state.official_chunk_ids,
-            "law_pairs": [p.model_dump() for p in state.law_pairs],
-            "content_result": state.content_result.model_dump()
-            if state.content_result
-            else None,
-            "manager_decision": state.manager_decision.model_dump()
-            if state.manager_decision
-            else None,
-            "draft_prediction": state.draft.prediction.model_dump()
-            if state.draft
-            else None,
-            "public_context_count": len(state.public_context),
-            "official_hits_count": len(state.official_hits),
-            "law_hits_count": len(state.law_hits),
-            "rejected": state.rejected,
-            "reject_reason": state.reject_reason,
-            "validation_errors": state.validation_errors,
-            "openai_model": state.openai_model,
-        }
-    )
+    return {
+        "case_id": state.case_id,
+        "iteration": state.iteration,
+        "route_history": state.route_history,
+        "revision_history": state.revision_history,
+        "official_chunk_ids": state.official_chunk_ids,
+        "law_pairs": [p.model_dump() for p in state.law_pairs],
+        "content_result": state.content_result.model_dump()
+        if state.content_result
+        else None,
+        "manager_decision": state.manager_decision.model_dump()
+        if state.manager_decision
+        else None,
+        "draft_prediction": state.draft.prediction.model_dump()
+        if state.draft
+        else None,
+        "public_context_count": len(state.public_context),
+        "official_hits_count": len(state.official_hits),
+        "law_hits_count": len(state.law_hits),
+        "rejected": state.rejected,
+        "reject_reason": state.reject_reason,
+        "validation_errors": state.validation_errors,
+        "openai_model": state.openai_model,
+    }

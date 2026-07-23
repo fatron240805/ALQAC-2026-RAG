@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from app.config import Settings
+from app.embeddings import create_embeddings
 from app.schemas import ElementGraph, LawHit
 
 logger = logging.getLogger("alqac.rag")
@@ -85,9 +86,10 @@ class LawRAG:
             base_url=self.settings.embedding_base_url,
             api_key=self.settings.embedding_api_key,
         )
-        resp = client.embeddings.create(
+        resp = create_embeddings(
+            client,
             model=self.settings.embedding_model,
-            input=texts,
+            inputs=texts,
         )
         # Preserve input order
         by_idx = {item.index: item.embedding for item in resp.data}
@@ -96,8 +98,8 @@ class LawRAG:
     def collection_ready(self) -> bool:
         try:
             client = self._get_client()
-            names = {c.name for c in client.get_collections().collections}
-            return COLLECTION_NAME in names
+            client.get_collection(COLLECTION_NAME)
+            return True
         except Exception:  # noqa: BLE001
             return False
 
@@ -122,13 +124,13 @@ class LawRAG:
             try:
                 client = self._get_client()
                 vector = self._embed([q])[0]
-                hits = client.search(
+                response = client.query_points(
                     collection_name=COLLECTION_NAME,
-                    query_vector=vector,
+                    query=vector,
                     limit=k,
                     with_payload=True,
                 )
-                for h in hits:
+                for h in response.points:
                     payload = h.payload or {}
                     law_id = str(payload.get("law_id", ""))
                     aid = str(payload.get("aid", ""))

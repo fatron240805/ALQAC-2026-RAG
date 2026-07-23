@@ -69,8 +69,18 @@ class Settings(BaseSettings):
         default=Path("data/ALQAC2026_public_test.json"),
         alias="PUBLIC_TEST_PATH",
     )
+    private_test_path: Path = Field(
+        default=Path("data/legal_corpus/ALQAC_private_test.json"),
+        alias="PRIVATE_TEST_PATH",
+    )
 
-    manager_max_iterations: int = 5
+    api_key: str = Field(default="", alias="API_KEY")
+    max_batch_size: int = Field(default=50, alias="MAX_BATCH_SIZE")
+    rate_limit_rpm: int = Field(default=60, alias="RATE_LIMIT_RPM")
+
+    manager_max_iterations: int = Field(default=5, alias="MANAGER_MAX_ITERATIONS")
+    llm_max_tokens: int = Field(default=0, alias="LLM_MAX_TOKENS")
+    total_llm_budget: int = Field(default=0, alias="TOTAL_LLM_BUDGET")
 
     @field_validator("law_rag_top_k")
     @classmethod
@@ -91,6 +101,27 @@ class Settings(BaseSettings):
     def _valid_budget_mult(cls, v: float) -> float:
         if v < 0 or v > 2:
             raise ValueError("OFFICIAL_CALL_BUDGET_MULTIPLIER must be in 0..2")
+        return v
+
+    @field_validator("manager_max_iterations")
+    @classmethod
+    def _valid_max_iter(cls, v: int) -> int:
+        if v < 1 or v > 20:
+            raise ValueError("MANAGER_MAX_ITERATIONS must be in 1..20")
+        return v
+
+    @field_validator("llm_max_tokens")
+    @classmethod
+    def _valid_max_tokens(cls, v: int) -> int:
+        if v < 0:
+            raise ValueError("LLM_MAX_TOKENS must be >= 0")
+        return v
+
+    @field_validator("total_llm_budget")
+    @classmethod
+    def _valid_llm_budget(cls, v: int) -> int:
+        if v < 0:
+            raise ValueError("TOTAL_LLM_BUDGET must be >= 0")
         return v
 
     @model_validator(mode="after")

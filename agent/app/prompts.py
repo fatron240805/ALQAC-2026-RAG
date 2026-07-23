@@ -1,300 +1,209 @@
-"""Prompt Vietnamese — derived from paper Table 8, adapted for ALQAC 2026.
-
-Source: docs/raw/2604.10470v1.pdf Table 8 (Appendix A.3).
-Role intent preserved; translated to Vietnamese for ALQAC competition context.
-Content Check adapted from paper rewrite role to pass/fail support gate
-so deterministic serializer owns final ALQAC output.
-"""
+"""Vietnamese prompts for ALQAC agent roles."""
 
 from __future__ import annotations
 
-PROMPT_VERSION = "paper-table8-alqac-v1"
-PAPER_SOURCE = "docs/raw/2604.10470v1.pdf Table 8 (Appendix A.3)"
+PROMPT_VERSION = "alqac-v3"
 
-# ---------------------------------------------------------------------------
-# ALQAC provenance rules — appended to every role prompt
-# ---------------------------------------------------------------------------
+JSON_ONLY = "Chỉ trả về JSON hợp lệ, không bọc Markdown và không kèm giải thích."
 
-ALQAC_PROVENANCE_RULES = """
-QUY TẮC NGUỒN GỐC ALQAC (bắt buộc):
-- KHÔNG được tự tạo giá trị case_evidence chunk_id. Chỉ dùng chunk_id có trong allowlist kết quả chính thức.
-- KHÔNG được tự tạo cặp law_evidence. Chỉ dùng {law_id, aid} có trong allowlist kết quả tìm kiếm luật.
-- Văn bản án lệ công khai không được trích dẫn: tuyệt đối không copy source_id công khai vào case_evidence.
-- Chỉ xuất JSON đọc được bằng máy. Không viết văn bản tư vấn làm kết quả cuối cùng.
-- Giữ nguyên ý nghĩa pháp lý; không thêm_claim không có cơ sở.
+EVIDENCE_RULES = """
+Ràng buộc bằng chứng:
+- `case_evidence` chỉ gồm `chunk_id` trong danh sách hợp lệ được cung cấp.
+- `law_evidence` chỉ gồm cặp `law_id`, `aid` trong danh sách hợp lệ được cung cấp.
+- Không tự tạo, sửa, hoặc suy diễn mã bằng chứng.
 """.strip()
 
-JSON_ONLY = "Chỉ xuất JSON hợp lệ. Không dùng markdown fence. Không bình luận ngoài JSON."
-
-
-# ---------------------------------------------------------------------------
-# Element Agent — paper Table 8, Vietnamese
-# ---------------------------------------------------------------------------
 
 ELEMENT_SYSTEM = f"""
-Bạn là chuyên gia trích xuất yếu tố pháp lý. Nhiệm vụ của bạn:
-• Trích xuất các yếu tố chính của vụ kiện từ tư vấn pháp lý của người dùng;
-• Xác định các mối quan hệ pháp lý và thực thể;
-• Làm rõ yêu cầu pháp lý của người dùng;
-• Xuất đồ thị yếu tố có cấu trúc ở định dạng JSON.
+Bạn là chuyên gia trích xuất yếu tố pháp lý. Nhiệm vụ:
+- Trích xuất các yếu tố trọng tâm từ nội dung vụ việc.
+- Xác định thực thể và quan hệ pháp lý giữa chúng.
+- Làm rõ yêu cầu và vấn đề pháp lý người dùng đặt ra.
+- Xuất đồ thị yếu tố có cấu trúc.
 
-Định dạng đồ thị yếu tố:
-{{
-  "entities": [{{ "name": "...", "type": "...", "attributes": {{}} }}],
-  "events": [{{ "description": "...", "time": "..." }}],
-  "relationships": [{{ "type": "...", "source": "...", "target": "..." }}],
-  "user_claims": ["..."],
-  "key_facts": ["..."],
-  "legal_questions": ["..."]
-}}
+Trả về JSON gồm: `entities`, `events`, `relationships`, `user_claims`, `key_facts`, `legal_questions`.
+`entities` chứa `name`, `type`, `attributes`; `events` chứa `description`, `time`;
+`relationships` chứa `type`, `source`, `target`.
 
-Nguồn: {PAPER_SOURCE}
 {JSON_ONLY}
-{ALQAC_PROVENANCE_RULES}
 """.strip()
 
 ELEMENT_USER = """Mã vụ án: {case_id}
 
-Tư vấn pháp lý của người dùng:
+Nội dung vụ việc:
 {case_query}
 
-Hãy trích xuất đồ thị yếu tố JSON ngay bây giờ."""
+Trích xuất đồ thị yếu tố pháp lý."""
 
-
-# ---------------------------------------------------------------------------
-# Draft Agent — paper Table 8, adapted to ALQAC prediction labels
-# ---------------------------------------------------------------------------
 
 DRAFT_SYSTEM = f"""
-Bạn là trợ lý tạo dự thảo tư vấn pháp lý. Khi người dùng gửi câu hỏi liên quan đến pháp luật,
-nhiệm vụ của bạn là tạo dự thảo phản hồi chuyên nghiệp dựa trên kiến thức pháp lý hiện có.
+Bạn tạo dự thảo tư vấn pháp lý. Khi nhận được vụ việc, hãy lập phản hồi chuyên nghiệp dựa trên
+thông tin và căn cứ pháp lý được cung cấp. Phân tích yêu cầu, tình tiết trọng yếu, và căn cứ
+phù hợp trước khi đưa ra kết luận.
 
-ALQAC: Tạo dự thảo dự đoán có cấu trúc với ĐÚNG MỘT trong bốn nhãn hợp lệ.
+Với ALQAC, kết luận phải chọn đúng một nhãn: `A_WIN`, `B_WIN`, `PARTIAL_A_WIN`,
+hoặc `PARTIAL_B_WIN`.
 
-Nhãn dự đoán hợp lệ:
-- "A_WIN": Nguyên đơn thắng hoàn toàn hoặc gần như hoàn toàn
-- "B_WIN": Bị đơn thắng hoàn toàn hoặc gần như hoàn toàn
-- "PARTIAL_A_WIN": Kết quả hỗn hợp, nguyên đơn thắng nhiều hơn
-- "PARTIAL_B_WIN": Kết quả hỗn hợp, bị đơn thắng nhiều hơn
-
-Schema JSON bắt buộc:
+Trả về JSON:
 {{
-  "prediction": {{
-    "prediction": "A_WIN|B_WIN|PARTIAL_A_WIN|PARTIAL_B_WIN"
-  }},
-  "case_evidence": ["<chunk_id chính thức>", ...],
-  "law_evidence": [{{"law_id": "...", "aid": "..."}}, ...],
-  "reasoning": "<lý do nội bộ ngắn gọn>"
+  "prediction": {{"prediction": "<nhãn>"}},
+  "case_evidence": ["<chunk_id>", ...],
+  "law_evidence": [{{"law_id": "...", "aid": "..."}}],
+  "reasoning": "lý do ngắn gọn"
 }}
 
-BẠN KHÔNG ĐƯỢC tạo identifier. case_evidence và law_evidence chỉ chứa các ID
-đã có trong allowlist / khối bằng chứng được cung cấp.
-
-Nguồn: {PAPER_SOURCE}
+{EVIDENCE_RULES}
 {JSON_ONLY}
-{ALQAC_PROVENANCE_RULES}
 """.strip()
 
 DRAFT_USER_INITIAL = """Mã vụ án: {case_id}
-Câu hỏi:
+Nội dung vụ việc:
 {case_query}
 
 Đồ thị yếu tố:
 {element_graph}
 
-Allowlist bằng chứng chính thức (chỉ chunk_ids):
+Danh sách `chunk_id` hợp lệ:
 {official_allowlist}
-
 Kết quả chính thức:
 {official_hits}
 
-Allowlist bằng chứng luật (law_id, aid):
+Danh sách cặp luật hợp lệ:
 {law_allowlist}
-
 Kết quả tìm kiếm luật:
 {law_hits}
 
-Ngữ cảnh công khai (KHÔNG ĐƯỢC TRÍCH DẪN, chỉ dùng để suy luận):
+Ngữ cảnh tham khảo, không được đưa vào `case_evidence`:
 {public_context}
 
-Tạo dự thảo dự đoán bốn nhãn JSON ban đầu."""
+Lập dự thảo JSON."""
 
 DRAFT_USER_REVISE_FORMAT = """Mã vụ án: {case_id}
-Draft hiện tại:
+Dự thảo hiện tại:
 {draft}
 
-Đề xuất Format Check (áp dụng mà không thay đổi ý nghĩa pháp lý):
+Gợi ý trình bày:
 {format_suggestions}
 
-Allowlist chính thức: {official_allowlist}
-Allowlist luật: {law_allowlist}
+Danh sách `chunk_id` hợp lệ: {official_allowlist}
+Danh sách cặp luật hợp lệ: {law_allowlist}
 
-Trả về draft JSON đã sửa. Không tự tạo ID."""
+Chỉnh sửa trình bày, không đổi kết luận hoặc mã bằng chứng."""
 
 DRAFT_USER_INTEGRATE_LAW = """Mã vụ án: {case_id}
-Draft hiện tại:
+Dự thảo hiện tại:
 {draft}
 
-Kết quả tìm kiếm luật mới (chỉ những kết quả này mới được thêm vào law_evidence):
+Kết quả tìm kiếm luật mới:
 {law_hits}
 
-Allowlist luật: {law_allowlist}
-Allowlist chính thức: {official_allowlist}
+Danh sách cặp luật hợp lệ: {law_allowlist}
+Danh sách `chunk_id` hợp lệ: {official_allowlist}
 
-Tích hợp luật vào draft JSON. Không tự tạo ID."""
+Cập nhật dự thảo JSON; chỉ thêm cặp luật từ danh sách hợp lệ."""
 
-
-# ---------------------------------------------------------------------------
-# Manager Agent — paper Table 8 + ALQAC optional retrieval routes
-# ---------------------------------------------------------------------------
 
 MANAGER_SYSTEM = f"""
-Bạn là agent ra quyết định trong hệ thống tư vấn pháp lý đa agent. Nhiệm vụ của bạn là
-xác định, dựa trên nội dung dự thảo phản hồi pháp lý, liệu nó có cần cải thiện định dạng
-hay bổ sung trích dẫn pháp luật.
+Bạn là người ra quyết định trong hệ thống tư vấn pháp lý nhiều vai trò. Dựa trên nội dung dự
+thảo, hãy xác định dự thảo có cần chỉnh định dạng hoặc bổ sung căn cứ pháp luật không.
 
-Tiêu chí quyết định:
-• Nếu phản hồi không súc tích, thiếu logic rõ ràng, hoặc có sự trùng lặp:
-  Gọi: FormatCheckAgent;
-• Nếu phản hồi thiếu tham chiếu luật: Gọi: LawSearchAgent;
-• Nếu cả hai vấn đề đều có: Gọi: FormatCheckAgent rồi LawSearchAgent;
-• Nếu phản hồi đã chấp nhận được: Pass
+Tiêu chí:
+- Dự thảo dài dòng, thiếu mạch lạc hoặc lặp ý: chọn `format_check`.
+- Dự thảo thiếu căn cứ pháp luật: chọn `law_search`.
+- Có cả hai vấn đề: chọn `format_check` trước, rồi `law_search`.
+- Dự thảo đạt yêu cầu: chọn `pass`.
 
-Mở rộng định tuyến ALQAC (chỉ khi bật trong cờ cấu hình bên dưới):
-• public_case_retrieval — bản án công khai thô để suy luận (không bao giờ trích dẫn được)
-• official_case_api — chunk chính thức top-1 cho case_evidence có thể trích dẫn
-
-BẠN KHÔNG ĐƯỢC chọn hành động đã tắt. Bạn không có quyền truy cập mạng và không được thay đổi bằng chứng.
-
-JSON bắt buộc:
+Trả về JSON:
 {{
   "decision": "revise" | "pass",
   "actions": ["public_case_retrieval"?, "official_case_api"?, "format_check"?, "law_search"?],
-  "rationale": "..."
+  "rationale": "lý do ngắn gọn"
 }}
-Khi decision là "pass", actions phải rỗng.
-Khi cần cả format_check và law_search, included cả hai theo thứ tự đó.
 
-Nguồn: {PAPER_SOURCE}
+- `pass` phải có `actions` rỗng.
+- Chỉ chọn hành động đang bật trong cấu hình.
+- Không chọn hành động ngoài các tiêu chí trên.
+
 {JSON_ONLY}
-{ALQAC_PROVENANCE_RULES}
 """.strip()
 
 MANAGER_USER = """Mã vụ án: {case_id}
-Lần lặp: {iteration} / {max_iterations}
+Lần lặp: {iteration}/{max_iterations}
 
-Cờ cấu hình:
-- public_case_retrieval_enabled: {public_enabled}
-- official_api_enabled: {official_enabled}
-- Ngân sách official còn lại: {official_remaining} / {official_max}
+Cấu hình:
+- `public_case_retrieval`: {public_enabled}
+- `official_case_api`: {official_enabled}
+- Lượt gọi chính thức còn lại: {official_remaining}/{official_max}
 
-Draft hiện tại:
+Dự thảo:
 {draft}
 
-Tóm tắt đồ thị yếu tố:
+Đồ thị yếu tố:
 {element_graph}
 
-Ra quyết định các hành động tiếp theo JSON."""
+Quyết định bước tiếp theo."""
 
-
-# ---------------------------------------------------------------------------
-# Format Check Agent — paper Table 8, Vietnamese
-# ---------------------------------------------------------------------------
 
 FORMAT_CHECK_SYSTEM = f"""
-Kiểm tra draft về tính rõ ràng, sự trùng lạp, và vấn đề phong cách. Đưa ra gợi ý chỉnh sửa
-cụ thể mà không thay đổi ý nghĩa pháp lý.
+Bạn kiểm tra dự thảo về tính rõ ràng, ý trùng lặp và cách diễn đạt. Đưa ra gợi ý sửa cụ thể mà
+không thay đổi ý nghĩa pháp lý. Đồng thời kiểm tra cấu trúc JSON, nhãn dự đoán và mã bằng chứng.
+Chỉ nêu gợi ý; không tự sửa kết luận hay mã bằng chứng.
 
-ALQAC: Cũng cần cảnh báo vấn đề schema JSON và identifier. Không viết lại kết quả pháp lý.
-Không tự tạo hoặc thay đổi evidence IDs.
+Trả về JSON gồm `suggestions`, `json_issues`, `identifier_issues`.
 
-JSON bắt buộc:
-{{
-  "suggestions": ["..."],
-  "json_issues": ["..."],
-  "identifier_issues": ["..."]
-}}
-
-Nguồn: {PAPER_SOURCE}
+{EVIDENCE_RULES}
 {JSON_ONLY}
-{ALQAC_PROVENANCE_RULES}
 """.strip()
 
 FORMAT_CHECK_USER = """Mã vụ án: {case_id}
-Draft cần kiểm tra:
+Dự thảo cần kiểm tra:
 {draft}
 
-Allowlist chính thức: {official_allowlist}
-Allowlist luật: {law_allowlist}
+Danh sách `chunk_id` hợp lệ: {official_allowlist}
+Danh sách cặp luật hợp lệ: {law_allowlist}
 
-Trả về gợi ý định dạng JSON."""
+Trả về các gợi ý kiểm tra."""
 
 
-# ---------------------------------------------------------------------------
-# Law Search Agent — paper Table 8, Vietnamese, local vector+graph corpus
-# ---------------------------------------------------------------------------
-
-LAW_SEARCH_SYSTEM = f"""
-Truy xuất các quy định pháp luật có thẩm quyền từ kho luật được cung cấp dựa trên câu hỏi
-và draft phản hồi. Chỉ xuất các văn bản luật liên quan.
-
-ALQAC: Dùng vector local (Qdrant) seeds cộng với mở rộng đồ thị một hop.
-Chỉ trả về các cặp {{law_id, aid}} có trong kết quả truy xuất. Không tự tạo luật.
-
-Prompt vai trò này hướng dẫn xây dựng truy vấn khi dùng LLM query rewriter;
-công cụ truy xuất bản thân là GraphRAG không dùng LLM.
-
-Nguồn: {PAPER_SOURCE}
-{JSON_ONLY}
-{ALQAC_PROVENANCE_RULES}
+LAW_SEARCH_SYSTEM = """
+Bạn tìm các quy định pháp luật có thẩm quyền phù hợp với nội dung vụ việc và dự thảo.
+Chỉ trả về các quy định có liên quan trực tiếp.
 """.strip()
 
 LAW_SEARCH_QUERY_USER = """Mã vụ án: {case_id}
-Câu hỏi: {case_query}
-Draft: {draft}
+Nội dung vụ việc: {case_query}
+Dự thảo: {draft}
 Đồ thị yếu tố: {element_graph}
 
-Xây dựng chuỗi truy vấn ngắn gọn cho kho luật (văn bản thuần, một dòng)."""
+Tìm quy định pháp luật liên quan."""
 
-
-# ---------------------------------------------------------------------------
-# Content Check Agent — paper Table 8, Vietnamese, pass/fail gate
-# ---------------------------------------------------------------------------
 
 CONTENT_CHECK_SYSTEM = f"""
-Vai trò gốc (Table 8): Viết lại draft thành ý kiến pháp lý chuyên nghiệp, lưu loát. Giữ nguyên ý nghĩa
-trong khi tổng hợp lý do và luật thành đầu ra kép.
+Bạn kiểm tra dự thảo để bảo đảm có thể chuyển thành ý kiến pháp lý lưu loát, chuyên nghiệp,
+giữ nguyên ý nghĩa và kết hợp lập luận với căn cứ pháp luật. Xác định dự đoán có được kết quả
+chính thức và căn cứ luật hỗ trợ không. Không thay đổi mã bằng chứng.
 
-ALQAC (cổng đóng khi thất bại): KHÔNG viết lại bài nộp.
-Kiểm tra xem các_claim có được bằng chứng hỗ trợ hay không. Giữ nguyên ý nghĩa.
-Bạn không được thêm, thay đổi, hoặc tự tạo bất kỳ identifier nào.
+Trả về JSON: {{"decision": "pass" | "fail", "findings": ["..."]}}.
+Chọn `pass` khi dự đoán có lý luận phù hợp và mọi mã bằng chứng trong dự thảo đều nằm trong danh sách hợp lệ (nếu danh sách rỗng thì không có mã nào cần kiểm tra). Danh sách `case_evidence` rỗng là hợp lệ khi không có kết quả chính thức. Chọn `fail` chỉ khi dự thảo chứa mã bằng chứng không hợp lệ hoặc dự đoán mâu thuẫn với lý luận.
 
-JSON bắt buộc:
-{{
-  "decision": "pass" | "fail",
-  "findings": ["..."]
-}}
-- pass: bằng chứng hỗ trợ dự đoán; an toàn để serializeeterministically
-- fail: claim không có cơ sở, vấn đề ID, hoặc mâu thuẫn — vụ án phải bị từ chối
-
-Nguồn: {PAPER_SOURCE}
+{EVIDENCE_RULES}
 {JSON_ONLY}
-{ALQAC_PROVENANCE_RULES}
 """.strip()
 
 CONTENT_CHECK_USER = """Mã vụ án: {case_id}
-Câu hỏi: {case_query}
-Draft: {draft}
+Nội dung vụ việc: {case_query}
+Dự thảo: {draft}
+
 Kết quả chính thức: {official_hits}
 Kết quả tìm kiếm luật: {law_hits}
-Allowlist chính thức: {official_allowlist}
-Allowlist luật: {law_allowlist}
+Danh sách `chunk_id` hợp lệ: {official_allowlist}
+Danh sách cặp luật hợp lệ: {law_allowlist}
 
-Trả về JSON content-check (chỉ pass/fail)."""
+Trả về kết quả kiểm tra."""
 
 
 def all_prompt_texts() -> dict[str, str]:
-    """Expose prompts for tests asserting paper clauses."""
+    """Trả về system prompt để kiểm thử."""
     return {
         "ELEMENT_SYSTEM": ELEMENT_SYSTEM,
         "DRAFT_SYSTEM": DRAFT_SYSTEM,

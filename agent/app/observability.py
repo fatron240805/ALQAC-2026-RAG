@@ -1,17 +1,23 @@
-"""Structured logging + optional Langfuse spans. Never log secrets."""
+"""Structured logging + optional Langfuse spans."""
 
 from __future__ import annotations
 
 import hashlib
 import logging
+import os
 import time
 import uuid
 from contextlib import contextmanager
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Generator, Iterator
 
 from app.config import Settings
 
 logger = logging.getLogger("alqac.agent")
+
+_DEBUG_FILE_LOGGER = "alqac.agent.prompts"
+_DEBUG_HANDLER_INSTALLED = False
 
 _SENSITIVE_KEYS = frozenset(
     {
@@ -36,6 +42,70 @@ def configure_logging(level: int = logging.INFO) -> None:
             format="%(asctime)s %(levelname)s [%(name)s] %(message)s",
         )
     logger.setLevel(level)
+
+
+def configure_debug_file_handler() -> logging.Logger:
+    """Create a per-process DEBUG file handler at artifacts/logs/.
+
+    The file is named agent-prompts-YYYYMMDDTHHMMSS±ZZZZ.log.
+    Returns the dedicated prompt-logger so callers can write to it directly.
+    Duplicate handlers are prevented across calls.
+    """
+    global _DEBUG_HANDLER_INSTALLED  # noqa: PLW0603
+    prompt_logger = logging.getLogger(_DEBUG_FILE_LOGGER)
+    if _DEBUG_HANDLER_INSTALLED or any(
+        isinstance(h, logging.FileHandler) for h in prompt_logger.handlers
+    ):
+        return prompt_logger
+
+    log_dir = Path("artifacts/logs")
+    log_dir.mkdir(parents=True, exist_ok=True)
+
+    now = datetime.now(timezone.utc)
+    offset = now.astimezone().strftime("%z")  # e.g. +0700
+    ts = now.strftime("%Y%m%dT%H%M%S")
+    filename = f"agent-prompts-{ts}{offset}.log"
+    filepath = log_dir / filename
+
+    handler = logging.FileHandler(filepath, encoding="utf-8")
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(
+        logging.Formatter("%(asctime)s %(levelname)s %(message)s")
+    )
+
+    prompt_logger.setLevel(logging.DEBUG)
+    prompt_logger.addHandler(handler)
+    # Prevent propagation to root to avoid double console output
+    prompt_logger.propagate = False
+
+    _DEBUG_HANDLER_INSTALLED = True
+    return prompt_logger
+
+
+def log_raw_prompt(
+    *,
+    role: str,
+    case_id: str | None = None,
+    trace_id: str | None = None,
+    model: str | None = None,
+    system_prompt: str,
+    user_prompt: str,
+) -> None:
+    """Write the exact system + user prompt to the debug file handler."""
+    try:
+        prompt_logger = configure_debug_file_handler()
+    except Exception:  # noqa: BLE001 — debug logging must not break pipeline
+        return
+
+    prompt_logger.debug(
+        "PROMPT role=%s case_id=%s trace_id=%s model=%s\n--- SYSTEM ---\n%s\n--- USER ---\n%s\n--- END ---",
+        role,
+        case_id or "N/A",
+        trace_id or "N/A",
+        model or "N/A",
+        system_prompt,
+        user_prompt,
+    )
 
 
 def new_trace_id() -> str:
@@ -85,7 +155,7 @@ def log_event(
         "case_id": case_id,
         "openai_model": openai_model,
         "trace_id": trace_id,
-        **redact(fields),
+        **fields,
     }
     # Drop Nones for cleaner logs
     payload = {k: v for k, v in payload.items() if v is not None}
@@ -124,9 +194,10 @@ class Observability:
                     secret_key=settings.langfuse_secret_key,
                     host=settings.langfuse_host,
                 )
-                self._trace = self._langfuse.trace(
-                    id=self.trace_id,
+                self._trace = self._langfuse.start_observation(
                     name="alqac_submission",
+                    as_type="chain",
+                    trace_context={"trace_id": self.trace_id},
                     metadata={
                         "openai_model": settings.openai_model,
                         "public_case_retrieval_enabled": settings.public_case_retrieval_enabled,
@@ -144,7 +215,7 @@ class Observability:
         log_event("trace_root", trace_id=self.trace_id, **meta)
         if self._trace is not None:
             try:
-                self._trace.update(metadata=redact(meta))
+                self._trace.update(metadata=meta)
             except Exception as exc:  # noqa: BLE001
                 log_event("langfuse_update_failed", error=str(exc), trace_id=self.trace_id)
 
@@ -171,14 +242,15 @@ class Observability:
         lf_span = None
         if self._trace is not None:
             try:
-                lf_span = self._trace.span(
+                lf_span = self._trace.start_observation(
                     name=name,
-                    input=redact(input_data) if input_data is not None else None,
+                    as_type="span",
+                    input=input_data if input_data is not None else None,
                     metadata={
                         "agent": agent or name,
                         "case_id": case_id,
                         "openai_model": self.openai_model,
-                        **redact(meta),
+                        **meta,
                     },
                 )
             except Exception as exc:  # noqa: BLE001
@@ -219,9 +291,15 @@ class Observability:
             if lf_span is not None:
                 try:
                     if proxy.error:
-                        lf_span.end(output=redact({"error": proxy.error}), level="ERROR")
+                        lf_span.update(
+                            output={"error": proxy.error},
+                            level="ERROR",
+                        )
                     else:
-                        lf_span.end(output=redact(proxy.output) if proxy.output is not None else None)
+                        lf_span.update(
+                            output=proxy.output if proxy.output is not None else None,
+                        )
+                    lf_span.end()
                 except Exception as exc:  # noqa: BLE001
                     log_event("langfuse_span_end_failed", error=str(exc), trace_id=self.trace_id)
 

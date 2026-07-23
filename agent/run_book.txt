@@ -1,0 +1,68 @@
+Here's the full runbook:
+1. Setup
+cd alqac2026_agent
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+cp .env.example .env
+Edit .env — minimum required:
+OPENAI_BASE_URL=http://your-openai-compatible-endpoint/v1
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o-mini          # or whatever model
+OPENAI_EMBEDDING_MODEL=text-embedding-3-small  # optional, defaults to this
+2. Build vector + graph index
+python scripts/build_legal_index.py
+Reads data/legal_corpus/cleaned/ → writes:
+- data/vector/ (Qdrant)
+- data/graph/graph/nodes.jsonl + edges.jsonl
+Skip embeddings (graph-only) with --skip-embeddings.
+3. Run API
+uvicorn app.main:app --reload --port 8000
+4. Test endpoints
+# Health check
+curl http://localhost:8000/health
+
+# Submit from public test (loads from PUBLIC_TEST_PATH)
+curl -X POST http://localhost:8000/v1/submission/from_public_test \
+  -H "Content-Type: application/json" \
+  -d '{"limit": 2}'
+
+# Submit from private test (loads from PRIVATE_TEST_PATH)
+curl -X POST http://localhost:8000/v1/submission/from_private_test \
+  -H "Content-Type: application/json" \
+  -d '{"limit": 2}'
+
+# Submit from private test — specific cases only
+curl -X POST http://localhost:8000/v1/submission/from_private_test \
+  -H "Content-Type: application/json" \
+  -d '{"case_ids": ["case_1615", "case_4110", "case_3487"], "limit": 50}'
+
+# Submit all 50 private test cases (writes submission.json)
+curl -X POST http://localhost:8000/v1/submission/from_private_test \
+  -H "Content-Type: application/json" \
+  -d '{"write_submission": true}'
+
+# Submit custom cases
+curl -X POST http://localhost:8000/v1/submission \
+  -H "Content-Type: application/json" \
+  -d '{"cases": [{"case_id": "c1", "case_query": "tố tụng dân sự"}]}'
+
+# Debug single case (redacted trace)
+curl -X POST http://localhost:8000/v1/cases/c1/debug \
+  -H "Content-Type: application/json" \
+  -d '{"case_id": "c1", "case_query": "tố tụng dân sự"}'
+5. Auth (optional)
+Set API_KEY in .env to enable. Then pass header:
+curl -H "X-API-Key: your-secret" -X POST ...
+Other notable .env knobs:
+Key	Default	Purpose
+MAX_BATCH_SIZE	50	Max cases per request
+RATE_LIMIT_RPM	60	Requests/min per principal
+OFFICIAL_API_ENABLED	false	Enable official ALQAC API
+PUBLIC_CASE_RETRIEVAL_ENABLED	false	Enable public case search
+PUBLIC_TEST_PATH	data/ALQAC2026_public_test.json	Public test input
+PRIVATE_TEST_PATH	data/legal_corpus/ALQAC_private_test.json	Private test input
+MANAGER_MAX_ITERATIONS	5	Max manager loop turns
+LLM_MAX_TOKENS	0	Per-request max tokens (0=unlimited)
+TOTAL_LLM_BUDGET	0	Total LLM calls per batch (0=unlimited)
+LANGFUSE_*	(empty)	Observability tracing

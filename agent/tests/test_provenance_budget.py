@@ -138,3 +138,77 @@ def test_submission_preserves_order(tmp_path):
     assert rows[1]["case_id"] == "c3"
     assert rows[0]["prediction"]["prediction"] == "A_WIN"
     assert rows[1]["prediction"]["prediction"] == "B_WIN"
+
+
+# ---- Minimum-evidence enforcement tests ----
+
+
+def test_reject_empty_law_evidence():
+    draft = CaseDraft(
+        prediction=AlqacPrediction(prediction=AlqacLabel.A_WIN),
+        case_evidence=["chunk_1"],
+        law_evidence=[],
+    )
+    errs = validate_draft_provenance(
+        draft, official_allowlist={"chunk_1"}, law_allowlist={("L1", "1")}
+    )
+    assert any("law_evidence is empty" in e for e in errs)
+
+
+def test_reject_empty_case_evidence_when_official_enabled():
+    draft = CaseDraft(
+        prediction=AlqacPrediction(prediction=AlqacLabel.B_WIN),
+        case_evidence=[],
+        law_evidence=[LawEvidenceItem(law_id="L1", aid="1")],
+    )
+    errs = validate_draft_provenance(
+        draft,
+        official_allowlist=set(),
+        law_allowlist={("L1", "1")},
+        official_api_enabled=True,
+    )
+    assert any("case_evidence is empty" in e for e in errs)
+
+
+def test_allow_empty_case_evidence_when_official_disabled():
+    draft = CaseDraft(
+        prediction=AlqacPrediction(prediction=AlqacLabel.B_WIN),
+        case_evidence=[],
+        law_evidence=[LawEvidenceItem(law_id="L1", aid="1")],
+    )
+    errs = validate_draft_provenance(
+        draft,
+        official_allowlist=set(),
+        law_allowlist={("L1", "1")},
+        official_api_enabled=False,
+    )
+    assert not errs
+
+
+def test_both_empty_evidence_rejected():
+    draft = CaseDraft(
+        prediction=AlqacPrediction(prediction=AlqacLabel.A_WIN),
+        case_evidence=[],
+        law_evidence=[],
+    )
+    errs = validate_draft_provenance(
+        draft, official_allowlist=set(), law_allowlist=set()
+    )
+    assert any("law_evidence is empty" in e for e in errs)
+
+
+def test_validate_and_build_rejects_zero_evidence():
+    draft = CaseDraft(
+        prediction=AlqacPrediction(prediction=AlqacLabel.A_WIN),
+        case_evidence=[],
+        law_evidence=[],
+    )
+    result = validate_and_build_result(
+        "case_x",
+        draft,
+        content_passed=True,
+        official_allowlist=[],
+        law_pairs=[],
+    )
+    assert result.status == "error"
+    assert "Provenance" in result.error.message

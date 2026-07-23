@@ -119,20 +119,35 @@ class DebugResponse(BaseModel):
 
 
 class EntityNode(BaseModel):
-    name: str
+    name: str = ""
     type: str = ""
     attributes: dict[str, Any] = Field(default_factory=dict)
 
+    @field_validator("name", "type", mode="before")
+    @classmethod
+    def _none_to_str(cls, v: Any) -> str:
+        return "" if v is None else str(v)
+
 
 class EventNode(BaseModel):
-    description: str
-    time: str = ""
+    description: str = ""
+    time: str | None = None
+
+    @field_validator("description", mode="before")
+    @classmethod
+    def _none_to_str(cls, v: Any) -> str:
+        return "" if v is None else str(v)
 
 
 class RelationshipEdge(BaseModel):
-    type: str
-    source: str | int
-    target: str | int
+    type: str = ""
+    source: str | int | list[str | int] = ""
+    target: str | int | list[str | int] = ""
+
+    @field_validator("type", mode="before")
+    @classmethod
+    def _none_to_str(cls, v: Any) -> str:
+        return "" if v is None else str(v)
 
 
 class ElementGraph(BaseModel):
@@ -142,6 +157,21 @@ class ElementGraph(BaseModel):
     user_claims: list[str] = Field(default_factory=list)
     key_facts: list[str] = Field(default_factory=list)
     legal_questions: list[str] = Field(default_factory=list)
+
+    @field_validator("user_claims", "key_facts", "legal_questions", mode="before")
+    @classmethod
+    def _coerce_to_strings(cls, v: Any) -> list[str]:
+        if not isinstance(v, list):
+            return v
+        out: list[str] = []
+        for item in v:
+            if isinstance(item, str):
+                out.append(item)
+            elif isinstance(item, dict):
+                out.append(next(iter(item.values()), str(item)))
+            else:
+                out.append(str(item))
+        return out
 
 
 # ---------------------------------------------------------------------------

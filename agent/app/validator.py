@@ -31,8 +31,23 @@ def validate_draft_provenance(
     *,
     official_allowlist: set[str],
     law_allowlist: set[tuple[str, str]],
+    official_api_enabled: bool = False,
 ) -> list[str]:
     errors: list[str] = []
+
+    # ---- Minimum evidence requirements ----
+    # Law evidence is always required — a legal prediction without law support
+    # is nonsensical regardless of official API availability.
+    if not draft.law_evidence:
+        errors.append("law_evidence is empty; at least one law pair required")
+    # Case evidence: required when official API is enabled (means retrieval
+    # was available). When disabled, warn but allow (public-only path).
+    if official_api_enabled and not draft.case_evidence:
+        errors.append(
+            "case_evidence is empty; official API enabled but no retrieval results"
+        )
+
+    # ---- Allowlist checks ----
     for cid in draft.case_evidence:
         if cid not in official_allowlist:
             errors.append(f"case_evidence chunk_id not in allowlist: {cid}")
@@ -40,6 +55,7 @@ def validate_draft_provenance(
         key = _law_key(item)
         if key not in law_allowlist:
             errors.append(f"law_evidence pair not in allowlist: {key}")
+
     # Prediction label must be one of four valid ALQAC labels
     pred = draft.prediction
     label_val = pred.prediction.value if hasattr(pred.prediction, "value") else str(pred.prediction)
@@ -55,6 +71,7 @@ def validate_and_build_result(
     content_passed: bool,
     official_allowlist: list[str],
     law_pairs: list[LawEvidenceItem],
+    official_api_enabled: bool = False,
     content_findings: list[str] | None = None,
     obs: Observability | None = None,
 ) -> CaseResult:
@@ -94,6 +111,7 @@ def validate_and_build_result(
             draft,
             official_allowlist=set(official_allowlist),
             law_allowlist={_law_key(p) for p in law_pairs},
+            official_api_enabled=official_api_enabled,
         )
         if errors:
             return CaseResult(
@@ -121,8 +139,15 @@ def serialize_submission(
     output_path: Path,
     *,
     write: bool = True,
+    trace_id: str | None = None,
 ) -> list[dict[str, Any]]:
-    """Project OK cases into provisional ALQAC submission rows. Preserve order."""
+    """Project OK cases into provisional ALQAC submission rows. Preserve order.
+
+    When write=True and trace_id is provided, writes to a request-scoped path
+    (submission_<trace_id>.json) via atomic temp+rename to avoid concurrent
+    overwrites. The canonical output_path is still returned for backwards
+    compatibility.
+    """
     rows: list[dict[str, Any]] = []
     for r in results:
         if r.status != "ok" or r.prediction is None:
@@ -136,12 +161,18 @@ def serialize_submission(
             }
         )
     if write:
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(
+        if trace_id:
+            dest = output_path.parent / f"submission_{trace_id}.json"
+        else:
+            dest = output_path
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        tmp = dest.with_suffix(".tmp")
+        tmp.write_text(
             json.dumps(rows, ensure_ascii=False, indent=2),
             encoding="utf-8",
         )
-        logger.info("wrote submission n=%s path=%s", len(rows), output_path)
+        tmp.replace(dest)
+        logger.info("wrote submission n=%s path=%s", len(rows), dest)
     return rows
 
 
