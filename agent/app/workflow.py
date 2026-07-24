@@ -429,7 +429,7 @@ from app.schemas import (
     OfficialCallLedger,
 )
 from app.tools import LawGraphSearchTool, OfficialCaseTop1Tool, PublicCaseSearchTool
-from app.validator import serialize_submission, validate_and_build_result
+from app.validator import serialize_case_artifact, serialize_submission, validate_and_build_result
 
 logger = logging.getLogger("alqac.workflow")
 
@@ -751,20 +751,23 @@ def run_batch(
 
     results: list[CaseResult] = []
     states: list[AlqacState] = []
+    submission_paths: list[str] = []
+    error_report_paths: list[str] = []
     for case in cases:
         state, result = wf.run_case(case)
         states.append(state)
         results.append(result)
 
-    submission_path = None
-    if write_submission:
-        rows = serialize_submission(
-            results, settings.submission_output_path, write=True, trace_id=obs.trace_id
-        )
-        submission_path = str(
-            settings.submission_output_path.parent / f"submission_{obs.trace_id}.json"
-        ) if rows else None
-    else:
+        if write_submission:
+            submission_file, error_file = serialize_case_artifact(
+                result, settings.submission_output_path, write=True
+            )
+            if submission_file is not None:
+                submission_paths.append(str(submission_file))
+            if error_file is not None:
+                error_report_paths.append(str(error_file))
+
+    if not write_submission:
         serialize_submission(results, settings.submission_output_path, write=False)
 
     obs.update_root(
@@ -781,7 +784,10 @@ def run_batch(
         "llm_calls": wf._llm_calls,
         "openai_model": settings.openai_model,
         "trace_id": obs.trace_id,
-        "submission_path": submission_path,
+        "submission_path": submission_paths[0] if len(submission_paths) == 1 else None,
+        "error_report_path": error_report_paths[0] if len(error_report_paths) == 1 else None,
+        "submission_paths": submission_paths,
+        "error_report_paths": error_report_paths,
         "ledger": ledger.snapshot(),
     }
 

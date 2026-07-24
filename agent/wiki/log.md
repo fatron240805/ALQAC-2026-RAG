@@ -2,6 +2,21 @@
 
 Append-only log. Format: `## [YYYY-MM-DD] type | description`
 
+## [2026-07-24] reliability | Incremental submission checkpoints
+
+- Atomically write a case-specific artifact after each completed case
+- Preserve ALQAC-valid rows in `submission_<case_id>.json` and persist rejected/error case details in `error_<case_id>.json`
+
+## [2026-07-24] reliability | Per-case artifact filenames
+
+- Save valid case outputs as `submission_<case_id>.json` and failed cases as `error_<case_id>.json`
+- Return plural artifact paths from submission endpoints for batch requests
+
+## [2026-07-24] reliability | Structured-output validation recovery
+
+- Normalize weak-model list/object variants in agent result schemas, including format-review issues
+- Retry every agent role after JSON parse or Pydantic validation failures; exhausted failures remain isolated to saved error cases
+
 ## [2026-07-22] init | Wiki created
 
 - Created AGENTS.md with codebase conventions

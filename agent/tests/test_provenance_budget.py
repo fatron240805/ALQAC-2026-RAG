@@ -140,6 +140,23 @@ def test_submission_preserves_order(tmp_path):
     assert rows[1]["prediction"]["prediction"] == "B_WIN"
 
 
+def test_case_artifact_sanitized_ids_do_not_collide(tmp_path):
+    from app.schemas import CaseResult
+    from app.validator import serialize_case_artifact
+
+    first = CaseResult(case_id="a/b", status="error")
+    second = CaseResult(case_id="a_b", status="error")
+
+    _, first_path = serialize_case_artifact(first, tmp_path / "submission.json")
+    _, second_path = serialize_case_artifact(second, tmp_path / "submission.json")
+
+    assert first_path is not None
+    assert second_path is not None
+    assert first_path != second_path
+    assert first_path.name.startswith("error_a_b_")
+    assert second_path.name == "error_a_b.json"
+
+
 # ---- Minimum-evidence enforcement tests ----
 
 

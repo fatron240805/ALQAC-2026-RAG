@@ -114,6 +114,9 @@ def create_submission(
         openai_model=out["openai_model"],
         trace_id=out["trace_id"],
         submission_path=out["submission_path"],
+        error_report_path=out["error_report_path"],
+        submission_paths=out["submission_paths"],
+        error_report_paths=out["error_report_paths"],
     )
 
 
@@ -160,6 +163,9 @@ def create_submission_from_public_test(
         openai_model=out["openai_model"],
         trace_id=out["trace_id"],
         submission_path=out["submission_path"],
+        error_report_path=out["error_report_path"],
+        submission_paths=out["submission_paths"],
+        error_report_paths=out["error_report_paths"],
     )
 
 
@@ -206,6 +212,9 @@ def create_submission_from_private_test(
         openai_model=out["openai_model"],
         trace_id=out["trace_id"],
         submission_path=out["submission_path"],
+        error_report_path=out["error_report_path"],
+        submission_paths=out["submission_paths"],
+        error_report_paths=out["error_report_paths"],
     )
 
 

@@ -4,6 +4,9 @@ from __future__ import annotations
 
 import json
 import logging
+import re
+import tempfile
+from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
@@ -165,15 +168,97 @@ def serialize_submission(
             dest = output_path.parent / f"submission_{trace_id}.json"
         else:
             dest = output_path
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        tmp = dest.with_suffix(".tmp")
-        tmp.write_text(
-            json.dumps(rows, ensure_ascii=False, indent=2),
-            encoding="utf-8",
-        )
-        tmp.replace(dest)
+        _write_json_atomic(dest, rows)
         logger.info("wrote submission n=%s path=%s", len(rows), dest)
     return rows
+
+
+def serialize_error_report(
+    results: list[CaseResult],
+    output_path: Path,
+    *,
+    write: bool = True,
+    trace_id: str | None = None,
+) -> list[dict[str, Any]]:
+    """Write non-submittable case outcomes beside ALQAC submission rows."""
+    rows = [
+        result.model_dump(mode="json")
+        for result in results
+        if result.status != "ok"
+    ]
+    if write:
+        dest = _error_report_path(output_path, trace_id)
+        _write_json_atomic(dest, rows)
+        logger.info("wrote error report n=%s path=%s", len(rows), dest)
+    return rows
+
+
+def serialize_case_artifact(
+    result: CaseResult,
+    output_path: Path,
+    *,
+    write: bool = True,
+) -> tuple[Path | None, Path | None]:
+    """Persist one completed case under a stable, case-specific filename."""
+    case_id = _safe_case_id(result.case_id)
+    if result.status == "ok" and result.prediction is not None:
+        dest = output_path.parent / f"submission_{case_id}.json"
+        row = {
+            "case_id": result.case_id,
+            "prediction": result.prediction.model_dump(),
+            "case_evidence": result.case_evidence,
+            "law_evidence": [item.model_dump() for item in result.law_evidence],
+        }
+        if write:
+            _write_json_atomic(dest, [row])
+            logger.info("wrote case submission case_id=%s path=%s", result.case_id, dest)
+        return dest, None
+
+    dest = output_path.parent / f"error_{case_id}.json"
+    if write:
+        _write_json_atomic(dest, [result.model_dump(mode="json")])
+        logger.info("wrote case error case_id=%s path=%s", result.case_id, dest)
+    return None, dest
+
+
+def submission_artifact_path(output_path: Path, trace_id: str | None) -> Path:
+    if trace_id:
+        return output_path.parent / f"submission_{trace_id}.json"
+    return output_path
+
+
+def error_report_path(output_path: Path, trace_id: str | None) -> Path:
+    return _error_report_path(output_path, trace_id)
+
+
+def _error_report_path(output_path: Path, trace_id: str | None) -> Path:
+    submission_path = submission_artifact_path(output_path, trace_id)
+    return submission_path.with_name(f"{submission_path.stem}.errors.json")
+
+
+def _write_json_atomic(dest: Path, payload: list[dict[str, Any]]) -> None:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        encoding="utf-8",
+        dir=dest.parent,
+        prefix=f".{dest.name}.",
+        suffix=".tmp",
+        delete=False,
+    ) as tmp:
+        tmp.write(json.dumps(payload, ensure_ascii=False, indent=2))
+        tmp_path = Path(tmp.name)
+    try:
+        tmp_path.replace(dest)
+    finally:
+        tmp_path.unlink(missing_ok=True)
+
+
+def _safe_case_id(case_id: str) -> str:
+    normalized = re.sub(r"[^A-Za-z0-9._-]+", "_", case_id).strip("._") or "unknown"
+    if normalized == case_id:
+        return normalized
+    return f"{normalized}_{sha256(case_id.encode()).hexdigest()[:10]}"
 
 
 def load_public_test(path: Path) -> list[dict[str, Any]]:

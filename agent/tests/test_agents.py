@@ -7,7 +7,7 @@ import pytest
 from openai import APIConnectionError
 
 from app.agents import _extract_json, _invoke_model, _invoke_role
-from app.schemas import ElementGraph
+from app.schemas import ContentCheckResult, ElementGraph, FormatSuggestions
 
 
 class _Message:
@@ -96,3 +96,47 @@ def test_extract_json_handles_string_with_braces():
 def test_extract_json_raises_on_no_json():
     with pytest.raises(Exception):
         _extract_json("no json here at all")
+
+
+def test_format_suggestions_coerces_object_issues_to_lists():
+    result = FormatSuggestions.model_validate(
+        {
+            "suggestions": "Giữ nguyên kết luận",
+            "json_issues": {"case_evidence": "Danh sách không hợp lệ"},
+            "identifier_issues": {"law_evidence": ["39/2015/QH13-1"]},
+        }
+    )
+
+    assert result.suggestions == ["Giữ nguyên kết luận"]
+    assert result.json_issues == ["case_evidence: Danh sách không hợp lệ"]
+    assert result.identifier_issues == ["law_evidence: 39/2015/QH13-1"]
+
+
+def test_invoke_role_retries_pydantic_validation_error():
+    class Message:
+        type = "ai"
+
+        def __init__(self, content: str) -> None:
+            self.content = content
+
+    class Agent:
+        def __init__(self) -> None:
+            self.calls = 0
+
+        def invoke(self, _: object) -> dict[str, list[Message]]:
+            self.calls += 1
+            content = '{"decision": "unknown"}' if self.calls == 1 else '{"decision": "pass"}'
+            return {"messages": [Message(content)]}
+
+    agent = Agent()
+    result = _invoke_role(
+        agent,
+        system="",
+        user="case",
+        schema=ContentCheckResult,
+        role_name="content_check",
+        obs=None,
+    )
+
+    assert result.decision == "pass"
+    assert agent.calls == 2

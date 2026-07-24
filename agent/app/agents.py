@@ -11,7 +11,7 @@ from deepagents import create_deep_agent
 from deepagents.backends import StateBackend
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from tenacity import retry, retry_if_exception, stop_after_attempt, wait_random_exponential
 
 from app import prompts
@@ -146,11 +146,11 @@ def _invoke_role(
         for attempt in range(max_json_retries):
             try:
                 return _run()
-            except json.JSONDecodeError as exc:
+            except (json.JSONDecodeError, ValidationError) as exc:
                 last_err = exc
                 if attempt < max_json_retries - 1:
                     logger.warning(
-                        "json_parse_fail role=%s attempt=%d/%d error=%s",
+                        "structured_output_fail role=%s attempt=%d/%d error=%s",
                         role_name, attempt + 1, max_json_retries, exc,
                     )
                     continue

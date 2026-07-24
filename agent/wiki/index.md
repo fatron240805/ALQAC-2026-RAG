@@ -7,7 +7,7 @@ Content catalog. Updated on every ingest.
 | Page | Summary | Source |
 |---|---|---|
 | [[AlqacState]] | Per-case workflow state; holds inputs, accumulated evidence, control counters | app/schemas.py:271 |
-| [[CaseWorkflow]] | LangGraph-style pipeline: Element → Draft → Manager loop → Content Check → Validator | app/workflow.py |
+| [[CaseWorkflow]] | Per-case pipeline plus atomic batch checkpoints and error sidecar artifacts | app/workflow.py |
 | [[AgentRoles]] | 6 Deep Agent role instances sharing one ChatOpenAI model; transient API retry | app/agents.py |
 | [[OfficialCallLedger]] | Shared batch budget tracker for official API calls | app/schemas.py:223 |
 | [[ALQACPrediction]] | Four-label prediction: A_WIN, B_WIN, PARTIAL_A_WIN, PARTIAL_B_WIN | app/schemas.py:41 |

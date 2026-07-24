@@ -354,6 +354,21 @@ ALQAC_VALID_LABELS = {"A_WIN", "B_WIN", "PARTIAL_A_WIN", "PARTIAL_B_WIN"}
 DEFAULT_FALLBACK_LABEL = "PARTIAL_B_WIN"
 
 
+def _coerce_string_list(value: Any) -> list[str]:
+    """Normalize weak-model list-shaped review output without dropping data."""
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return [item for entry in value for item in _coerce_string_list(entry)]
+    if isinstance(value, dict):
+        return [
+            f"{key}: {item}"
+            for key, entry in value.items()
+            for item in _coerce_string_list(entry)
+        ]
+    return [str(value)]
+
+
 class AlqacLabel(str, Enum):
     """Official ALQAC 2026 prediction labels.
 
@@ -406,6 +421,23 @@ class CaseDraft(BaseModel):
             return {"prediction": v}
         return v
 
+    @field_validator("case_evidence", mode="before")
+    @classmethod
+    def _coerce_case_evidence(cls, v: Any) -> list[str]:
+        return _coerce_string_list(v)
+
+    @field_validator("law_evidence", mode="before")
+    @classmethod
+    def _coerce_law_evidence(cls, v: Any) -> Any:
+        if v is None:
+            return []
+        return v if isinstance(v, list) else [v]
+
+    @field_validator("reasoning", mode="before")
+    @classmethod
+    def _coerce_reasoning(cls, v: Any) -> str:
+        return "" if v is None else str(v)
+
 
 class CaseInput(BaseModel):
     case_id: str
@@ -446,6 +478,9 @@ class SubmissionResponse(BaseModel):
     openai_model: str
     trace_id: str | None = None
     submission_path: str | None = None
+    error_report_path: str | None = None
+    submission_paths: list[str] = Field(default_factory=list)
+    error_report_paths: list[str] = Field(default_factory=list)
 
 
 class DebugResponse(BaseModel):
@@ -540,20 +575,17 @@ class ElementGraph(BaseModel):
             return {"entities": data}
         return data
 
+    @field_validator("entities", "events", "relationships", mode="before")
+    @classmethod
+    def _coerce_node_lists(cls, v: Any) -> list[Any]:
+        if v is None:
+            return []
+        return v if isinstance(v, list) else [v]
+
     @field_validator("user_claims", "key_facts", "legal_questions", mode="before")
     @classmethod
     def _coerce_to_strings(cls, v: Any) -> list[str]:
-        if not isinstance(v, list):
-            return v
-        out: list[str] = []
-        for item in v:
-            if isinstance(item, str):
-                out.append(item)
-            elif isinstance(item, dict):
-                out.append(next(iter(item.values()), str(item)))
-            else:
-                out.append(str(item))
-        return out
+        return _coerce_string_list(v)
 
 
 # ---------------------------------------------------------------------------
@@ -583,8 +615,13 @@ class ManagerDecision(BaseModel):
         """Some models put an action value (e.g. "law_search") directly into
         `decision` instead of decision="revise" + actions=[...]. Detect and
         fix that specific confusion."""
+        if isinstance(data, str):
+            data = {"decision": data}
         if isinstance(data, dict):
             decision = data.get("decision")
+            if isinstance(decision, str):
+                decision = decision.lower()
+                data = {**data, "decision": decision}
             if decision not in ("revise", "pass"):
                 valid_actions = {a.value for a in ManagerAction}
                 if decision in valid_actions:
@@ -595,6 +632,13 @@ class ManagerDecision(BaseModel):
                         actions = [decision, *actions]
                     data = {**data, "decision": "revise", "actions": actions}
         return data
+
+    @field_validator("actions", mode="before")
+    @classmethod
+    def _coerce_actions(cls, v: Any) -> list[Any]:
+        if v is None:
+            return []
+        return v if isinstance(v, list) else [v]
 
     @field_validator("actions")
     @classmethod
@@ -641,10 +685,25 @@ class FormatSuggestions(BaseModel):
     json_issues: list[str] = Field(default_factory=list)
     identifier_issues: list[str] = Field(default_factory=list)
 
+    @field_validator("suggestions", "json_issues", "identifier_issues", mode="before")
+    @classmethod
+    def _coerce_review_lists(cls, v: Any) -> list[str]:
+        return _coerce_string_list(v)
+
 
 class ContentCheckResult(BaseModel):
     decision: Literal["pass", "fail"]
     findings: list[str] = Field(default_factory=list)
+
+    @field_validator("decision", mode="before")
+    @classmethod
+    def _coerce_decision(cls, v: Any) -> Any:
+        return v.lower().strip() if isinstance(v, str) else v
+
+    @field_validator("findings", mode="before")
+    @classmethod
+    def _coerce_findings(cls, v: Any) -> list[str]:
+        return _coerce_string_list(v)
 
 
 # ---------------------------------------------------------------------------

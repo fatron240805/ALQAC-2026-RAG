@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from app.schemas import (
+    AlqacState,
     AlqacLabel,
     AlqacPrediction,
     CaseDraft,
+    CaseError,
     CaseInput,
+    CaseResult,
     ContentCheckResult,
     ElementGraph,
     FormatSuggestions,
@@ -84,7 +89,7 @@ class FakeOfficial:
         self.ledger = ledger
         self.calls = 0
 
-    def __call__(self, query):
+    def __call__(self, query, case_id=None):
         self.calls += 1
         self.ledger.record("chunk_x", is_duplicate=False, is_no_gain=False)
         return OfficialCaseHit(chunk_id="chunk_x", text="official", score=1.0)
@@ -262,3 +267,70 @@ def test_batch_budget_shared(settings):
     assert official.calls == 2
     assert ledger.used == 2
     assert ledger.used <= 2 * len(cases)
+
+
+def test_batch_checkpoints_submission_and_errors_after_each_case(settings, monkeypatch):
+    import json
+
+    from app import workflow
+    from app.observability import Observability
+
+    snapshots: list[str] = []
+    real_serialize = workflow.serialize_case_artifact
+
+    def track_checkpoints(result, *args, **kwargs):
+        snapshots.append(result.case_id)
+        return real_serialize(result, *args, **kwargs)
+
+    def completed_case(self, case):
+        state = AlqacState(case_id=case.case_id, case_query=case.case_query)
+        if case.case_id == "bad":
+            return state, CaseResult(
+                case_id=case.case_id,
+                status="error",
+                error=CaseError(
+                    case_id=case.case_id,
+                    stage="workflow",
+                    message="model unavailable",
+                ),
+            )
+        return state, CaseResult(
+            case_id=case.case_id,
+            status="ok",
+            prediction=AlqacPrediction(prediction=AlqacLabel.A_WIN),
+            law_evidence=[LawEvidenceItem(law_id="L1", aid="10")],
+        )
+
+    monkeypatch.setattr(workflow, "serialize_case_artifact", track_checkpoints)
+    monkeypatch.setattr(CaseWorkflow, "run_case", completed_case)
+
+    out = run_batch(
+        [
+            CaseInput(case_id="good", case_query="q1"),
+            CaseInput(case_id="bad", case_query="q2"),
+        ],
+        settings,
+        obs=Observability(settings),
+        agents=FakeAgents(settings),  # type: ignore[arg-type]
+        public_tool=FakePublic(),  # type: ignore[arg-type]
+        official_tool=FakeOfficial(OfficialCallLedger(max_calls=4)),  # type: ignore[arg-type]
+        law_tool=FakeLaw(),  # type: ignore[arg-type]
+    )
+
+    assert snapshots == ["good", "bad"]
+    assert out["submission_path"] is not None
+    assert out["error_report_path"] is not None
+    assert out["submission_paths"] == [str(settings.submission_output_path.parent / "submission_good.json")]
+    assert out["error_report_paths"] == [str(settings.submission_output_path.parent / "error_bad.json")]
+    assert json.loads(Path(out["submission_path"]).read_text()) == [
+        {
+            "case_id": "good",
+            "prediction": {"prediction": "A_WIN"},
+            "case_evidence": [],
+            "law_evidence": [{"law_id": "L1", "aid": "10"}],
+        }
+    ]
+    errors = json.loads(Path(out["error_report_path"]).read_text())
+    assert errors[0]["case_id"] == "bad"
+    assert errors[0]["status"] == "error"
+    assert errors[0]["error"]["message"] == "model unavailable"

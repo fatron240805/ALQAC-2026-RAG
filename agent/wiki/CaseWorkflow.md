@@ -39,3 +39,8 @@ Element → Draft → Manager loop (max 5) → Content Check → Validator
 - Disabled actions → reject, never silently enable
 - Content Check fail → reject, never serialized
 - Deterministic validator: no LLM, no network
+- `run_batch()` atomically checkpoints after every completed case. Valid rows go to
+  `submission_<case_id>.json`; rejected and error cases go to `error_<case_id>.json`.
+- Agent role JSON is normalized for known weak-model shape variants and retries
+  on Pydantic validation failures. An exhausted retry becomes a saved per-case
+  workflow error; it does not stop remaining cases.
